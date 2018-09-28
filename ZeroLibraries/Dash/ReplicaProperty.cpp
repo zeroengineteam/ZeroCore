@@ -285,20 +285,22 @@ bool HasChangedCustom(const ReplicaProperty* replicaProperty)
   {
     // Get delta threshold value for comparison
     const Variant& deltaThreshold = replicaPropertyType->GetDeltaThreshold();
+    ReturnIf(deltaThreshold.IsEmpty(), false, "Empty delta threshold");
 
-    // (Delta threshold value should be non-empty)
-    Assert(deltaThreshold.IsNotEmpty());
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives   = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* lastValuePrimitives      = lastValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* deltaThresholdPrimitives = deltaThreshold.GetPrimitivesOrNull<PropertyType>();
 
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember   = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& lastValuePrimitiveMember      = lastValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& deltaThresholdPrimitiveMember = deltaThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive   = currentValuePrimitives[i];
+      const PrimitiveType& lastValuePrimitive      = lastValuePrimitives[i];
+      const PrimitiveType& deltaThresholdPrimitive = deltaThresholdPrimitives[i];
 
       // Current value and last value primitive members differ by more than the delta threshold value primitive member?
-      if(Math::Abs(currentValuePrimitiveMember - lastValuePrimitiveMember) > deltaThresholdPrimitiveMember)
+      if(Math::Abs(currentValuePrimitive - lastValuePrimitive) > deltaThresholdPrimitive)
       {
         // Has changed
         return true;
@@ -308,15 +310,18 @@ bool HasChangedCustom(const ReplicaProperty* replicaProperty)
   // Do not use delta threshold?
   else
   {
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* lastValuePrimitives    = lastValue.GetPrimitivesOrNull<PropertyType>();
+
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& lastValuePrimitiveMember    = lastValue.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive = currentValuePrimitives[i];
+      const PrimitiveType& lastValuePrimitive    = lastValuePrimitives[i];
 
       // Current value and last value primitive members differ?
-      if(currentValuePrimitiveMember != lastValuePrimitiveMember)
+      if(currentValuePrimitive != lastValuePrimitive)
       {
         // Has changed
         return true;
@@ -417,8 +422,8 @@ void UpdateLastValueCustom(ReplicaProperty* replicaProperty)
   SerializationMode::Enum serializationMode = replicaPropertyType->GetSerializationMode();
 
   // (Current and last values should be non-empty)
-  Assert(currentValue.IsNotEmpty());
-  Assert(lastValue.IsNotEmpty());
+  ReturnIf(currentValue.IsEmpty(), , "Empty current value");
+  ReturnIf(lastValue.IsEmpty(), , "Empty last value");
 
   //    Serialize all primitive members?
   // OR Do not use delta threshold?
@@ -435,21 +440,23 @@ void UpdateLastValueCustom(ReplicaProperty* replicaProperty)
 
     // Get delta threshold value for comparison
     const Variant& deltaThreshold = replicaPropertyType->GetDeltaThreshold();
+    ReturnIf(deltaThreshold.IsEmpty(), , "Empty delta threshold");
 
-    // (Delta threshold value should be non-empty)
-    Assert(deltaThreshold.IsNotEmpty());
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives   = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* lastValuePrimitives      = lastValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* deltaThresholdPrimitives = deltaThreshold.GetPrimitivesOrNull<PropertyType>();
 
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember   = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& lastValuePrimitiveMember      = lastValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& deltaThresholdPrimitiveMember = deltaThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive   = currentValuePrimitives[i];
+      const PrimitiveType& lastValuePrimitive      = lastValuePrimitives[i];
+      const PrimitiveType& deltaThresholdPrimitive = deltaThresholdPrimitives[i];
 
       // Has this primitive member changed?
       // (Current value and last value primitive members differ by more than the delta threshold value primitive member?)
-      bool hasChanged = (Math::Abs(currentValuePrimitiveMember - lastValuePrimitiveMember) > deltaThresholdPrimitiveMember);
+      bool hasChanged = (Math::Abs(currentValuePrimitive - lastValuePrimitive) > deltaThresholdPrimitive);
 
       // Has not changed?
       if(!hasChanged)
@@ -457,7 +464,7 @@ void UpdateLastValueCustom(ReplicaProperty* replicaProperty)
         // Reset current value's primitive member to our last value's primitive member
         // (Our intent is to only update the new last value's primitive members to our current value's primitive members
         // once the primitive member in question has exceeded it's delta threshold and is therefore considered changed)
-        currentValuePrimitiveMember = lastValuePrimitiveMember;
+        currentValuePrimitive = lastValuePrimitive;
       }
     }
 
@@ -568,11 +575,13 @@ void UpdateCurveCustom(ReplicaProperty* replicaProperty, TimeMs timestamp, const
     return;
   }
 
+  // Get primitive members
+  const PrimitiveType* valuePrimitives = value.GetPrimitivesOrNull<PropertyType>();
+
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get primitive member
-    PrimitiveType& valuePrimitiveMember = value.GetPrimitiveMemberOrError<PropertyType>(i);
+    const PrimitiveType& valuePrimitive = valuePrimitives[i];
 
     // Get received change value curve points
     // (We treat this as a set to keep our points sorted by their timestamp (x value))
@@ -612,7 +621,7 @@ void UpdateCurveCustom(ReplicaProperty* replicaProperty, TimeMs timestamp, const
     // Create control point at specified timestamp
     Math::Vec3 point;
     point.x = newPointTimestamp;
-    point.y = float(valuePrimitiveMember);
+    point.y = float(valuePrimitive);
     point.z = 0;
 
     // Add control point to set
@@ -675,15 +684,17 @@ Variant SampleCurveCustom(ReplicaProperty* replicaProperty, TimeMs timestamp)
   Variant result;
   result.DefaultConstruct<PropertyType>();
 
+  // Get primitive members
+  PrimitiveType* resultPrimitives = result.GetPrimitivesOrNull<PropertyType>();
+
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get primitive member
-    PrimitiveType& resultPrimitiveMember = result.GetPrimitiveMemberOrError<PropertyType>(i);
+    PrimitiveType& resultPrimitive = resultPrimitives[i];
 
     // Sample baked out spline curve
     Math::Vec3 point = replicaProperty->mBakedCurve[i].SampleFunction(sampleTimestamp, false);
-    resultPrimitiveMember = PrimitiveType(point.y);
+    resultPrimitive = PrimitiveType(point.y);
   }
 
   // Success
@@ -832,36 +843,40 @@ void SetValueUsingConvergenceCustom(ReplicaProperty* replicaProperty, Variant& t
   const Variant& snapThreshold = replicaPropertyType->GetSnapThreshold();
 
   // (Current, target, and snap threshold values should be non-empty)
-  Assert(currentValue.IsNotEmpty());
-  Assert(targetValue.IsNotEmpty());
-  Assert(snapThreshold.IsNotEmpty());
+  ReturnIf(currentValue.IsEmpty(), , "Empty current value");
+  ReturnIf(targetValue.IsEmpty(), , "Empty target value");
+  ReturnIf(snapThreshold.IsEmpty(), , "Empty snap threshold");
+
+  // Get primitive members
+  PrimitiveType*       currentValuePrimitives  = currentValue.GetPrimitivesOrNull<PropertyType>();
+  const PrimitiveType* targetValuePrimitives   = targetValue.GetPrimitivesOrNull<PropertyType>();
+  const PrimitiveType* snapThresholdPrimitives = snapThreshold.GetPrimitivesOrNull<PropertyType>();
 
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get primitive members
-    PrimitiveType&       currentValuePrimitiveMember  = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-    const PrimitiveType& targetValuePrimitiveMember   = targetValue.GetPrimitiveMemberOrError<PropertyType>(i);
-    const PrimitiveType& snapThresholdPrimitiveMember = snapThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
+    PrimitiveType&       currentValuePrimitive  = currentValuePrimitives[i];
+    const PrimitiveType& targetValuePrimitive   = targetValuePrimitives[i];
+    const PrimitiveType& snapThresholdPrimitive = snapThresholdPrimitives[i];
 
     // Compute converged value primitive member
-    PrimitiveType convergedValuePrimitiveMember = Converge<PrimitiveType>(currentValuePrimitiveMember, targetValuePrimitiveMember, targetWeight);
+    PrimitiveType convergedValuePrimitive = Converge<PrimitiveType>(currentValuePrimitive, targetValuePrimitive, targetWeight);
 
     // Should this primitive member be snapped?
     // (Current value and target value primitive members differ by more than the snap threshold value primitive member?)
-    bool shouldSnap = (Math::Abs(currentValuePrimitiveMember - targetValuePrimitiveMember) > snapThresholdPrimitiveMember);
+    bool shouldSnap = (Math::Abs(currentValuePrimitive - targetValuePrimitive) > snapThresholdPrimitive);
 
     // Should snap primitive member?
     if(shouldSnap)
     {
       // Set current value primitive member to target value primitive member
-      currentValuePrimitiveMember = targetValuePrimitiveMember;
+      currentValuePrimitive = targetValuePrimitive;
     }
     // Should converge primitive member?
     else
     {
       // Set current value primitive member to converged value primitive member
-      currentValuePrimitiveMember = convergedValuePrimitiveMember;
+      currentValuePrimitive = convergedValuePrimitive;
     }
   }
 
@@ -1096,25 +1111,27 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
   bool                    useHalfFloats     = replicaPropertyType->GetUseHalfFloats();
 
   // (Current and last values should be non-empty)
-  Assert(currentValue.IsNotEmpty());
-  Assert(lastValue.IsNotEmpty());
+  ReturnIf(currentValue.IsEmpty(), false, "Empty current value");
+  ReturnIf(lastValue.IsEmpty(), false, "Empty last value");
 
   //    Serialize all primitive members?
   // OR Force serialization of all primitive members?
   if(serializationMode == SerializationMode::All
   || forceAll)
   {
+    // Get primitive members
+    PrimitiveType* currentValuePrimitives = currentValue.GetPrimitivesOrNull<PropertyType>();
+
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive member
-      PrimitiveType& currentValuePrimitiveMember = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType& currentValuePrimitive = currentValuePrimitives[i];
 
       // Use half floats?
       if(useHalfFloats)
       {
         // Convert primitive member to float then to half float
-        u16 halfFloat = HalfFloatConverter::ToHalfFloat((float)currentValuePrimitiveMember);
+        u16 halfFloat = HalfFloatConverter::ToHalfFloat((float)currentValuePrimitive);
 
         // Write half float
         if(!bitStream.Write(halfFloat)) // Unable?
@@ -1127,7 +1144,7 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
       else
       {
         // Write primitive member
-        if(!bitStream.Write(currentValuePrimitiveMember)) // Unable?
+        if(!bitStream.Write(currentValuePrimitive)) // Unable?
         {
           Assert(false);
           return false;
@@ -1145,21 +1162,23 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
     {
       // Get delta threshold value for comparison
       const Variant& deltaThreshold = replicaPropertyType->GetDeltaThreshold();
+      ReturnIf(deltaThreshold.IsEmpty(), false, "Empty delta threshold");
 
-      // (Delta threshold value should be non-empty)
-      Assert(deltaThreshold.IsNotEmpty());
+      // Get primitive members
+      PrimitiveType*       currentValuePrimitives   = currentValue.GetPrimitivesOrNull<PropertyType>();
+      const PrimitiveType* lastValuePrimitives      = lastValue.GetPrimitivesOrNull<PropertyType>();
+      const PrimitiveType* deltaThresholdPrimitives = deltaThreshold.GetPrimitivesOrNull<PropertyType>();
 
       // For each primitive member
       for(size_t i = 0; i < PrimitiveCount; ++i)
       {
-        // Get primitive members
-        PrimitiveType&       currentValuePrimitiveMember   = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-        const PrimitiveType& lastValuePrimitiveMember      = lastValue.GetPrimitiveMemberOrError<PropertyType>(i);
-        const PrimitiveType& deltaThresholdPrimitiveMember = deltaThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
+        PrimitiveType&       currentValuePrimitive   = currentValuePrimitives[i];
+        const PrimitiveType& lastValuePrimitive      = lastValuePrimitives[i];
+        const PrimitiveType& deltaThresholdPrimitive = deltaThresholdPrimitives[i];
 
         // Has this primitive member changed?
         // (Current value and last value primitive members differ by more than the delta threshold value primitive member?)
-        bool hasChanged = (Math::Abs(currentValuePrimitiveMember - lastValuePrimitiveMember) > deltaThresholdPrimitiveMember);
+        bool hasChanged = (Math::Abs(currentValuePrimitive - lastValuePrimitive) > deltaThresholdPrimitive);
 
         // Write 'Has Changed?' Flag
         bitStream.Write(hasChanged);
@@ -1169,7 +1188,7 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
           if(useHalfFloats)
           {
             // Convert primitive member to float then to half float
-            u16 halfFloat = HalfFloatConverter::ToHalfFloat((float)currentValuePrimitiveMember);
+            u16 halfFloat = HalfFloatConverter::ToHalfFloat((float)currentValuePrimitive);
 
             // Write half float
             if(!bitStream.Write(halfFloat)) // Unable?
@@ -1182,7 +1201,7 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
           else
           {
             // Write primitive member
-            if(!bitStream.Write(currentValuePrimitiveMember)) // Unable?
+            if(!bitStream.Write(currentValuePrimitive)) // Unable?
             {
               Assert(false);
               return false;
@@ -1194,16 +1213,19 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
     // Do not use delta threshold?
     else
     {
+      // Get primitive members
+      PrimitiveType*       currentValuePrimitives = currentValue.GetPrimitivesOrNull<PropertyType>();
+      const PrimitiveType* lastValuePrimitives    = lastValue.GetPrimitivesOrNull<PropertyType>();
+
       // For each primitive member
       for(size_t i = 0; i < PrimitiveCount; ++i)
       {
-        // Get primitive members
-        PrimitiveType&       currentValuePrimitiveMember = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-        const PrimitiveType& lastValuePrimitiveMember    = lastValue.GetPrimitiveMemberOrError<PropertyType>(i);
+        PrimitiveType&       currentValuePrimitive = currentValuePrimitives[i];
+        const PrimitiveType& lastValuePrimitive    = lastValuePrimitives[i];
 
         // Has this primitive member changed?
         // (Current value and last value primitive members differ?)
-        bool hasChanged = (currentValuePrimitiveMember != lastValuePrimitiveMember);
+        bool hasChanged = (currentValuePrimitive != lastValuePrimitive);
 
         // Write 'Has Changed?' Flag
         bitStream.Write(hasChanged);
@@ -1213,7 +1235,7 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
           if(useHalfFloats)
           {
             // Convert primitive member to float then to half float
-            u16 halfFloat = HalfFloatConverter::ToHalfFloat((float)currentValuePrimitiveMember);
+            u16 halfFloat = HalfFloatConverter::ToHalfFloat((float)currentValuePrimitive);
 
             // Write half float
             if(!bitStream.Write(halfFloat)) // Unable?
@@ -1226,7 +1248,7 @@ bool SerializeCustom(BitStream& bitStream, const ReplicaProperty* replicaPropert
           else
           {
             // Write primitive member
-            if(!bitStream.Write(currentValuePrimitiveMember)) // Unable?
+            if(!bitStream.Write(currentValuePrimitive)) // Unable?
             {
               Assert(false);
               return false;
@@ -1266,31 +1288,36 @@ bool SerializeQuantizedCustom(BitStream& bitStream, const ReplicaProperty* repli
   const Variant& quantum              = replicaPropertyType->GetDeltaThreshold();
 
   // (Current and last values should be non-empty)
-  Assert(currentValue.IsNotEmpty());
-  Assert(lastValue.IsNotEmpty());
+  ReturnIf(currentValue.IsEmpty(), false, "Empty current value");
+  ReturnIf(lastValue.IsEmpty(), false, "Empty last value");
 
   // (Quantization should be enabled and our quantization parameters should be non-empty)
-  Assert(useQuantization
-      && quantizationRangeMin.IsNotEmpty()
-      && quantizationRangeMax.IsNotEmpty()
-      && quantum.IsNotEmpty());
+  ReturnIf(useQuantization == false, false, "Quantization is not enabled");
+  ReturnIf(quantizationRangeMin.IsEmpty(), false, "Empty quantization range min");
+  ReturnIf(quantizationRangeMax.IsEmpty(), false, "Empty quantization range max");
+  ReturnIf(quantum.IsEmpty(), false, "Empty quantum");
 
   //    Serialize all primitive members?
   // OR Force serialization of all primitive members?
   if(serializationMode == SerializationMode::All
   || forceAll)
   {
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives         = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMinPrimitives = quantizationRangeMin.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMaxPrimitives = quantizationRangeMax.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantumPrimitives              = quantum.GetPrimitivesOrNull<PropertyType>();
+
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember         = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMinPrimitiveMember = quantizationRangeMin.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMaxPrimitiveMember = quantizationRangeMax.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantumPrimitiveMember              = quantum.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive         = currentValuePrimitives[i];
+      const PrimitiveType& quantizationRangeMinPrimitive = quantizationRangeMinPrimitives[i];
+      const PrimitiveType& quantizationRangeMaxPrimitive = quantizationRangeMaxPrimitives[i];
+      const PrimitiveType& quantumPrimitive              = quantumPrimitives[i];
 
       // Write primitive member quantized
-      if(!bitStream.WriteQuantized(currentValuePrimitiveMember, quantizationRangeMinPrimitiveMember, quantizationRangeMaxPrimitiveMember, quantumPrimitiveMember)) // Unable?
+      if(!bitStream.WriteQuantized(currentValuePrimitive, quantizationRangeMinPrimitive, quantizationRangeMaxPrimitive, quantumPrimitive)) // Unable?
       {
         Assert(false);
         return false;
@@ -1307,31 +1334,36 @@ bool SerializeQuantizedCustom(BitStream& bitStream, const ReplicaProperty* repli
 
     // Get delta threshold value for comparison
     const Variant& deltaThreshold = replicaPropertyType->GetDeltaThreshold();
+    ReturnIf(deltaThreshold.IsEmpty(), false, "Empty delta threshold");
 
-    // (Delta threshold value should be non-empty)
-    Assert(deltaThreshold.IsNotEmpty());
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives         = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* lastValuePrimitives            = lastValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* deltaThresholdPrimitives       = deltaThreshold.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMinPrimitives = quantizationRangeMin.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMaxPrimitives = quantizationRangeMax.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantumPrimitives              = quantum.GetPrimitivesOrNull<PropertyType>();
 
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember         = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& lastValuePrimitiveMember            = lastValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& deltaThresholdPrimitiveMember       = deltaThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMinPrimitiveMember = quantizationRangeMin.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMaxPrimitiveMember = quantizationRangeMax.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantumPrimitiveMember              = quantum.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive         = currentValuePrimitives[i];
+      const PrimitiveType& lastValuePrimitive            = lastValuePrimitives[i];
+      const PrimitiveType& deltaThresholdPrimitive       = deltaThresholdPrimitives[i];
+      const PrimitiveType& quantizationRangeMinPrimitive = quantizationRangeMinPrimitives[i];
+      const PrimitiveType& quantizationRangeMaxPrimitive = quantizationRangeMaxPrimitives[i];
+      const PrimitiveType& quantumPrimitive              = quantumPrimitives[i];
 
       // Has this primitive member changed?
       // (Current value and last value primitive members differ by more than the delta threshold value primitive member?)
-      bool hasChanged = (Math::Abs(currentValuePrimitiveMember - lastValuePrimitiveMember) > deltaThresholdPrimitiveMember);
+      bool hasChanged = (Math::Abs(currentValuePrimitive - lastValuePrimitive) > deltaThresholdPrimitive);
 
       // Write 'Has Changed?' Flag
       bitStream.Write(hasChanged);
       if(hasChanged) // Has changed?
       {
         // Write primitive member quantized
-        if(!bitStream.WriteQuantized(currentValuePrimitiveMember, quantizationRangeMinPrimitiveMember, quantizationRangeMaxPrimitiveMember, quantumPrimitiveMember)) // Unable?
+        if(!bitStream.WriteQuantized(currentValuePrimitive, quantizationRangeMinPrimitive, quantizationRangeMaxPrimitive, quantumPrimitive)) // Unable?
         {
           Assert(false);
           return false;
@@ -1404,18 +1436,20 @@ bool DeserializeCustom(Variant& newValue, BitStream& bitStream, ReplicaProperty*
   bool                    useHalfFloats     = replicaPropertyType->GetUseHalfFloats();
 
   // (Current value should be non-empty)
-  Assert(currentValue.IsNotEmpty());
+  ReturnIf(currentValue.IsEmpty(), false, "Empty current value");
 
   //    Serialize all primitive members?
   // OR Force serialization of all primitive members?
   if(serializationMode == SerializationMode::All
   || forceAll)
   {
+    // Get primitive members
+    PrimitiveType* currentValuePrimitives = currentValue.GetPrimitivesOrNull<PropertyType>();
+
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive member
-      PrimitiveType& currentValuePrimitiveMember = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType& currentValuePrimitive = currentValuePrimitives[i];
 
       // Use half floats?
       if(useHalfFloats)
@@ -1429,13 +1463,13 @@ bool DeserializeCustom(Variant& newValue, BitStream& bitStream, ReplicaProperty*
         }
 
         // Convert half float to float then to primitive member
-        currentValuePrimitiveMember = (PrimitiveType)HalfFloatConverter::ToFloat(halfFloat);
+        currentValuePrimitive = (PrimitiveType)HalfFloatConverter::ToFloat(halfFloat);
       }
       // Do not use half floats?
       else
       {
         // Read primitive member
-        if(!bitStream.Read(currentValuePrimitiveMember)) // Unable?
+        if(!bitStream.Read(currentValuePrimitive)) // Unable?
         {
           Assert(false);
           return false;
@@ -1463,13 +1497,15 @@ bool DeserializeCustom(Variant& newValue, BitStream& bitStream, ReplicaProperty*
     // we want to fill in the other primitive members with the interpolated values
     // we have from that point in time when this received value occurred)
     currentValue = replicaProperty->SampleCurve(timestamp);
-    Assert(currentValue.IsNotEmpty());
+    ReturnIf(currentValue.IsEmpty(), false, "Empty current value from sampling received value curve");
+
+    // Get primitive members
+    PrimitiveType* currentValuePrimitives = currentValue.GetPrimitivesOrNull<PropertyType>();
 
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive member
-      PrimitiveType& currentValuePrimitiveMember = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType& currentValuePrimitive = currentValuePrimitives[i];
 
       // Read 'Has Changed?' Flag
       bool hasChanged;
@@ -1488,13 +1524,13 @@ bool DeserializeCustom(Variant& newValue, BitStream& bitStream, ReplicaProperty*
           }
 
           // Convert half float to float then to primitive member
-          currentValuePrimitiveMember = (PrimitiveType)HalfFloatConverter::ToFloat(halfFloat);
+          currentValuePrimitive = (PrimitiveType)HalfFloatConverter::ToFloat(halfFloat);
         }
         // Do not use half floats?
         else
         {
           // Read primitive member
-          if(!bitStream.Read(currentValuePrimitiveMember)) // Unable?
+          if(!bitStream.Read(currentValuePrimitive)) // Unable?
           {
             Assert(false);
             return false;
@@ -1534,30 +1570,35 @@ bool DeserializeQuantizedCustom(Variant& newValue, BitStream& bitStream, Replica
   const Variant& quantum              = replicaPropertyType->GetDeltaThreshold();
 
   // (Current value should be non-empty)
-  Assert(currentValue.IsNotEmpty());
+  ReturnIf(currentValue.IsEmpty(), false, "Empty current value");
 
   // (Quantization should be enabled and our quantization parameters should be non-empty)
-  Assert(useQuantization
-      && quantizationRangeMin.IsNotEmpty()
-      && quantizationRangeMax.IsNotEmpty()
-      && quantum.IsNotEmpty());
+  ReturnIf(useQuantization == false, false, "Quantization is not enabled");
+  ReturnIf(quantizationRangeMin.IsEmpty(), false, "Empty quantization range min");
+  ReturnIf(quantizationRangeMax.IsEmpty(), false, "Empty quantization range max");
+  ReturnIf(quantum.IsEmpty(), false, "Empty quantum");
 
   //    Serialize all primitive members?
   // OR Force serialization of all primitive members?
   if(serializationMode == SerializationMode::All
   || forceAll)
   {
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives         = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMinPrimitives = quantizationRangeMin.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMaxPrimitives = quantizationRangeMax.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantumPrimitives              = quantum.GetPrimitivesOrNull<PropertyType>();
+
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember         = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMinPrimitiveMember = quantizationRangeMin.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMaxPrimitiveMember = quantizationRangeMax.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantumPrimitiveMember              = quantum.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive         = currentValuePrimitives[i];
+      const PrimitiveType& quantizationRangeMinPrimitive = quantizationRangeMinPrimitives[i];
+      const PrimitiveType& quantizationRangeMaxPrimitive = quantizationRangeMaxPrimitives[i];
+      const PrimitiveType& quantumPrimitive              = quantumPrimitives[i];
 
       // Read primitive member quantized
-      if(!bitStream.ReadQuantized(currentValuePrimitiveMember, quantizationRangeMinPrimitiveMember, quantizationRangeMaxPrimitiveMember, quantumPrimitiveMember)) // Unable?
+      if(!bitStream.ReadQuantized(currentValuePrimitive, quantizationRangeMinPrimitive, quantizationRangeMaxPrimitive, quantumPrimitive)) // Unable?
       {
         Assert(false);
         return false;
@@ -1577,16 +1618,21 @@ bool DeserializeQuantizedCustom(Variant& newValue, BitStream& bitStream, Replica
     // we want to fill in the other primitive members with the interpolated values
     // we have from that point in time when this received value occurred)
     currentValue = replicaProperty->SampleCurve(timestamp);
-    Assert(currentValue.IsNotEmpty());
+    ReturnIf(currentValue.IsEmpty(), false, "Empty current value from sampling received value curve");
+
+    // Get primitive members
+    PrimitiveType*       currentValuePrimitives         = currentValue.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMinPrimitives = quantizationRangeMin.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantizationRangeMaxPrimitives = quantizationRangeMax.GetPrimitivesOrNull<PropertyType>();
+    const PrimitiveType* quantumPrimitives              = quantum.GetPrimitivesOrNull<PropertyType>();
 
     // For each primitive member
     for(size_t i = 0; i < PrimitiveCount; ++i)
     {
-      // Get primitive members
-      PrimitiveType&       currentValuePrimitiveMember         = currentValue.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMinPrimitiveMember = quantizationRangeMin.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantizationRangeMaxPrimitiveMember = quantizationRangeMax.GetPrimitiveMemberOrError<PropertyType>(i);
-      const PrimitiveType& quantumPrimitiveMember              = quantum.GetPrimitiveMemberOrError<PropertyType>(i);
+      PrimitiveType&       currentValuePrimitive         = currentValuePrimitives[i];
+      const PrimitiveType& quantizationRangeMinPrimitive = quantizationRangeMinPrimitives[i];
+      const PrimitiveType& quantizationRangeMaxPrimitive = quantizationRangeMaxPrimitives[i];
+      const PrimitiveType& quantumPrimitive              = quantumPrimitives[i];
 
       // Read 'Has Changed?' Flag
       bool hasChanged;
@@ -1594,7 +1640,7 @@ bool DeserializeQuantizedCustom(Variant& newValue, BitStream& bitStream, Replica
       if(hasChanged) // Has changed?
       {
         // Read primitive member quantized
-        if(!bitStream.ReadQuantized(currentValuePrimitiveMember, quantizationRangeMinPrimitiveMember, quantizationRangeMaxPrimitiveMember, quantumPrimitiveMember)) // Unable?
+        if(!bitStream.ReadQuantized(currentValuePrimitive, quantizationRangeMinPrimitive, quantizationRangeMaxPrimitive, quantumPrimitive)) // Unable?
         {
           Assert(false);
           return false;
@@ -2210,14 +2256,16 @@ void SetDeltaThresholdCustom(ReplicaPropertyType* replicaPropertyType, const Var
   // Correct the given delta threshold (every primitive member must be non-zero and positive)
   Variant correctedDeltaThreshold = deltaThreshold;
 
+  // Get primitive members
+  PrimitiveType* correctedDeltaThresholdPrimitives = correctedDeltaThreshold.GetPrimitivesOrNull<PropertyType>();
+
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get primitive members
-    PrimitiveType& correctedDeltaThresholdPrimitiveMember = correctedDeltaThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
+    PrimitiveType& correctedDeltaThresholdPrimitive = correctedDeltaThresholdPrimitives[i];
 
     // Correct primitive member (make the value non-zero and positive)
-    correctedDeltaThresholdPrimitiveMember = NonZeroAbs(correctedDeltaThresholdPrimitiveMember);
+    correctedDeltaThresholdPrimitive = NonZeroAbs(correctedDeltaThresholdPrimitive);
   }
 
   // Set corrected delta threshold
@@ -2385,15 +2433,18 @@ bool IsPrimitiveMemberLessThanCustom(const Variant& lhs, const Variant& rhs)
   typedef typename BasicNativeTypePrimitiveMembers<PropertyType>::Type PrimitiveType;
   constexpr size_t PrimitiveCount = BasicNativeTypePrimitiveMembers<PropertyType>::Count;
 
+  // Get primitive members
+  const PrimitiveType* lhsPrimitives = lhs.GetPrimitivesOrNull<PropertyType>();
+  const PrimitiveType* rhsPrimitives = rhs.GetPrimitivesOrNull<PropertyType>();
+
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get primitive members
-    const PrimitiveType& lhsPrimitiveMember = lhs.GetPrimitiveMemberOrError<PropertyType>(i);
-    const PrimitiveType& rhsPrimitiveMember = rhs.GetPrimitiveMemberOrError<PropertyType>(i);
+    const PrimitiveType& lhsPrimitive = lhsPrimitives[i];
+    const PrimitiveType& rhsPrimitive = rhsPrimitives[i];
 
     // Lhs primitive is less than rhs primitive?
-    if(lhsPrimitiveMember < rhsPrimitiveMember)
+    if(lhsPrimitive < rhsPrimitive)
       return true;
   }
 
@@ -2689,14 +2740,16 @@ void SetSnapThresholdCustom(ReplicaPropertyType* replicaPropertyType, const Vari
   // Correct the given snap threshold (every primitive member must be non-zero and positive)
   Variant correctedSnapThreshold = snapThreshold;
 
+  // Get primitive members
+  PrimitiveType* correctedSnapThresholdPrimitives = correctedSnapThreshold.GetPrimitivesOrNull<PropertyType>();
+
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get primitive members
-    PrimitiveType& correctedSnapThresholdPrimitiveMember = correctedSnapThreshold.GetPrimitiveMemberOrError<PropertyType>(i);
+    PrimitiveType& correctedSnapThresholdPrimitive = correctedSnapThresholdPrimitives[i];
 
     // Correct primitive member (make the value non-zero and positive)
-    correctedSnapThresholdPrimitiveMember = NonZeroAbs(correctedSnapThresholdPrimitiveMember);
+    correctedSnapThresholdPrimitive = NonZeroAbs(correctedSnapThresholdPrimitive);
   }
 
   // Set corrected snap threshold

@@ -92,15 +92,23 @@ public:
   /// Returns true if the variant stored type is the specified native type, else false
   bool Is(NativeType* nativeType) const;
 
-  /// Returns the stored value if the variant stored type is T, else asserts and returns an invalid T
-  template <typename T, typename UnqualifiedType = typename Decay<T>::Type>
-  UnqualifiedType& GetOrError() const;
+  /// Returns a reference to the stored value if the variant stored type is T, else asserts and returns a reference to an invalid T
+  template <typename T, typename U = typename Decay<T>::Type>
+  const U& GetOrError() const;
+  /// Returns a reference to the stored value if the variant stored type is T, else asserts and returns a reference to an invalid T
+  template <typename T, typename U = typename Decay<T>::Type>
+  U& GetOrError();
+
   /// Returns the stored value if the variant stored type is T, else defaultValue
-  template <typename T, typename UnqualifiedType = typename Decay<T>::Type>
-  UnqualifiedType& GetOrDefault(const UnqualifiedType& defaultValue = UnqualifiedType()) const;
+  template <typename T, typename U = typename Decay<T>::Type>
+  U GetOrDefault(const U& defaultValue = U()) const;
+
   /// Returns a pointer to the stored value if the variant stored type is T, else nullptr
-  template <typename T, typename UnqualifiedType = typename Decay<T>::Type>
-  UnqualifiedType* GetOrNull() const;
+  template <typename T, typename U = typename Decay<T>::Type>
+  const U* GetOrNull() const;
+  /// Returns a pointer to the stored value if the variant stored type is T, else nullptr
+  template <typename T, typename U = typename Decay<T>::Type>
+  U* GetOrNull();
 
   /// Returns a pointer to the stored value if the variant is non-empty, else nullptr
   void* GetData() const;
@@ -192,25 +200,17 @@ public:
   //
 
   /// (Only defined for arithmetic types)
-  /// Returns the stored value's primitive member at the specified index if the variant stored type is T, else asserts and returns an invalid primitive
-  template <typename T, typename UnqualifiedType = typename Decay<T>::Type,
-            TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType = BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
-  PrimitiveType& GetPrimitiveMemberOrError(size_t index) const;
-
+  /// Returns a pointer to the arithmetic stored value as it's underlying primitive array if the variant stored type is T, else nullptr
+  template <typename T, typename U = typename Decay<T>::Type,
+            TF_ENABLE_IF(IsBasicNativeTypeArithmetic<U>::Value),
+            typename PrimitiveType = BasicNativeTypePrimitiveMembers<U>::Type>
+  const PrimitiveType* GetPrimitivesOrNull() const;
   /// (Only defined for arithmetic types)
-  /// Returns the stored value's primitive member at the specified index if the variant stored type is T, else defaultValue
-  template <typename T, typename UnqualifiedType = typename Decay<T>::Type,
-            TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType = BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
-  PrimitiveType& GetPrimitiveMemberOrDefault(size_t index, const PrimitiveType& defaultValue = PrimitiveType()) const;
-
-  /// (Only defined for arithmetic types)
-  /// Returns a pointer to the stored value's primitive member at the specified index if the variant stored type is T, else nullptr
-  template <typename T, typename UnqualifiedType = typename Decay<T>::Type,
-            TF_ENABLE_IF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType = BasicNativeTypePrimitiveMembers<UnqualifiedType>::Type>
-  PrimitiveType* GetPrimitiveMemberOrNull(size_t index) const;
+  /// Returns a pointer to the arithmetic stored value as it's underlying primitive array if the variant stored type is T, else nullptr
+  template <typename T, typename U = typename Decay<T>::Type,
+            TF_ENABLE_IF(IsBasicNativeTypeArithmetic<U>::Value),
+            typename PrimitiveType = BasicNativeTypePrimitiveMembers<U>::Type>
+  PrimitiveType* GetPrimitivesOrNull();
 
 private:
   //

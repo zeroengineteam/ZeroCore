@@ -116,6 +116,7 @@ struct BasicNativeTypePrimitiveMembers
 {
   typedef void Type;
   static const size_t Count = 0;
+  typedef void ArrayType;
 };
 
 /// Define basic native type macros
@@ -175,6 +176,7 @@ struct BasicNativeTypePrimitiveMembers<T>                                       
 {                                                                                 \
   typedef T Type;                                                                 \
   static const size_t Count = 1;                                                  \
+  typedef T ArrayType[1];                                                         \
 };
 
 #define DeclareBasicNativeTypeMultiPrimitive(T, Name, PrimitiveT, PrimitiveCount) \
@@ -210,6 +212,7 @@ struct BasicNativeTypePrimitiveMembers<T>                                       
 {                                                                                 \
   typedef PrimitiveT Type;                                                        \
   static const size_t Count = PrimitiveCount;                                     \
+  typedef PrimitiveT ArrayType[PrimitiveCount];                                   \
 };
 
 // Include basic native type template specializations

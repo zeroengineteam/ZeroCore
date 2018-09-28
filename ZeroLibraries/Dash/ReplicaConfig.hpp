@@ -417,14 +417,17 @@ Bits SerializeKnownBasicVariantCustom(SerializeDirection::Enum direction, BitStr
   // Get starting bits count
   Bits startBits = bitStream.GetBitsSerialized(direction);
 
+  // Get primitive members
+  PrimitiveType* valuePrimitives = value.GetPrimitivesOrNull<T>();
+  ReturnIf(valuePrimitives == nullptr, 0, "Unable to get value primitives");
+
   // For each primitive member
   for(size_t i = 0; i < PrimitiveCount; ++i)
   {
-    // Get the primitive member to be serialized
-    PrimitiveType& valuePrimitiveMember = value.GetPrimitiveMemberOrError<T>(i);
+    PrimitiveType& valuePrimitive = valuePrimitives[i];
 
     // Serialize primitive member
-    if(!bitStream.Serialize(direction, valuePrimitiveMember)) // Unable?
+    if(!bitStream.Serialize(direction, valuePrimitive)) // Unable?
       return 0;
   }
 

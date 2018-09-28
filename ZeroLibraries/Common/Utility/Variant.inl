@@ -78,36 +78,48 @@ bool Variant::Is() const
   return Is(NativeTypeOf(T));
 }
 
-template <typename T, typename UnqualifiedType>
-UnqualifiedType& Variant::GetOrError() const
+template <typename T, typename U>
+const U& Variant::GetOrError() const
 {
   // Get stored value
-  if(UnqualifiedType* value = GetOrNull<UnqualifiedType>()) // Successful?
+  if(const U* value = GetOrNull<U>()) // Successful?
     return *value;
 
   Error("%s%s", String::Format("Unable to get stored value of specified type '%s' from Variant - ", NativeTypeOf(T)->mDebugTypeName).c_str(),
                 (mNativeType == nullptr ? "Variant is empty" : String::Format("Variant's stored value is type '%s'", mNativeType->mDebugTypeName).c_str()));
-  return GetInvalidObject<UnqualifiedType>();
+  return GetInvalidObject<U>();
 }
-template <typename T, typename UnqualifiedType>
-UnqualifiedType& Variant::GetOrDefault(const UnqualifiedType& defaultValue) const
+template <typename T, typename U>
+U& Variant::GetOrError()
+{
+  return const_cast<U&>(const_cast<const Variant*>(this)->GetOrError<U>());
+}
+
+template <typename T, typename U>
+U Variant::GetOrDefault(const U& defaultValue) const
 {
   // Get stored value
-  if(UnqualifiedType* value = GetOrNull<UnqualifiedType>()) // Successful?
+  if(const U* value = GetOrNull<U>()) // Successful?
     return *value;
 
-  return (UnqualifiedType&)defaultValue;
+  return defaultValue;
 }
-template <typename T, typename UnqualifiedType>
-UnqualifiedType* Variant::GetOrNull() const
+
+template <typename T, typename U>
+const U* Variant::GetOrNull() const
 {
   // Variant is not storing a value of type T?
-  if(!Is<UnqualifiedType>())
+  if(!Is<U>())
     return nullptr;
 
   // Get stored value
-  UnqualifiedType* value = reinterpret_cast<UnqualifiedType*>(GetData());
+  U* value = reinterpret_cast<U*>(GetData());
   return value;
+}
+template <typename T, typename U>
+U* Variant::GetOrNull()
+{
+  return const_cast<U*>(const_cast<const Variant*>(this)->GetOrNull<U>());
 }
 
 template <typename T>
@@ -136,11 +148,11 @@ template <typename T>
 void Variant::DefaultConstruct()
 {
   // Unqualify type
-  typedef typename Decay<T>::Type UnqualifiedType;
+  typedef typename Decay<T>::Type U;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
   StaticAssert(VariantTypeRequiresCopyConstructorAndDestructor0,
-               has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
+               has_copy_constructor<U>::value && has_destructor<U>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 
   // Destroy current stored value, if any
@@ -163,11 +175,11 @@ template <typename T>
 void Variant::Assign(const T& rhs)
 {
   // Unqualify type
-  typedef typename Decay<T>::Type UnqualifiedType;
+  typedef typename Decay<T>::Type U;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
   StaticAssert(VariantTypeRequiresCopyConstructorAndDestructor1,
-               has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
+               has_copy_constructor<U>::value && has_destructor<U>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 
   // Destroy current stored value, if any
@@ -180,7 +192,7 @@ void Variant::Assign(const T& rhs)
   InternalReplaceStoredType(newStoredType);
 
   // Copy construct the new stored value
-  const UnqualifiedType* unqualifiedValue = static_cast<const UnqualifiedType*>(&rhs);
+  const U* unqualifiedValue = static_cast<const U*>(&rhs);
   InternalCopyConstructValue(unqualifiedValue);
 
   // (Sanity check)
@@ -190,11 +202,11 @@ template <typename T>
 void Variant::Assign(MoveReference<T> rhs)
 {
   // Unqualify type
-  typedef typename Decay<T>::Type UnqualifiedType;
+  typedef typename Decay<T>::Type U;
 
   // (Verify type is copy constructible and destructible, else fail to compile)
   StaticAssert(VariantTypeRequiresCopyConstructorAndDestructor2,
-               has_copy_constructor<UnqualifiedType>::value && has_destructor<UnqualifiedType>::value,
+               has_copy_constructor<U>::value && has_destructor<U>::value,
                "Types assigned to variant must have both an accessible copy constructor and destructor.");
 
   // Destroy current stored value, if any
@@ -207,7 +219,7 @@ void Variant::Assign(MoveReference<T> rhs)
   InternalReplaceStoredType(newStoredType);
 
   // Move construct the new stored value
-  UnqualifiedType* unqualifiedValue = static_cast<UnqualifiedType*>(&rhs);
+  U* unqualifiedValue = static_cast<U*>(&rhs);
   InternalMoveConstructValue(unqualifiedValue);
 
   // (Sanity check)
@@ -218,50 +230,19 @@ void Variant::Assign(MoveReference<T> rhs)
 // Primitive Member Access (Arithmetic Types Only)
 //
 
-template <typename T, typename UnqualifiedType,
-            TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType>
-PrimitiveType& Variant::GetPrimitiveMemberOrError(size_t index) const
+template <typename T, typename U,
+          TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<U>::Value),
+          typename PrimitiveType>
+const PrimitiveType* Variant::GetPrimitivesOrNull() const
 {
-  // Get stored value's primitive member at the specified index
-  if(PrimitiveType* primitiveValue = GetPrimitiveMemberOrNull<T>(index)) // Successful?
-    return *primitiveValue;
-
-  Error("%s%s", String::Format("Unable to get primitive member on stored value of specified type '%s' from Variant - ", NativeTypeOf(T)->mDebugTypeName).c_str(),
-                (mNativeType == nullptr ? "Variant is empty" : String::Format("Variant's stored value is type '%s'", mNativeType->mDebugTypeName).c_str()));
-  return GetInvalidObject<PrimitiveType>();
+  return reinterpret_cast<const PrimitiveType*>(GetOrNull<U>());
 }
-
-template <typename T, typename UnqualifiedType,
-            TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType>
-PrimitiveType& Variant::GetPrimitiveMemberOrDefault(size_t index, const PrimitiveType& defaultValue) const
+template <typename T, typename U,
+          TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<U>::Value),
+          typename PrimitiveType>
+PrimitiveType* Variant::GetPrimitivesOrNull()
 {
-  // Get stored value's primitive member at the specified index
-  if(PrimitiveType* primitiveValue = GetPrimitiveMemberOrNull<T>(index)) // Successful?
-    return *primitiveValue;
-
-  return (PrimitiveType&)defaultValue;
-}
-
-template <typename T, typename UnqualifiedType,
-            TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-            typename PrimitiveType>
-PrimitiveType* Variant::GetPrimitiveMemberOrNull(size_t index) const
-{
-  // Primitive member info
-  static const size_t PrimitiveCount = BasicNativeTypePrimitiveMembers<Decay<T>::Type>::Count;
-
-  // (Specified index should not be out of bounds)
-  ErrorIf(index >= PrimitiveCount, "Specified index is out of bounds while attempting to access a primitive member on variant's stored value");
-
-  // Variant is not storing a value of type T?
-  if(!Is<T>())
-    return nullptr;
-
-  // Get a pointer to stored value's primitive member at the specified index
-  PrimitiveType* primitiveValues = reinterpret_cast<PrimitiveType*>(GetData());
-  return (primitiveValues + index);
+  return reinterpret_cast<PrimitiveType*>(GetOrNull<U>());
 }
 
 //
