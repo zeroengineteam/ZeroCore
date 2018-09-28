@@ -124,7 +124,7 @@ void NetUser::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   Cog* owner = GetOwner();
 
   // Add 'built-in' net user channel
-  NetChannel* netUserChannel = AddNetChannel("NetUser");
+  NetChannel* netUserChannel = AddNetChannel(cNetUser);
   if(!netUserChannel) // Unable?
   {
     DoNotifyError("Unable to Add NetUser C++ NetProperties", String::Format("Unable to add built-in 'NetUser' channel on the NetUser '%s'", owner->GetDescription().c_str()));

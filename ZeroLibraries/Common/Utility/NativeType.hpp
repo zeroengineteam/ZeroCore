@@ -336,6 +336,9 @@ typedef String (*ObjectToStringFn) (const void* source, bool shortFormat);
 /// Parses the source string as the erased type and assigns the result to the object at destination
 typedef void (*StringToObjectFn) (StringRange source, void* destination);
 
+/// Converts and assigns each primitive member of the arithmetic source object to the corresponding primitive member of the arithmetic destination object
+typedef void (*ConvertArithmeticObjectFn)(const void* source, void* destination);
+
 //
 // Transparent Function Definitions:
 // Satisfies the opaque function interface for any given type.
@@ -443,9 +446,31 @@ ZeroSharedTemplate void StringToObject(StringRange source, void* destination)
   ToValue(source, destinationObject);
 }
 
+/// Converts and assigns each primitive member of the arithmetic source object to the corresponding primitive member of the arithmetic destination object
+/// (Both SourceType and DestinationType must be arithmetic basic native types)
+template <typename SourceType, typename DestinationType>
+ZeroSharedTemplate void ConvertArithmeticObject(const void* source, void* destination)
+{
+  // Get primitive member type info
+  typedef typename BasicNativeTypePrimitiveMembers<SourceType>::Type      SourcePrimitiveType;
+  typedef typename BasicNativeTypePrimitiveMembers<DestinationType>::Type DestinationPrimitiveType;
+
+  constexpr size_t SourcePrimitiveCount      = BasicNativeTypePrimitiveMembers<SourceType>::Count;
+  constexpr size_t DestinationPrimitiveCount = BasicNativeTypePrimitiveMembers<DestinationType>::Count;
+  constexpr size_t MinPrimitiveCount         = std::min(SourcePrimitiveCount, DestinationPrimitiveCount);
+
+  // Get source and destination primitive members
+  const SourcePrimitiveType* sourceMembers      = reinterpret_cast<const SourcePrimitiveType*>(source);
+  DestinationPrimitiveType*  destinationMembers = reinterpret_cast<DestinationPrimitiveType*>(destination);
+
+  // Convert and assign each source primitive member over it's corresponding destination primitive member
+  for(size_t i = 0; i < MinPrimitiveCount; ++i)
+    destinationMembers[i] = DestinationPrimitiveType(sourceMembers[i]);
+}
+
 //
 // Transparent Function Generation:
-// Determines at compile-time the appropriate transparent function definition to return for any given type.
+// Determines at compile-time the appropriate transparent function definition to return for any given type as an opaque function pointer.
 // Uses C++ type traits and SFINAE to determine each type's capabilities in order to choose the function with the most appropriate behavior.
 // Returns nullptr to allow for optional type functionality, queryable at runtime to support dynamic programming.
 //
@@ -669,5 +694,188 @@ public:
   /// String to object function
   StringToObjectFn mStringToObjectFn;
 };
+
+//---------------------------------------------------------------------------------//
+//                           Dynamic Dispatch Macros                               //
+//---------------------------------------------------------------------------------//
+
+//
+// Dynamic Dispatch For Basic Native Types
+//
+// Given a native type ID (T) at runtime and a templated function with a template parameter expecting the static type of T,
+// returns the specific instantiation of that templated function with the known static type of T, in the form of FnName<T>.
+//
+// nativeTypeIdT      : The native type ID, identifying a basic native type, to be resolved to it's static type.
+// NativeTypeCategory : Token specifying the category of basic native types to be resolved (must be either All, Arithmetic, or NonBooleanArithmetic).
+// FnName             : Token specifying the name of the templated function to be dispatched. May include namespace prefixes as needed.
+// FnType             : Function type of the templated function to be dispatched. All templated function instantiations must result in this same function type.
+// DefaultReturnValue : Value to be returned if type resolution fails (meaning the given native type ID was not in the category specified).
+//
+// (Note: All possible permutations of FnName<T> within the specified basic native type category will be instantiated as a result of calling this macro.
+// Macro parameter nativeTypeIdT is evaluated at runtime. All other remaining macro parameters are expected to be compile-time constants.)
+#define BasicNativeTypeDynamicDispatch(nativeTypeIdT, NativeTypeCategory, FnName, FnType, DefaultReturnValue) \
+[](NativeTypeId typeIdT) -> FnType                                                                            \
+{                                                                                                             \
+  auto Dispatch = [](NativeTypeId typeIdT) -> FnType                                                          \
+  {                                                                                                           \
+    auto DispatchT = [](auto dummyT) -> FnType                                                                \
+    {                                                                                                         \
+      typedef remove_pointer<TypeOf(dummyT)>::type TypeT;                                                     \
+                                                                                                              \
+      return static_cast<FnType>(FnName<TypeT>);                                                              \
+    };                                                                                                        \
+                                                                                                              \
+    switch(typeIdT)                                                                                           \
+    {                                                                                                         \
+    default:                                                                                                  \
+      return static_cast<FnType>(DefaultReturnValue);                                                         \
+                                                                                                              \
+    InternalBasicNativeTypeDynamicDispatchSwitchCases_##NativeTypeCategory(DispatchT, FnType);                \
+    }                                                                                                         \
+  };                                                                                                          \
+                                                                                                              \
+  return static_cast<FnType>(Dispatch(typeIdT));                                                              \
+}(nativeTypeIdT)
+
+//
+// Dynamic Double-Dispatch For Basic Native Types
+//
+// Given two native type IDs (A and B) at runtime and a templated function with template parameters expecting the static types of A and B,
+// returns the specific instantiation of that templated function with the known static types of A and B, in the form of FnName<A, B>.
+//
+// nativeTypeIdA      : First native type ID, identifying a basic native type, to be resolved to it's static type.
+// nativeTypeIdB      : Second native type ID, identifying a basic native type, to be resolved to it's static type.
+// NativeTypeCategory : Token specifying the category of basic native types to be resolved (must be either All, Arithmetic, or NonBooleanArithmetic).
+// FnName             : Token specifying the name of the templated function to be dispatched. May include namespace prefixes as needed.
+// FnType             : Function type of the templated function to be dispatched. All templated function instantiations must result in this same function type.
+// DefaultReturnValue : Value to be returned if type resolution fails (meaning at least one of the given native type IDs was not in the category specified).
+//
+// (Note: All possible permutations of FnName<A, B> within the specified basic native type category will be instantiated as a result of calling this macro.
+// Macro parameters nativeTypeIdA and nativeTypeIdB are evaluated at runtime. All other remaining macro parameters are expected to be compile-time constants.)
+#define BasicNativeTypeDynamicDoubleDispatch(nativeTypeIdA, nativeTypeIdB, NativeTypeCategory, FnName, FnType, DefaultReturnValue) \
+[](NativeTypeId typeIdA, NativeTypeId typeIdB) -> FnType                                                                           \
+{                                                                                                                                  \
+  auto Dispatch = [](NativeTypeId typeIdA, NativeTypeId typeIdB) -> FnType                                                         \
+  {                                                                                                                                \
+    auto DispatchA = [](auto dummyA, NativeTypeId typeIdB) -> FnType                                                               \
+    {                                                                                                                              \
+      auto DispatchAB = [](auto dummyB, auto dummyA) -> FnType                                                                     \
+      {                                                                                                                            \
+        typedef remove_pointer<TypeOf(dummyA)>::type TypeA;                                                                        \
+        typedef remove_pointer<TypeOf(dummyB)>::type TypeB;                                                                        \
+                                                                                                                                   \
+        return static_cast<FnType>(FnName<TypeA, TypeB>);                                                                          \
+      };                                                                                                                           \
+                                                                                                                                   \
+      typedef remove_pointer<TypeOf(dummyA)>::type TypeA;                                                                          \
+      switch(typeIdB)                                                                                                              \
+      {                                                                                                                            \
+      default:                                                                                                                     \
+        return static_cast<FnType>(DefaultReturnValue);                                                                            \
+                                                                                                                                   \
+      InternalBasicNativeTypeDynamicDispatchSwitchCases_##NativeTypeCategory(DispatchAB, FnType, dummyA);                          \
+      }                                                                                                                            \
+    };                                                                                                                             \
+                                                                                                                                   \
+    switch(typeIdA)                                                                                                                \
+    {                                                                                                                              \
+    default:                                                                                                                       \
+      return static_cast<FnType>(DefaultReturnValue);                                                                              \
+                                                                                                                                   \
+    InternalBasicNativeTypeDynamicDispatchSwitchCases_##NativeTypeCategory(DispatchA, FnType, typeIdB);                            \
+    }                                                                                                                              \
+  };                                                                                                                               \
+                                                                                                                                   \
+  return static_cast<FnType>(Dispatch(typeIdA, typeIdB));                                                                          \
+}(nativeTypeIdA, nativeTypeIdB)
+
+//
+// (Dispatch Helper) All BasicNativeType Category Switch Cases
+//
+#define InternalBasicNativeTypeDynamicDispatchSwitchCases_All(FnName, FnType, ...)                                                \
+                                                                                                                                  \
+/* Include Arithmetic Type Cases */                                                                                               \
+InternalBasicNativeTypeDynamicDispatchSwitchCases_Arithmetic(FnName, FnType, __VA_ARGS__);                                        \
+                                                                                                                                  \
+/* String Type */                                                                                                                 \
+case BasicNativeType::String:                                                                                                     \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::String>::Type*>(nullptr) ,__VA_ARGS__))
+
+//
+// (Dispatch Helper) Arithmetic BasicNativeType Category Switch Cases
+//
+#define InternalBasicNativeTypeDynamicDispatchSwitchCases_Arithmetic(FnName, FnType, ...)                                               \
+                                                                                                                                        \
+/* Include Non-Boolean Arithmetic Type Cases */                                                                                         \
+InternalBasicNativeTypeDynamicDispatchSwitchCases_NonBooleanArithmetic(FnName, FnType, __VA_ARGS__);                                    \
+                                                                                                                                        \
+/* Bool Type */                                                                                                                         \
+case BasicNativeType::Bool:                                                                                                             \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type*>(nullptr) ,__VA_ARGS__));        \
+                                                                                                                                        \
+/* Multi-Primitive Math Types (Only Bool Types) */                                                                                      \
+case BasicNativeType::BoolVector2:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type*>(nullptr) ,__VA_ARGS__)); \
+case BasicNativeType::BoolVector3:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type*>(nullptr) ,__VA_ARGS__)); \
+case BasicNativeType::BoolVector4:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type*>(nullptr) ,__VA_ARGS__))
+
+//
+// (Dispatch Helper) Non-Boolean Arithmetic BasicNativeType Category Switch Cases
+//
+#define InternalBasicNativeTypeDynamicDispatchSwitchCases_NonBooleanArithmetic(FnName, FnType, ...)                                    \
+                                                                                                                                       \
+/* Char Type */                                                                                                                        \
+case BasicNativeType::Char:                                                                                                            \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Char>::Type*>(nullptr) ,__VA_ARGS__));       \
+                                                                                                                                       \
+/* Fixed-Width Signed Integral Types */                                                                                                \
+case BasicNativeType::Int8:                                                                                                            \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Int8>::Type*>(nullptr) ,__VA_ARGS__));       \
+case BasicNativeType::Int16:                                                                                                           \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Int16>::Type*>(nullptr) ,__VA_ARGS__));      \
+case BasicNativeType::Int32:                                                                                                           \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type*>(nullptr) ,__VA_ARGS__));      \
+case BasicNativeType::Int64:                                                                                                           \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type*>(nullptr) ,__VA_ARGS__));      \
+                                                                                                                                       \
+/* Fixed-Width Unsigned Integral Types */                                                                                              \
+case BasicNativeType::Uint8:                                                                                                           \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type*>(nullptr) ,__VA_ARGS__));      \
+case BasicNativeType::Uint16:                                                                                                          \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Uint16>::Type*>(nullptr) ,__VA_ARGS__));     \
+case BasicNativeType::Uint32:                                                                                                          \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Uint32>::Type*>(nullptr) ,__VA_ARGS__));     \
+case BasicNativeType::Uint64:                                                                                                          \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Uint64>::Type*>(nullptr) ,__VA_ARGS__));     \
+                                                                                                                                       \
+/* Floating Point Types */                                                                                                             \
+case BasicNativeType::Float:                                                                                                           \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Float>::Type*>(nullptr) ,__VA_ARGS__));      \
+case BasicNativeType::Double:                                                                                                          \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Double>::Type*>(nullptr) ,__VA_ARGS__));     \
+                                                                                                                                       \
+/* Multi-Primitive Math Types (Excluding Bool Types) */                                                                                \
+case BasicNativeType::IntVector2:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type*>(nullptr) ,__VA_ARGS__)); \
+case BasicNativeType::IntVector3:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type*>(nullptr) ,__VA_ARGS__)); \
+case BasicNativeType::IntVector4:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type*>(nullptr) ,__VA_ARGS__)); \
+case BasicNativeType::Vector2:                                                                                                         \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type*>(nullptr) ,__VA_ARGS__));    \
+case BasicNativeType::Vector3:                                                                                                         \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type*>(nullptr) ,__VA_ARGS__));    \
+case BasicNativeType::Vector4:                                                                                                         \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type*>(nullptr) ,__VA_ARGS__));    \
+case BasicNativeType::Quaternion:                                                                                                      \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type*>(nullptr) ,__VA_ARGS__)); \
+case BasicNativeType::Matrix2:                                                                                                         \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Matrix2>::Type*>(nullptr) ,__VA_ARGS__));    \
+case BasicNativeType::Matrix3:                                                                                                         \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type*>(nullptr) ,__VA_ARGS__));    \
+case BasicNativeType::Matrix4:                                                                                                         \
+  return static_cast<FnType>(FnName( static_cast<BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type*>(nullptr) ,__VA_ARGS__))
 
 } // namespace Zero

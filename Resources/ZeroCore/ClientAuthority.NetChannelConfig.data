@@ -3,7 +3,7 @@ NetChannelConfig
 {
 	var DetectOutgoingChanges = true
 	var AcceptIncomingChanges = true
-	var EventOnOutgoingPropertyChange = true
+	var EventOnOutgoingPropertyChange = false
 	var EventOnIncomingPropertyChange = true
 	var AuthorityMode = AuthorityMode.Fixed
 	var AuthorityDefault = Authority.Client

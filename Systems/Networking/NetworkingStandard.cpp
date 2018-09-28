@@ -113,7 +113,7 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   ZilchInitializeType(NetObjectOnline);
   ZilchInitializeType(NetObjectOffline);
   ZilchInitializeType(NetUserOwnerChanged);
-  ZilchInitializeType(NetChannelPropertyChange);
+  ZilchInitializeType(NetPropertyChanged);
   ZilchInitializeType(NetEventSent);
   ZilchInitializeType(NetEventReceived);
   ZilchInitializeType(NetHostRecordEvent);

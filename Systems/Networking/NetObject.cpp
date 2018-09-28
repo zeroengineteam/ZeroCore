@@ -425,7 +425,7 @@ void NetObject::OnCogNameChanged(Event* event)
   if(IsServer())
   {
     // Replicate name changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if(NetChannel* netObjectChannel = GetNetChannel(cNetObject))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -455,7 +455,7 @@ void NetObject::OnAttached(HierarchyEvent* event)
   if(IsServer())
   {
     // Replicate parent changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if(NetChannel* netObjectChannel = GetNetChannel(cNetObject))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -467,7 +467,7 @@ void NetObject::OnDetached(HierarchyEvent* event)
   if(IsServer())
   {
     // Replicate parent changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if(NetChannel* netObjectChannel = GetNetChannel(cNetObject))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);
@@ -490,7 +490,7 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   Cog* owner = GetOwner();
 
   // Add 'built-in' net object channel
-  NetChannel* netObjectChannel = AddNetChannel("NetObject");
+  NetChannel* netObjectChannel = AddNetChannel(cNetObject);
   if(!netObjectChannel) // Unable?
   {
     DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
@@ -523,7 +523,7 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   }
 
   // Add owning network user net property (replicates network owner changes)
-  NetProperty* netUserOwnerIdProperty = netObjectChannel->AddBasicNetProperty("NetUserOwnerUserId", mNetUserOwnerUserId);
+  NetProperty* netUserOwnerIdProperty = netObjectChannel->AddBasicNetProperty(cNetUserOwnerUserId, mNetUserOwnerUserId);
   if(!netUserOwnerIdProperty) // Unable?
   {
     DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'NetUserOwnerUserId' NetProperty to the 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
@@ -662,7 +662,7 @@ void NetObject::AddNetChannelAuthorityNetProperties()
   Cog* owner = GetOwner();
 
   // Get 'built-in' net object channel
-  NetChannel* netObjectChannel = GetNetChannel("NetObject");
+  NetChannel* netObjectChannel = GetNetChannel(cNetObject);
   if(!netObjectChannel) // Unable?
   {
     DoNotifyError("Unable to Add Built-In Authority NetProperties", String::Format("Unable to get built-in 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
@@ -1824,7 +1824,7 @@ void NetObject::SetNetUserOwnerUserById(NetUserId netUserId)
   if(GetNetUserOwnerUserId() != previousNetUserOwnerUserId)
   {
     // Replicate net user owner ID changes now (if any)
-    if(NetChannel* netObjectChannel = GetNetChannel("NetObject"))
+    if(NetChannel* netObjectChannel = GetNetChannel(cNetObject))
       netObjectChannel->ReplicateNow();
     else
       Assert(false);

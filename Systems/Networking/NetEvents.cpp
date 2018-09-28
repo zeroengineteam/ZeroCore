@@ -97,13 +97,8 @@ namespace Events
   // Network Ownership:
   DefineEvent(NetUserOwnerChanged);
 
-  // Network Channel Property Change:
-  DefineEvent(NetChannelOutgoingPropertyInitialized);
-  DefineEvent(NetChannelIncomingPropertyInitialized);
-  DefineEvent(NetChannelOutgoingPropertyUninitialized);
-  DefineEvent(NetChannelIncomingPropertyUninitialized);
-  DefineEvent(NetChannelOutgoingPropertyChanged);
-  DefineEvent(NetChannelIncomingPropertyChanged);
+  // Network Property Changed:
+  DefineEvent(NetPropertyChanged);
 
   //
   // NetEvent Events
@@ -207,13 +202,8 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
   // Network Ownership:
   ZeroBindEvent(Events::NetUserOwnerChanged, NetUserOwnerChanged);
 
-  // Network Channel Property Change:
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyInitialized,   NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyInitialized,   NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyUninitialized, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyUninitialized, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyChanged,       NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyChanged,       NetChannelPropertyChange);
+  // Network Property Changed:
+  ZeroBindEvent(Events::NetPropertyChanged, NetPropertyChanged);
 
   //
   // NetEvent Events
@@ -788,27 +778,61 @@ ZilchDefineType(NetUserOwnerChanged, builder, type)
   ZilchBindFieldGetterProperty(mCurrentNetUserOwner);
 }
 
-/////////////////////////////////////
-// Network Channel Property Change //
-/////////////////////////////////////
+//////////////////////////////
+// Network Property Changed //
+//////////////////////////////
 
 //---------------------------------------------------------------------------------//
-//                           NetChannelPropertyChange                              //
+//                             NetPropertyChanged                                  //
 //---------------------------------------------------------------------------------//
 
-ZilchDefineType(NetChannelPropertyChange, builder, type)
+ZilchDefineType(NetPropertyChanged, builder, type)
 {
   // Bind documentation
   ZeroBindDocumented();
 
   // Bind properties
+  ZilchBindGetterSetter(PropertyValue);
   ZilchBindFieldGetterProperty(mTimestamp);
   ZilchBindFieldGetterProperty(mReplicationPhase);
   ZilchBindFieldGetterProperty(mDirection);
   ZilchBindFieldGetterProperty(mObject);
-  ZilchBindFieldGetterProperty(mChannelName);
+  ZilchBindFieldGetterProperty(mNetChannel);
+  ZilchBindFieldGetterProperty(mNetProperty);
+  ZilchBindFieldGetterProperty(mLastValue);
+  ZilchBindFieldGetterProperty(mComponent);
   ZilchBindFieldGetterProperty(mComponentName);
   ZilchBindFieldGetterProperty(mPropertyName);
+}
+
+void NetPropertyChanged::SetPropertyValue(AnyParam value)
+{
+  // Missing component?
+  if(!mComponent)
+  {
+    Error("Unable to set property value - Object '%s' is missing component '%s' while trying to access property '%s'",
+          mObject->GetDescription().c_str(), mComponentName.c_str(), mPropertyName.c_str());
+    return;
+  }
+
+  // Set current value
+  bool result = mComponent->SetProperty(mPropertyName, value);
+  Assert(result);
+}
+Any NetPropertyChanged::GetPropertyValue() const
+{
+  // Missing component?
+  if(!mComponent)
+  {
+    Error("Unable to get property value - Object '%s' is missing component '%s' while trying to access property '%s'",
+          mObject->GetDescription().c_str(), mComponentName.c_str(), mPropertyName.c_str());
+    return Any();
+  }
+
+  // Get current value
+  Any result = mComponent->GetProperty(mPropertyName);
+  Assert(result.IsHoldingValue());
+  return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////

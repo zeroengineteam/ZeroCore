@@ -4340,106 +4340,120 @@ void NetPeer::OnInvalidReplica(Replica* replica, bool isForget)
 
 void NetPeer::OnReplicaChannelPropertyChange(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, Replica* replica, ReplicaChannel* replicaChannel, ReplicaProperty* replicaProperty, TransmissionDirection::Enum direction)
 {
-  // (This should only be called on an actual property change)
-  Assert(replicaProperty->GetValue() != replicaProperty->GetLastValue());
+  /// Cached "NetPropertyChanged" event IDs map ( Pair(NetChannelName, NetPropertyName).Hash() -> NetPropertyChangedEventIds )
+  /// Provided solely to improve performance; so we're not recreating the same event ID strings on every change event dispatch for a given net property.
+  /// (Safe to be implemented as lock-less static map because NetPeers always run their update logic on the same main thread.)
+  /// (This caching method prioritizes lookup speed as opposed to memory efficiency, generating some duplicate strings in the process.)
+  typedef ArrayMap<size_t, NetPropertyChangedEventIds> NetPropertyChangedEventIdsMap;
+  static NetPropertyChangedEventIdsMap sNetPropertyChangedEventIdsMap;
 
-  // Get net object
+  // Get net object, channel, and property
   NetObject* netObject = static_cast<NetObject*>(replica);
+  NetChannel* netChannel = static_cast<NetChannel*>(replicaChannel);
+  NetProperty* netProperty = static_cast<NetProperty*>(replicaProperty);
 
-  // This is net object's net user owner ID property change?
-  if(replicaChannel->GetName()  == "NetObject"
-  && replicaProperty->GetName() == "NetUserOwnerUserId")
+  // Get last property value
+  const Variant& lastValue = netProperty->GetLastValue();
+
+  // (This should only be called on an actual property change)
+  Assert(netProperty->GetValue() != lastValue);
+
+  // Get net channel and net property names
+  const String& netChannelName = netChannel->GetName();
+  const String& netPropertyName = netProperty->GetName();
+
+  // Is the built-in "NetObject" channel?
+  if(netChannelName == cNetObject)
   {
-    // (We've configured the channel to only tell us about incoming changes)
+    // (We've configured the built-in NetObject channel to only tell us about incoming changes)
     Assert(direction == TransmissionDirection::Incoming);
 
-    // Get previous net user owner ID
-    const Variant& lastValue = replicaProperty->GetLastValue();
-    NetUserId previousNetUserOwnerUserId = lastValue.GetOrDefault<NetUserId>(0);
-
-    // Has changed?
-    if(netObject->GetNetUserOwnerUserId() != previousNetUserOwnerUserId)
+    // This is net object's net user owner ID property change?
+    if(netPropertyName == cNetUserOwnerUserId)
     {
-      // Handle the net user owner change
-      netObject->HandleNetUserOwnerChanged(previousNetUserOwnerUserId);
+      // Get previous net user owner ID
+      NetUserId previousNetUserOwnerUserId = lastValue.GetOrDefault<NetUserId>(0);
+
+      // Has changed?
+      if(netObject->GetNetUserOwnerUserId() != previousNetUserOwnerUserId)
+      {
+        // Handle the net user owner change
+        netObject->HandleNetUserOwnerChanged(previousNetUserOwnerUserId);
+      }
     }
   }
-  // Other net channel change?
+  // Is the built-in "NetUser" channel?
+  else if(netChannelName == cNetUser)
+  {
+    // (We've configured the built-in NetUser channel to never tell us about changes)
+    Assert(false);
+  }
+  // Is any other channel? (Not a built-in channel?)
   else
   {
-    // (We already configured when to notify the user at the replicator layer)
-
-    // Get combined net property name
-    StringSplitRange combinedNetPropertyName = replicaProperty->GetName().Split("_");
+    // Get combined net property name (formatted as "ComponentName_PropertyName")
+    StringSplitRange combinedNetPropertyName = netPropertyName.Split("_");
 
     // Get component and property names
     String componentName = combinedNetPropertyName.Front();
     combinedNetPropertyName.PopFront();
     String propertyName = combinedNetPropertyName.Front();
 
+    // (Component and property names should not be empty)
+    Assert(!componentName.Empty());
+    Assert(!propertyName.Empty());
+
+    // Convert last value variant to any (if there is a last value available)
+    Any lastValueAny;
+    if(lastValue.IsNotEmpty())
+    {
+      // Attempt to convert basic variant value to any value
+      lastValueAny = ConvertBasicVariantToAny(lastValue);
+      if(!lastValueAny.IsHoldingValue())// Unable? (The variant's stored type is not a basic native type?)
+      {
+        // Get the any value itself from the variant value
+        // (Some property types like enums, resources, and bitstream are expected to be wrapped in an any this way)
+        lastValueAny = lastValue.GetOrError<Any>();
+      }
+    }
+
     // Get net object owner
     Cog* cog = netObject->GetOwner();
+    ReturnIf(!cog,);
 
-    // Create net property change event
-    NetChannelPropertyChange event;
+    // Get component managing the changed property
+    Component* component = cog->GetComponentByName(componentName);
+    ReturnIf(!component,);
+
+    // Create net property changed event
+    NetPropertyChanged event;
     event.mTimestamp        = TimeMsToFloatSeconds(timestamp);
     event.mReplicationPhase = replicationPhase;
     event.mDirection        = direction;
     event.mObject           = cog;
-    event.mChannelName      = replicaChannel->GetName();
+    event.mNetChannel       = netChannel;
+    event.mNetProperty      = netProperty;
+    event.mLastValue        = lastValueAny;
+    event.mComponent        = component;
     event.mComponentName    = componentName;
     event.mPropertyName     = propertyName;
 
-    // Determine net property change event ID (based on direction and replication phase)
-    String eventId;
-    switch(direction)
-    {
-    default:
-    case TransmissionDirection::Unspecified:
-      Assert(false);
-      break;
-    case TransmissionDirection::Outgoing:
+    // Get or create NetPropertyChanged event ID variations for this net channel and net property configuration
+    size_t netPropertyHash = MakePair(netChannelName, netPropertyName).Hash();
+    NetPropertyChangedEventIdsMap::pointer_bool_pair result = sNetPropertyChangedEventIdsMap.FindOrInsert(netPropertyHash, NetPropertyChangedEventIds());
+    NetPropertyChangedEventIds& netPropertyChangedEventIds = result.first->second;
 
-      switch(replicationPhase)
-      {
-      default:
-        Assert(false);
-        break;
-      case ReplicationPhase::Initialization:
-        eventId = Events::NetChannelOutgoingPropertyInitialized;
-        break;
-      case ReplicationPhase::Uninitialization:
-        eventId = Events::NetChannelOutgoingPropertyUninitialized;
-        break;
-      case ReplicationPhase::Change:
-        eventId = Events::NetChannelOutgoingPropertyChanged;
-        break;
-      }
+    // Insert occurred? (First time dispatching a change event for this net channel and net property configuration?)
+    if(result.second)
+      netPropertyChangedEventIds.CreateEventIds(netChannelName, componentName, propertyName);
 
-      break;
-    case TransmissionDirection::Incoming:
-
-      switch(replicationPhase)
-      {
-      default:
-        Assert(false);
-        break;
-      case ReplicationPhase::Initialization:
-        eventId = Events::NetChannelIncomingPropertyInitialized;
-        break;
-      case ReplicationPhase::Uninitialization:
-        eventId = Events::NetChannelIncomingPropertyUninitialized;
-        break;
-      case ReplicationPhase::Change:
-        eventId = Events::NetChannelIncomingPropertyChanged;
-        break;
-      }
-
-      break;
-    }
-
-    // Dispatch net property change event
-    cog->DispatchEvent(eventId, &event);
+    // Dispatch a NetPropertyChanged event for each custom event ID variation in "most specific" to "least specific" order
+    cog->DispatchEvent(netPropertyChangedEventIds.mChannelComponentPropertyEventId, &event); // Ex. "InputChannel_NetPropertyChanged_Player_InputJump"
+    cog->DispatchEvent(netPropertyChangedEventIds.mComponentPropertyEventId, &event);        // Ex. "NetPropertyChanged_Player_InputJump"
+    cog->DispatchEvent(netPropertyChangedEventIds.mChannelComponentEventId, &event);         // Ex. "InputChannel_NetPropertyChanged_Player"
+    cog->DispatchEvent(netPropertyChangedEventIds.mChannelEventId, &event);                  // Ex. "InputChannel_NetPropertyChanged"
+    cog->DispatchEvent(netPropertyChangedEventIds.mComponentEventId, &event);                // Ex. "NetPropertyChanged_Player"
+    cog->DispatchEvent(Events::NetPropertyChanged, &event);                                  // Ex. "NetPropertyChanged"
   }
 }
 

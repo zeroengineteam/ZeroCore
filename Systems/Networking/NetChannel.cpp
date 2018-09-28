@@ -161,7 +161,7 @@ void NetChannel::SetAuthority(Authority::Enum authority)
     if(netObject->IsServer())
     {
       // Replicate authority changes now (if any)
-      if(NetChannel* netObjectChannel = netObject->GetNetChannel("NetObject"))
+      if(NetChannel* netObjectChannel = netObject->GetNetChannel(cNetObject))
         netObjectChannel->ReplicateNow();
       else
         Assert(false);

@@ -156,11 +156,11 @@ public:
   void SetAcceptIncomingChanges(bool acceptIncomingChanges = true);
   bool GetAcceptIncomingChanges() const;
 
-  /// Controls whether or not net channels should dispatch NetChannelOutgoingPropertyChange when an outgoing net property change is detected.
+  /// Controls whether or not net channels should dispatch a net property change event when an outgoing net property change is detected.
   void SetEventOnOutgoingPropertyChange(bool eventOnOutgoingPropertyChange = true);
   bool GetEventOnOutgoingPropertyChange() const;
 
-  /// Controls whether or not net channels should dispatch NetChannelIncomingPropertyChange when an incoming net property change is accepted.
+  /// Controls whether or not net channels should dispatch a net property change event when an incoming net property change is accepted.
   void SetEventOnIncomingPropertyChange(bool eventOnIncomingPropertyChange = true);
   bool GetEventOnIncomingPropertyChange() const;
 
@@ -290,10 +290,10 @@ public:
   /// Controls whether or not net channels should accept incoming changes.
   bool mAcceptIncomingChanges;
 
-  /// Controls whether or not net channels should dispatch NetChannelOutgoingPropertyChange when an outgoing net property change is detected.
+  /// Controls whether or not net channels should dispatch a net property change event when an outgoing net property change is detected.
   bool mEventOnOutgoingPropertyChange;
 
-  /// Controls whether or not net channels should dispatch NetChannelIncomingPropertyChange when an incoming net property change is accepted.
+  /// Controls whether or not net channels should dispatch a net property change event when an incoming net property change is accepted.
   bool mEventOnIncomingPropertyChange;
 
   /// Controls when net channels can modify their change authority.

@@ -15,10 +15,14 @@ namespace Tags
   DeclareTag(Networking);
 }
 
-/// Constants.
-static const String cScriptSource = "ScriptSource";
-static const String cEventId      = "EventId";
-static const String cGameSetup    = "GameSetup";
+/// String constants.
+static const String cScriptSource       = "ScriptSource";
+static const String cEventId            = "EventId";
+static const String cGameSetup          = "GameSetup";
+static const String cNetObject          = "NetObject";
+static const String cNetUser            = "NetUser";
+static const String cNetUserOwnerUserId = "NetUserOwnerUserId";
+static const String cNetPropertyChanged = "NetPropertyChanged";
 
 /// Returns true if the specified property instance is a supported net property, else false.
 bool IsValidNetProperty(Property* property);
@@ -144,9 +148,9 @@ void SetComponentAnyProperty(const Variant& value, Variant& propertyData);
 //
 
 /// Returns the BasicNativeType enum equivalent of the BasicNetType enum value, else BasicNativeType::Unknown.
-BasicNativeType::Enum BasicNetworkToNativeTypeEnum(BasicNetType::Enum value);
+BasicNativeType::Enum BasicNetTypeToBasicNativeTypeEnum(BasicNetType::Enum value);
 /// Returns the BasicNetType enum equivalent of the BasicNativeType enum value, else BasicNetType::Other.
-BasicNetType::Enum BasicNativeToNetworkTypeEnum(BasicNativeType::Enum value);
+BasicNetType::Enum BasicNativeTypeToBasicNetTypeEnum(BasicNativeType::Enum value);
 
 /// Returns true if the event has a property with a NetPeerId attribute, else false.
 bool HasNetPeerIdProperty(Event* event);

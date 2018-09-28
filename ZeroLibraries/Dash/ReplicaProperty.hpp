@@ -41,6 +41,10 @@ public:
 
   /// Operating replica property type
   ReplicaPropertyType* GetReplicaPropertyType() const;
+  /// Operating replica property type's native type
+  NativeType* GetNativeType() const;
+  /// Operating replica property type's native type ID
+  NativeTypeId GetNativeTypeId() const;
 
   /// Returns true if the replica property is valid (added to a valid replica channel), else false
   bool IsValid() const;

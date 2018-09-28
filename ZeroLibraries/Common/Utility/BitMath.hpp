@@ -135,15 +135,15 @@ inline bool IsPlatformNetworkByteOrder(void)
 }
 
 /// Returns the endian flipped equivalent of the specified value
-template<typename T>
-inline R_ENABLE_IF(sizeof(T) <= 1, T) EndianFlip(T value)
+template<typename T, TF_ENABLE_IF(sizeof(T) <= 1)>
+inline T EndianFlip(T value)
 {
   // Nothing to flip
   return value;
 }
 
-template<typename T>
-inline R_ENABLE_IF(sizeof(T) > 1, T) EndianFlip(T value)
+template<typename T, TF_ENABLE_IF(sizeof(T) > 1)>
+inline T EndianFlip(T value)
 {
   // Reverse byte order
   T flipped = T();
@@ -161,15 +161,15 @@ inline T NetworkFlip(T value)
 }
 
 /// Returns the number of bits needed to represent the unsigned integral value
-template<typename T>
-inline R_ENABLE_IF(is_integral<T>::value && is_unsigned<T>::value, Bits) BitsNeededToRepresent(T value)
+template<typename T, TF_ENABLE_IF(is_integral<T>::value && is_unsigned<T>::value)>
+inline Bits BitsNeededToRepresent(T value)
 {
   return BITS_NEEDED_TO_REPRESENT(value);
 }
 
 /// Returns the number of bits needed to represent the signed integral value
-template<typename T>
-inline R_ENABLE_IF(is_integral<T>::value && is_signed<T>::value, Bits) BitsNeededToRepresent(T value)
+template<typename T, TF_ENABLE_IF(is_integral<T>::value && is_signed<T>::value)>
+inline Bits BitsNeededToRepresent(T value)
 {
   typedef typename make_unsigned<T>::type UT;
 
@@ -221,27 +221,24 @@ inline T Average(T previous, T current, F currentWeight)
 }
 
 /// Returns the specified floating-point value rounded to the nearest integer value (represented in the same floating-point type)
-template<typename T>
-inline R_ENABLE_IF(is_floating_point<T>::value, T) Round(T value)
+template<typename T, TF_ENABLE_IF(is_floating_point<T>::value)>
+inline T Round(T value)
 {
   return std::floor(value + T(0.5));
 }
 
 /// Divides the numerator by the denominator and ceils the result without branching or casting to intermediary types
-template<typename T>
-inline R_ENABLE_IF(is_integral<T>::value, T) DivCeil(T numerator, T denominator)
+template<typename T, TF_ENABLE_IF(is_integral<T>::value)>
+inline T DivCeil(T numerator, T denominator)
 {
   // Formula from StackOverflow answer ( http://stackoverflow.com/a/17005764 ), Ben Voigt, June 9th, 2013
   return (numerator / denominator)
        + T(((numerator < 0) ^ (denominator > 0)) && (numerator % denominator));
 }
-template<typename T>
-inline R_ENABLE_IF(is_floating_point<T>::value, T) DivCeil(T numerator, T denominator)
+template<typename T, TF_ENABLE_IF(is_floating_point<T>::value)>
+inline T DivCeil(T numerator, T denominator)
 {
   return std::ceil(numerator / denominator);
 }
 
 } // namespace Zero
-
-// Using directives
-//using Zero::uintptr;

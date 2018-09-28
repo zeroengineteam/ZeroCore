@@ -70,6 +70,9 @@ public:
   /// Net property type name.
   const String& GetName() const;
 
+  /// Net property basic net type, else BasicNetType::Other.
+  BasicNetType::Enum GetBasicNetType() const;
+
   //
   // Configuration
   //
@@ -88,24 +91,24 @@ public:
 //---------------------------------------------------------------------------------//
 
 // Variant Configuration Helper Macros
-#define DeclareVariantGetSetForArithmeticTypes(property, defaultFloat, defaultInt) \
-static constexpr float DefaultFloat##property = defaultFloat;                      \
-static constexpr int   DefaultInt##property   = defaultInt;                        \
-DeclareVariantGetSetForType(property, Integer,       int);                         \
-DeclareVariantGetSetForType(property, DoubleInteger, s64);                         \
-DeclareVariantGetSetForType(property, Integer2,      Integer2);                    \
-DeclareVariantGetSetForType(property, Integer3,      Integer3);                    \
-DeclareVariantGetSetForType(property, Integer4,      Integer4);                    \
-DeclareVariantGetSetForType(property, Real,          float);                       \
-DeclareVariantGetSetForType(property, DoubleReal,    double);                      \
-DeclareVariantGetSetForType(property, Real2,         Real2);                       \
-DeclareVariantGetSetForType(property, Real3,         Real3);                       \
-DeclareVariantGetSetForType(property, Real4,         Real4);                       \
-DeclareVariantGetSetForType(property, Quaternion,    Quaternion)
+#define DeclareVariantGetSetForArithmeticTypes(property)                   \
+DeclareVariantGetSetForType(property, Integer);                            \
+DeclareVariantGetSetForType(property, DoubleInteger);                      \
+DeclareVariantGetSetForType(property, Integer2);                           \
+DeclareVariantGetSetForType(property, Integer3);                           \
+DeclareVariantGetSetForType(property, Integer4);                           \
+DeclareVariantGetSetForType(property, Real);                               \
+DeclareVariantGetSetForType(property, DoubleReal);                         \
+DeclareVariantGetSetForType(property, Real2);                              \
+DeclareVariantGetSetForType(property, Real3);                              \
+DeclareVariantGetSetForType(property, Real4);                              \
+DeclareVariantGetSetForType(property, Quaternion);                         \
+static Variant GetDefault##property(BasicNetType::Enum basicNetType)
 
-#define DeclareVariantGetSetForType(property, typeName, type) \
-void Set##property##typeName(type value);                     \
-type Get##property##typeName() const
+#define DeclareVariantGetSetForType(property, type) \
+static const type sDefault##property##type;         \
+void Set##property##type(type value);               \
+type Get##property##type() const
 
 /// Network Property Configuration.
 /// Defines a configuration for the replication of a single property on the network.
@@ -131,8 +134,10 @@ public:
   /// Net property configuration name.
   const String& GetName() const;
 
-  /// Translates our variant properties into the target network property type (where possible, else defaults).
+  /// Attempts to convert each variant property to the target network property type, else sets the appropriate default value.
   void TranslateVariantProperties();
+  /// Sets each variant property to it's appropriate default value for the target network property type.
+  void DefaultVariantProperties();
 
   //
   // Configuration
@@ -147,7 +152,7 @@ public:
   bool GetUseDeltaThreshold() const;
 
   /// Controls the delta threshold at which a net property's primitive-components are considered changed during change detection.
-  DeclareVariantGetSetForArithmeticTypes(DeltaThreshold, float(1), int(1));
+  DeclareVariantGetSetForArithmeticTypes(DeltaThreshold);
 
   /// Controls how net properties are serialized.
   void SetSerializationMode(SerializationMode::Enum serializationMode);
@@ -165,10 +170,10 @@ public:
   bool GetUseQuantization() const;
 
   /// Controls the minimum, inclusive value at which a net property's primitive-components may be quantized during serialization.
-  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMin, float(-1), int(-1));
+  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMin);
 
   /// Controls the maximum, inclusive value at which a net property's primitive-components may be quantized during serialization.
-  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMax, float(+1), int(+1));
+  DeclareVariantGetSetForArithmeticTypes(QuantizationRangeMax);
 
   /// Controls whether or not to interpolate a net property's received authoritative values before sampling them locally.
   /// (Enable to improve changing value smoothness, at the expense of some small CPU and memory impact)
@@ -215,7 +220,7 @@ public:
   uint GetConvergenceInterval() const;
 
   /// Controls the threshold at which to snap a net property's locally simulated values to sampled authoritative values instead of gradually converging.
-  DeclareVariantGetSetForArithmeticTypes(SnapThreshold, float(10), int(10));
+  DeclareVariantGetSetForArithmeticTypes(SnapThreshold);
 
   // Data
   BasicNetType::Enum      mBasicNetType;                  ///< Target basic property type.
@@ -324,12 +329,12 @@ public:
 /// Typedefs.
 typedef Array<NetPropertyInfo> NetPropertyInfoArray;
 
-#define DeclarePropertyFilterForType(typeName)                                        \
-class PropertyFilter##typeName : public MetaPropertyFilter                            \
-{                                                                                     \
-public:                                                                               \
-  ZilchDeclareType(TypeCopyMode::ReferenceType);                                      \
-  bool Filter(Member* prop, HandleParam instance) override;                           \
+#define DeclarePropertyFilterForType(type)                  \
+class PropertyFilter##type : public MetaPropertyFilter      \
+{                                                           \
+public:                                                     \
+  ZilchDeclareType(TypeCopyMode::ReferenceType);            \
+  bool Filter(Member* prop, HandleParam instance) override; \
 }
 
 // Variant Configuration Property Filters
@@ -367,6 +372,27 @@ class PropertyFilterArithmeticTypes : public MetaPropertyFilter
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
+};
+
+//---------------------------------------------------------------------------------//
+//                          NetPropertyChangedEventIds                             //
+//---------------------------------------------------------------------------------//
+
+/// NetPropertyChanged Event IDs.
+/// Contains all supported custom "NetPropertyChanged" event ID variations for a given NetProperty.
+/// Provided solely to improve change event dispatch performance (Looking up the event ID variations is faster than creating them every dispatch).
+class NetPropertyChangedEventIds
+{
+public:
+  /// Creates all the event ID variations
+  void CreateEventIds(StringParam channelName, StringParam componentName, StringParam propertyName);
+
+  // Data
+  String mChannelComponentPropertyEventId; ///< Ex. "InputChannel_NetPropertyChanged_Player_InputJump"
+  String mComponentPropertyEventId;        ///< Ex. "NetPropertyChanged_Player_InputJump"
+  String mChannelComponentEventId;         ///< Ex. "InputChannel_NetPropertyChanged_Player"
+  String mChannelEventId;                  ///< Ex. "InputChannel_NetPropertyChanged"
+  String mComponentEventId;                ///< Ex. "NetPropertyChanged_Player"
 };
 
 } // namespace Zero

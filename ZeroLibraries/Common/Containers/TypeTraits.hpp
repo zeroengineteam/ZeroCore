@@ -332,38 +332,48 @@ struct disable_if<false, Type>
 };
 
 /// Enable If via Class Template Parameter
-#define TC_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type
-#define TC_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
-#define TC_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type
-#define TC_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
+#define TC_ENABLE_IF(...)  typename Zero::enable_if<(__VA_ARGS__)>::type
+#define TC_DISABLE_IF(...) typename Zero::disable_if<(__VA_ARGS__)>::type
 
 /// Enable If via Function Template Parameter (Declaration)
-#define TF_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = nullptr
-#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
-#define TF_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = nullptr
-#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_ENABLE_IF(...)  typename Zero::enable_if<(__VA_ARGS__)>::type* = nullptr
+#define TF_DISABLE_IF(...) typename Zero::disable_if<(__VA_ARGS__)>::type* = nullptr
 
 /// Enable If via Function Template Parameter (Definition)
-#define TF_ENABLE_IF_DEF(Condition)             typename Zero::enable_if<(Condition)>::type*
-#define TF_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
-#define TF_DISABLE_IF_DEF(Condition)            typename Zero::disable_if<(Condition)>::type*
-#define TF_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define TF_ENABLE_IF_DEF(...)  typename Zero::enable_if<(__VA_ARGS__)>::type*
+#define TF_DISABLE_IF_DEF(...) typename Zero::disable_if<(__VA_ARGS__)>::type*
 
 /// Enable If via Function Return Type
-#define R_ENABLE_IF(Condition, ReturnType)  typename Zero::enable_if<(Condition), ReturnType>::type
-#define R_DISABLE_IF(Condition, ReturnType) typename Zero::disable_if<(Condition), ReturnType>::type
+#define R_ENABLE_IF(ReturnType, ...)  typename Zero::enable_if<(__VA_ARGS__), ReturnType>::type
+#define R_DISABLE_IF(ReturnType, ...) typename Zero::disable_if<(__VA_ARGS__), ReturnType>::type
 
 /// Enable If via Function Parameter (Declaration)
-#define P_ENABLE_IF(Condition)             typename Zero::enable_if<(Condition)>::type* = nullptr
-#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
-#define P_DISABLE_IF(Condition)            typename Zero::disable_if<(Condition)>::type* = nullptr
-#define P_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_ENABLE_IF(...)  typename Zero::enable_if<(__VA_ARGS__)>::type* = nullptr
+#define P_DISABLE_IF(...) typename Zero::disable_if<(__VA_ARGS__)>::type* = nullptr
 
 /// Enable If via Function Parameter (Definition)
-#define P_ENABLE_IF_DEF(Condition)             typename Zero::enable_if<(Condition)>::type*
-#define P_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB)  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
-#define P_DISABLE_IF_DEF(Condition)            typename Zero::disable_if<(Condition)>::type*
-#define P_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define P_ENABLE_IF_DEF(...)  typename Zero::enable_if<(__VA_ARGS__)>::type*
+#define P_DISABLE_IF_DEF(...) typename Zero::disable_if<(__VA_ARGS__)>::type*
+
+//
+// Underlying Type
+//
+
+/// If Type is an enum, provides a typedef type which is defined as the underlying integral type of Type.
+/// If Type is not an enum, provides a typedef type which is simply Type.
+/// (Note: This differs from std::underlying_type where specifying a non-enum type results in undefined behavior.)
+template <typename Type, typename Enable = void>
+struct underlying_type;
+template <typename Type>
+struct underlying_type<Type, TC_ENABLE_IF(is_enum<Type>::value)>
+{
+  typedef typename std::underlying_type<Type>::type type;
+};
+template <typename Type>
+struct underlying_type<Type, TC_DISABLE_IF(is_enum<Type>::value)>
+{
+  typedef Type type;
+};
 
 //
 // Make Signed/Unsigned

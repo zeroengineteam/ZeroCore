@@ -131,15 +131,10 @@ namespace Events
   // Generated as a result of changing NetObject ownership, for ALL RELEVANT peers in the network graph.
   DeclareEvent(NetUserOwnerChanged);
 
-  // Network Channel Property Change:
+  // Network Property Changed:
   // [Client/Server] (Dispatched on Cog)
   // Generated after an outgoing/incoming net property change is detected, for ALL RELEVANT peers in the network graph.
-  DeclareEvent(NetChannelOutgoingPropertyInitialized);
-  DeclareEvent(NetChannelIncomingPropertyInitialized);
-  DeclareEvent(NetChannelOutgoingPropertyUninitialized);
-  DeclareEvent(NetChannelIncomingPropertyUninitialized);
-  DeclareEvent(NetChannelOutgoingPropertyChanged);
-  DeclareEvent(NetChannelIncomingPropertyChanged);
+  DeclareEvent(NetPropertyChanged);
 
   // Master Server Records:
   // [MasterServer] (Dispatched on GameSession)
@@ -682,28 +677,35 @@ public:
   Cog* mCurrentNetUserOwner;  ///< The object's current network user owner.
 };
 
-/////////////////////////////////////
-// Network Channel Property Change //
-/////////////////////////////////////
+//////////////////////////////
+// Network Property Changed //
+//////////////////////////////
 
 //---------------------------------------------------------------------------------//
-//                           NetChannelPropertyChange                              //
+//                             NetPropertyChanged                                  //
 //---------------------------------------------------------------------------------//
 
-/// Dispatched after an outgoing/incoming net channel property change is detected during a particular replication phase.
-class NetChannelPropertyChange : public Event
+/// Dispatched after an outgoing/incoming net property change is detected during a particular replication phase.
+class NetPropertyChanged : public Event
 {
 public:
   ZilchDeclareType(TypeCopyMode::ReferenceType);
 
+  /// The changed property's current value.
+  void SetPropertyValue(AnyParam value);
+  Any GetPropertyValue() const;
+
   // Data
-  float                       mTimestamp;        ///< The time this change occurred.
-  ReplicationPhase::Enum      mReplicationPhase; ///< The replication phase.
-  TransmissionDirection::Enum mDirection;        ///< The change direction.
-  Cog*                        mObject;           ///< The changed net object.
-  String                      mChannelName;      ///< The changed net channel.
-  String                      mComponentName;    ///< The component which declared the changed net property.
-  String                      mPropertyName;     ///< The changed net property.
+  float                       mTimestamp;        ///< Time this change occurred (since the net peer was created).
+  ReplicationPhase::Enum      mReplicationPhase; ///< Replication phase in which this change occurred.
+  TransmissionDirection::Enum mDirection;        ///< Direction this change occurred (incoming or outgoing).
+  Cog*                        mObject;           ///< Net object managing the changed net property.
+  NetChannel*                 mNetChannel;       ///< Net channel managing the changed net property.
+  NetProperty*                mNetProperty;      ///< The changed net property (Note: It's name will be a combined "ComponentName_PropertyName" string).
+  Any                         mLastValue;        ///< The changed property's value immediately before this change occurred.
+  Component*                  mComponent;        ///< Component which the changed property belongs to.
+  String                      mComponentName;    ///< Name of the component which the changed property belongs to.
+  String                      mPropertyName;     ///< Name of the changed property.
 };
 
 /////////////////////////////////////////////////////////////////////////////////////

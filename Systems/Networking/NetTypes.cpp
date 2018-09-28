@@ -355,7 +355,7 @@ void SetComponentAnyProperty(const Variant& value, Variant& propertyData)
 // Helper Methods
 //
 
-BasicNativeType::Enum BasicNetworkToNativeTypeEnum(BasicNetType::Enum value)
+BasicNativeType::Enum BasicNetTypeToBasicNativeTypeEnum(BasicNetType::Enum value)
 {
   switch(value)
   {
@@ -412,7 +412,7 @@ BasicNativeType::Enum BasicNetworkToNativeTypeEnum(BasicNetType::Enum value)
     return BasicNativeType::String;
   }
 }
-BasicNetType::Enum BasicNativeToNetworkTypeEnum(BasicNativeType::Enum value)
+BasicNetType::Enum BasicNativeTypeToBasicNetTypeEnum(BasicNativeType::Enum value)
 {
   switch(value)
   {
