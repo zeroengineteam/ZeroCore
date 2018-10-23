@@ -320,8 +320,17 @@ void SubRenderGroupPass::AddSubSettings(RenderSettings& subSettings, RenderGroup
   SubRenderGroupPass::SubData& subData = mSubData.PushBack();
   subData.mRenderSettings = subSettings;
   subData.mRenderGroup = &subGroup;
-  subData.mRenderPass = subPass;
   subData.mRender = true;
+
+  // Allocate new MaterialBlock for copying properties to.
+  BoundType* derivedType = ZilchVirtualTypeId(&subPass);
+  subData.mRenderPass = ZilchAllocate(MaterialBlock, derivedType);
+
+  // Copy data from derived type.
+  byte* source = (byte*)&subPass + sizeof(MaterialBlock);
+  byte* dest = (byte*)(MaterialBlock*)subData.mRenderPass + sizeof(MaterialBlock);
+  size_t fragmentSize = derivedType->Size - sizeof(MaterialBlock);
+  memcpy(dest, source, fragmentSize);
 }
 
 //**************************************************************************************************
@@ -588,7 +597,7 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRe
     uint shaderInputsId = GetUniqueShaderInputsId();
     if (subData.mRender)
     {
-      AddShaderInputs(&subData.mRenderPass, shaderInputsId);
+      AddShaderInputs(subData.mRenderPass, shaderInputsId);
       // Okay to use the whole Material set from the base RenderGroup because inputs will just be cached
       // but we need an input range entry for each unique shaderInputsId to find the inputs.
       forRange (Material* material, materials.All())
@@ -597,7 +606,7 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRe
       AddShaderInputs(subData.mRenderSettings.mGlobalShaderInputs, shaderInputsId);
     }
 
-    String renderPassName = ZilchVirtualTypeId(&subData.mRenderPass)->Name;
+    String renderPassName = ZilchVirtualTypeId((MaterialBlock*)subData.mRenderPass)->Name;
     mRenderTasks->mRenderTaskBuffer.AddRenderTaskRenderPass(subData.mRenderSettings, subData.mRenderGroup->mSortId, renderPassName, shaderInputsId, subGroupCount, subData.mRender);
 
     // Only set the sub count for the first task.
