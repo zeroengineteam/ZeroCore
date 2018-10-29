@@ -63,7 +63,7 @@
       <DisableSpecificWarnings>4302</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\ZeroLibraries\AudioEngine;$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;$(ZERO_SOURCE)\External\WinHid\lib;$(ZERO_SOURCE)\External\CEF\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\Systems\Sound;$(ZERO_SOURCE)\External\GLEW\lib;$(ZERO_SOURCE)\External\freetype\lib;$(ZERO_SOURCE)\External\WinHid\lib;$(ZERO_SOURCE)\External\CEF\lib;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
@@ -90,7 +90,7 @@ COPY /Y "$(OutDir)\..\ChromeSubProcess\ChromeSubProcess.exe" "$(OutDir)\ChromeSu
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
-      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;$(ZERO_SOURCE)Systems\Sound;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ZERO_SOURCE)\External\Curl\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
