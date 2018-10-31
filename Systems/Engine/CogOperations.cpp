@@ -214,6 +214,28 @@ Archetype* UploadToArchetype(OperationQueue* queue, Cog* cog, StringParam archet
   }
   else
   {
+    // If the cog already has a base archetype, then we need to be
+    // careful that we're not uploading to the base archetype itself
+    if (cog->mArchetype != nullptr)
+    {
+      if (Archetype* baseArchetype = cog->mArchetype->GetBaseArchetype())
+      {
+        // The archetype we're uploading to cannot be in the base chain
+        while (baseArchetype)
+        {
+          if (baseArchetype == archetype)
+          {
+            DoNotifyError("Archetype", "Cannot upload to an archetype whose base inherits from itself in the base chain");
+              delete op;
+            return nullptr;
+          }
+
+          // Iterate up the base inheritance chain
+          baseArchetype = baseArchetype->GetBaseArchetype();
+        }
+      }
+    }
+
     op->mNewArchetype = archetype;
 
     if (baseArchetype)
@@ -476,6 +498,46 @@ void DetachOperation::Undo()
 }
 
 //**************************************************************************************************
+// When detaching a Cog that is a child of an Archetype, we may need to clean up some local
+// modifications that are no longer relevant.
+//
+// Example 1:
+// Let's say we have an Archetype called Enemy. This Archetype has a child Cog that is a sword (not
+// an Archetype).
+//
+// In our level, we have an instance of the Enemy, and the damage of the sword is locally modified
+// on this instance. If we detach the sword, the locally modified damage is no longer relevant
+// because it was a modification from the no longer associated Enemy Archetype.
+//
+// Example 2:
+// Similar to Example 1, but in this case the sword is an Archetype and it's attached to the
+// "Hand" Cog underneath the Enemy. The hierarchy would look like this:
+//
+// Enemy [Archetype:Enemy]
+//   Hand
+//     Sword [Archetype:Sword]
+//
+// If both the Hand and Sword were modified on the instance in the level and we detached the hand,
+// we would want to clear modifications on the hand like the previous example. However, we would
+// not want to clear modifications on the Sword, because those modifications are still modifications
+// from the Sword Archetype. This is why we stop clearing modifications once we hit an Archetype.
+void ClearModificationsUntilArchetype(Cog* cog)
+{
+  if (cog->GetArchetype() != nullptr)
+    return;
+
+  LocalModifications* localModifications = LocalModifications::GetInstance();
+  localModifications->ClearModifications(cog, false, false);
+
+  // Modifications are stored on Components as well as Cogs, so we need to clear both
+  forRange(Component* component, cog->GetComponents())
+    localModifications->ClearModifications(component, false, false);
+
+  forRange(Cog& child, cog->GetChildren())
+    ClearModificationsUntilArchetype(&child);
+}
+
+//**************************************************************************************************
 void DetachOperation::Redo()
 {
   // Resolve handles
@@ -485,9 +547,13 @@ void DetachOperation::Redo()
   if(object == nullptr || parent == nullptr)
     return;
 
+  Cog* archetypeCog = object->FindNearestArchetypeContext();
+
+  if(archetypeCog != nullptr)
+    ClearModificationsUntilArchetype(object);
+
   if(mStoreModifications)
   {
-    Cog* archetypeCog = object->FindNearestArchetypeContext();
     Archetype* archetype = archetypeCog->GetArchetype();
     archetype->GetAllCachedModifications().ApplyModificationsToChildObject(archetypeCog, object, true);
   }
