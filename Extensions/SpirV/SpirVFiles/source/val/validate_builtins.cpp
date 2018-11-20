@@ -167,6 +167,8 @@ class BuiltInsValidator {
                                                   const Instruction& inst);
   spv_result_t ValidateVertexIndexAtDefinition(const Decoration& decoration,
                                                const Instruction& inst);
+  spv_result_t ValidateVertexIdOrInstanceIdAtDefinition(
+      const Decoration& decoration, const Instruction& inst);
   spv_result_t ValidateWorkgroupSizeAtDefinition(const Decoration& decoration,
                                                  const Instruction& inst);
   // Used for GlobalInvocationId, LocalInvocationId, NumWorkgroups, WorkgroupId.
@@ -1688,11 +1690,12 @@ spv_result_t BuiltInsValidator::ValidatePrimitiveIdAtReference(
         case SpvExecutionModelTessellationEvaluation:
         case SpvExecutionModelGeometry:
         case SpvExecutionModelMeshNV:
-        case SpvExecutionModelRayGenerationNVX:
-        case SpvExecutionModelIntersectionNVX:
-        case SpvExecutionModelAnyHitNVX:
-        case SpvExecutionModelClosestHitNVX:
-        case SpvExecutionModelMissNVX: {
+        case SpvExecutionModelRayGenerationNV:
+        case SpvExecutionModelIntersectionNV:
+        case SpvExecutionModelAnyHitNV:
+        case SpvExecutionModelClosestHitNV:
+        case SpvExecutionModelMissNV:
+        case SpvExecutionModelCallableNV: {
           // Ok.
           break;
         }
@@ -2084,6 +2087,20 @@ spv_result_t BuiltInsValidator::ValidateVertexIndexAtDefinition(
   return ValidateVertexIndexAtReference(decoration, inst, inst, inst);
 }
 
+spv_result_t BuiltInsValidator::ValidateVertexIdOrInstanceIdAtDefinition(
+    const Decoration& decoration, const Instruction& inst) {
+  const SpvBuiltIn label = SpvBuiltIn(decoration.params()[0]);
+  bool allow_instance_id = _.HasCapability(SpvCapabilityRayTracingNV) &&
+                           label == SpvBuiltInInstanceId;
+  if (spvIsVulkanEnv(_.context()->target_env) && !allow_instance_id) {
+    return _.diag(SPV_ERROR_INVALID_DATA, &inst)
+           << "Vulkan spec doesn't allow BuiltIn VertexId/InstanceId "
+              "to be used.";
+  }
+
+  return SPV_SUCCESS;
+}
+
 spv_result_t BuiltInsValidator::ValidateVertexIndexAtReference(
     const Decoration& decoration, const Instruction& built_in_inst,
     const Instruction& referenced_inst,
@@ -2440,7 +2457,9 @@ spv_result_t BuiltInsValidator::ValidateSingleBuiltInAtDefinition(
       return ValidateWorkgroupSizeAtDefinition(decoration, inst);
     }
     case SpvBuiltInVertexId:
-    case SpvBuiltInInstanceId:
+    case SpvBuiltInInstanceId: {
+      return ValidateVertexIdOrInstanceIdAtDefinition(decoration, inst);
+    }
     case SpvBuiltInLocalInvocationIndex:
     case SpvBuiltInWorkDim:
     case SpvBuiltInGlobalSize:
@@ -2490,19 +2509,20 @@ spv_result_t BuiltInsValidator::ValidateSingleBuiltInAtDefinition(
     case SpvBuiltInBaryCoordNoPerspNV:
     case SpvBuiltInFragmentSizeNV:
     case SpvBuiltInInvocationsPerPixelNV:
-    case SpvBuiltInLaunchIdNVX:
-    case SpvBuiltInLaunchSizeNVX:
-    case SpvBuiltInWorldRayOriginNVX:
-    case SpvBuiltInWorldRayDirectionNVX:
-    case SpvBuiltInObjectRayOriginNVX:
-    case SpvBuiltInObjectRayDirectionNVX:
-    case SpvBuiltInRayTminNVX:
-    case SpvBuiltInRayTmaxNVX:
-    case SpvBuiltInInstanceCustomIndexNVX:
-    case SpvBuiltInObjectToWorldNVX:
-    case SpvBuiltInWorldToObjectNVX:
-    case SpvBuiltInHitTNVX:
-    case SpvBuiltInHitKindNVX: {
+    case SpvBuiltInLaunchIdNV:
+    case SpvBuiltInLaunchSizeNV:
+    case SpvBuiltInWorldRayOriginNV:
+    case SpvBuiltInWorldRayDirectionNV:
+    case SpvBuiltInObjectRayOriginNV:
+    case SpvBuiltInObjectRayDirectionNV:
+    case SpvBuiltInRayTminNV:
+    case SpvBuiltInRayTmaxNV:
+    case SpvBuiltInInstanceCustomIndexNV:
+    case SpvBuiltInObjectToWorldNV:
+    case SpvBuiltInWorldToObjectNV:
+    case SpvBuiltInHitTNV:
+    case SpvBuiltInHitKindNV:
+    case SpvBuiltInIncomingRayFlagsNV: {
       // No validation rules (for the moment).
       break;
     }

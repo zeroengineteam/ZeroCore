@@ -155,7 +155,6 @@ public:
 		uint32_t aux_buffer_index = 0;
 		bool enable_point_size_builtin = true;
 		bool disable_rasterization = false;
-		bool resolve_specialized_array_lengths = true;
 		bool swizzle_texture_samples = false;
 
 		bool is_ios()
@@ -231,6 +230,7 @@ public:
 		SPVFuncImplFindILsb,
 		SPVFuncImplFindSMsb,
 		SPVFuncImplFindUMsb,
+		SPVFuncImplSSign,
 		SPVFuncImplArrayCopyMultidimBase,
 		// Unfortunately, we cannot use recursive templates in the MSL compiler properly,
 		// so stamp out variants up to some arbitrary maximum.
@@ -269,6 +269,13 @@ public:
 
 	// Alternate constructor avoiding use of std::vectors.
 	CompilerMSL(const uint32_t *ir, size_t word_count, MSLVertexAttr *p_vtx_attrs = nullptr, size_t vtx_attrs_count = 0,
+	            MSLResourceBinding *p_res_bindings = nullptr, size_t res_bindings_count = 0);
+
+	// Alternate constructors taking pre-parsed IR directly.
+	CompilerMSL(const ParsedIR &ir, MSLVertexAttr *p_vtx_attrs = nullptr, size_t vtx_attrs_count = 0,
+	            MSLResourceBinding *p_res_bindings = nullptr, size_t res_bindings_count = 0);
+
+	CompilerMSL(ParsedIR &&ir, MSLVertexAttr *p_vtx_attrs = nullptr, size_t vtx_attrs_count = 0,
 	            MSLResourceBinding *p_res_bindings = nullptr, size_t res_bindings_count = 0);
 
 	// Compiles the SPIR-V code into Metal Shading Language.
@@ -335,7 +342,6 @@ protected:
 	void preprocess_op_codes();
 	void localize_global_variables();
 	void extract_global_variables_from_functions();
-	void resolve_specialized_array_lengths();
 	void mark_packable_structs();
 	void mark_as_packable(SPIRType &type);
 

@@ -131,14 +131,26 @@ public:
 		remap_pls_variables();
 	}
 
-	CompilerGLSL(std::vector<uint32_t> spirv_)
+	explicit CompilerGLSL(std::vector<uint32_t> spirv_)
 	    : Compiler(move(spirv_))
 	{
 		init();
 	}
 
-	CompilerGLSL(const uint32_t *ir, size_t word_count)
-	    : Compiler(ir, word_count)
+	CompilerGLSL(const uint32_t *ir_, size_t word_count)
+	    : Compiler(ir_, word_count)
+	{
+		init();
+	}
+
+	explicit CompilerGLSL(const ParsedIR &ir_)
+	    : Compiler(ir_)
+	{
+		init();
+	}
+
+	explicit CompilerGLSL(ParsedIR &&ir_)
+	    : Compiler(std::move(ir_))
 	{
 		init();
 	}
@@ -224,6 +236,9 @@ protected:
 	virtual void emit_spv_amd_gcn_shader_op(uint32_t result_type, uint32_t result_id, uint32_t op, const uint32_t *args,
 	                                        uint32_t count);
 	virtual void emit_header();
+	void build_workgroup_size(std::vector<std::string> &arguments, const SpecializationConstant &x,
+	                          const SpecializationConstant &y, const SpecializationConstant &z);
+
 	virtual void emit_sampled_image_op(uint32_t result_type, uint32_t result_id, uint32_t image_id, uint32_t samp_id);
 	virtual void emit_texture_op(const Instruction &i);
 	virtual void emit_subgroup_op(const Instruction &i);
@@ -315,6 +330,7 @@ protected:
 	std::string type_to_array_glsl(const SPIRType &type);
 	std::string to_array_size(const SPIRType &type, uint32_t index);
 	uint32_t to_array_size_literal(const SPIRType &type, uint32_t index) const;
+	uint32_t to_array_size_literal(const SPIRType &type) const;
 	std::string variable_decl(const SPIRVariable &variable);
 	std::string variable_decl_function_local(SPIRVariable &variable);
 
@@ -349,7 +365,13 @@ protected:
 		bool long_long_literal_suffix = false;
 		const char *basic_int_type = "int";
 		const char *basic_uint_type = "uint";
+		const char *basic_int8_type = "int8_t";
+		const char *basic_uint8_type = "uint8_t";
+		const char *basic_int16_type = "int16_t";
+		const char *basic_uint16_type = "uint16_t";
 		const char *half_literal_suffix = "hf";
+		const char *int16_t_literal_suffix = "s";
+		const char *uint16_t_literal_suffix = "us";
 		bool swizzle_is_function = false;
 		bool shared_is_implied = false;
 		bool flexible_member_array_supported = true;
@@ -383,6 +405,7 @@ protected:
 	void emit_flattened_io_block(const SPIRVariable &var, const char *qual);
 	void emit_block_chain(SPIRBlock &block);
 	void emit_hoisted_temporaries(std::vector<std::pair<uint32_t, uint32_t>> &temporaries);
+	std::string constant_value_macro_name(uint32_t id);
 	void emit_constant(const SPIRConstant &constant);
 	void emit_specialization_constant_op(const SPIRConstantOp &constant);
 	std::string emit_continue_block(uint32_t continue_block);
@@ -590,10 +613,10 @@ protected:
 private:
 	void init()
 	{
-		if (source.known)
+		if (ir.source.known)
 		{
-			options.es = source.es;
-			options.version = source.version;
+			options.es = ir.source.es;
+			options.version = ir.source.version;
 		}
 	}
 };

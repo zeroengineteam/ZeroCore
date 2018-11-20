@@ -365,6 +365,9 @@ void ValidationState_t::RegisterCapability(SpvCapability cap) {
       features_.group_ops_reduce_and_scans = true;
       break;
     case SpvCapabilityInt8:
+      features_.use_int8_type = true;
+      features_.declare_int8_type = true;
+      break;
     case SpvCapabilityStorageBuffer8BitAccess:
     case SpvCapabilityUniformAndStorageBuffer8BitAccess:
     case SpvCapabilityStoragePushConstant8:
@@ -879,8 +882,12 @@ std::tuple<bool, bool, uint32_t> ValidationState_t::EvalInt32IfConst(
     return std::make_tuple(false, false, 0);
   }
 
-  if (inst->opcode() != SpvOpConstant && inst->opcode() != SpvOpSpecConstant) {
+  if (!spvOpcodeIsConstant(inst->opcode())) {
     return std::make_tuple(true, false, 0);
+  }
+
+  if (inst->opcode() == SpvOpConstantNull) {
+    return std::make_tuple(true, true, 0);
   }
 
   assert(inst->words().size() == 4);

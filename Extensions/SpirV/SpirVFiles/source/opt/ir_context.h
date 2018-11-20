@@ -37,6 +37,7 @@
 #include "source/opt/module.h"
 #include "source/opt/register_pressure.h"
 #include "source/opt/scalar_analysis.h"
+#include "source/opt/struct_cfg_analysis.h"
 #include "source/opt/type_manager.h"
 #include "source/opt/value_number_table.h"
 #include "source/util/make_unique.h"
@@ -71,7 +72,9 @@ class IRContext {
     kAnalysisScalarEvolution = 1 << 8,
     kAnalysisRegisterPressure = 1 << 9,
     kAnalysisValueNumberTable = 1 << 10,
-    kAnalysisEnd = 1 << 11
+    kAnalysisStructuredCFG = 1 << 11,
+    kAnalysisBuiltinVarId = 1 << 12,
+    kAnalysisEnd = 1 << 13
   };
 
   friend inline Analysis operator|(Analysis lhs, Analysis rhs);
@@ -225,6 +228,15 @@ class IRContext {
       BuildValueNumberTable();
     }
     return vn_table_.get();
+  }
+
+  // Returns a pointer to a StructuredCFGAnalysis.  If the analysis is invalid,
+  // it is rebuilt first.
+  StructuredCFGAnalysis* GetStructuredCFGAnalysis() {
+    if (!AreAnalysesValid(kAnalysisStructuredCFG)) {
+      BuildStructuredCFGAnalysis();
+    }
+    return struct_cfg_analysis_.get();
   }
 
   // Returns a pointer to a liveness analysis.  If the liveness analysis is
@@ -461,6 +473,11 @@ class IRContext {
   uint32_t max_id_bound() const { return max_id_bound_; }
   void set_max_id_bound(uint32_t new_bound) { max_id_bound_ = new_bound; }
 
+  // Return id of variable only decorated with |builtin|, if in module.
+  // Create variable and return its id otherwise. If builtin not currently
+  // supported, return 0.
+  uint32_t GetBuiltinVarId(uint32_t builtin);
+
  private:
   // Builds the def-use manager from scratch, even if it was already valid.
   void BuildDefUseManager() {
@@ -509,6 +526,13 @@ class IRContext {
     valid_analyses_ = valid_analyses_ | kAnalysisValueNumberTable;
   }
 
+  // Builds the structured CFG analysis from scratch, even if it was already
+  // valid.
+  void BuildStructuredCFGAnalysis() {
+    struct_cfg_analysis_ = MakeUnique<StructuredCFGAnalysis>(this);
+    valid_analyses_ = valid_analyses_ | kAnalysisStructuredCFG;
+  }
+
   // Removes all computed dominator and post-dominator trees. This will force
   // the context to rebuild the trees on demand.
   void ResetDominatorAnalysis() {
@@ -523,6 +547,13 @@ class IRContext {
     // Clear the cache.
     loop_descriptors_.clear();
     valid_analyses_ = valid_analyses_ | kAnalysisLoopAnalysis;
+  }
+
+  // Removes all computed loop descriptors.
+  void ResetBuiltinAnalysis() {
+    // Clear the cache.
+    builtin_var_id_map_.clear();
+    valid_analyses_ = valid_analyses_ | kAnalysisBuiltinVarId;
   }
 
   // Analyzes the features in the owned module. Builds the manager if required.
@@ -547,6 +578,13 @@ class IRContext {
   // Returns true if it is suppose to be valid but it is incorrect.  Returns
   // true if the cfg is invalidated.
   bool CheckCFG();
+
+  // Return id of variable only decorated with |builtin|, if in module.
+  // Return 0 otherwise.
+  uint32_t FindBuiltinVar(uint32_t builtin);
+
+  // Add |var_id| to all entry points in module.
+  void AddVarToEntryPoints(uint32_t var_id);
 
   // The SPIR-V syntax context containing grammar tables for opcodes and
   // operands.
@@ -589,6 +627,10 @@ class IRContext {
   // without side-effect.
   std::unordered_map<uint32_t, std::unordered_set<uint32_t>> combinator_ops_;
 
+  // Opcodes of shader capability core executable instructions
+  // without side-effect.
+  std::unordered_map<uint32_t, uint32_t> builtin_var_id_map_;
+
   // The CFG for all the functions in |module_|.
   std::unique_ptr<CFG> cfg_;
 
@@ -618,6 +660,8 @@ class IRContext {
   std::unique_ptr<ValueNumberTable> vn_table_;
 
   std::unique_ptr<InstructionFolder> inst_folder_;
+
+  std::unique_ptr<StructuredCFGAnalysis> struct_cfg_analysis_;
 
   // The maximum legal value for the id bound.
   uint32_t max_id_bound_;
@@ -766,6 +810,9 @@ void IRContext::AddCapability(std::unique_ptr<Instruction>&& c) {
 }
 
 void IRContext::AddExtension(std::unique_ptr<Instruction>&& e) {
+  if (AreAnalysesValid(kAnalysisDefUse)) {
+    get_def_use_mgr()->AnalyzeInstDefUse(e.get());
+  }
   module()->AddExtension(std::move(e));
 }
 
@@ -807,6 +854,9 @@ void IRContext::AddAnnotationInst(std::unique_ptr<Instruction>&& a) {
   if (AreAnalysesValid(kAnalysisDecorations)) {
     get_decoration_mgr()->AddDecoration(a.get());
   }
+  if (AreAnalysesValid(kAnalysisDefUse)) {
+    get_def_use_mgr()->AnalyzeInstDefUse(a.get());
+  }
   module()->AddAnnotationInst(std::move(a));
 }
 
@@ -818,10 +868,10 @@ void IRContext::AddType(std::unique_ptr<Instruction>&& t) {
 }
 
 void IRContext::AddGlobalValue(std::unique_ptr<Instruction>&& v) {
-  module()->AddGlobalValue(std::move(v));
   if (AreAnalysesValid(kAnalysisDefUse)) {
-    get_def_use_mgr()->AnalyzeInstDef(&*(--types_values_end()));
+    get_def_use_mgr()->AnalyzeInstDefUse(&*v);
   }
+  module()->AddGlobalValue(std::move(v));
 }
 
 void IRContext::AddFunction(std::unique_ptr<Function>&& f) {

@@ -1,0 +1,36 @@
+################################################################################
+# Generated using Joshua T. Fisher's 'CMake Builder'.
+# Link: https://github.com/playmer/CmakeBuilder 
+################################################################################
+target_sources(SPIRV-Cross
+  PRIVATE
+    ${SPIRV-Cross-Dir}/spirv_cfg.cpp
+    ${SPIRV-Cross-Dir}/spirv_cpp.cpp
+    ${SPIRV-Cross-Dir}/spirv_cross.cpp
+    ${SPIRV-Cross-Dir}/spirv_cross_parsed_ir.cpp
+    ${SPIRV-Cross-Dir}/spirv_cross_util.cpp
+    ${SPIRV-Cross-Dir}/spirv_glsl.cpp
+    ${SPIRV-Cross-Dir}/spirv_hlsl.cpp
+    ${SPIRV-Cross-Dir}/spirv_msl.cpp
+    ${SPIRV-Cross-Dir}/spirv_parser.cpp
+    ${SPIRV-Cross-Dir}/spirv_reflect.cpp
+    ${SPIRV-Cross-Dir}/GLSL.std.450.h
+    ${SPIRV-Cross-Dir}/spirv.hpp
+    ${SPIRV-Cross-Dir}/spirv_cfg.hpp
+    ${SPIRV-Cross-Dir}/spirv_common.hpp
+    ${SPIRV-Cross-Dir}/spirv_cpp.hpp
+    ${SPIRV-Cross-Dir}/spirv_cross.hpp
+    ${SPIRV-Cross-Dir}/spirv_cross_parsed_ir.hpp
+    ${SPIRV-Cross-Dir}/spirv_cross_util.hpp
+    ${SPIRV-Cross-Dir}/spirv_glsl.hpp
+    ${SPIRV-Cross-Dir}/spirv_hlsl.hpp
+    ${SPIRV-Cross-Dir}/spirv_msl.hpp
+    ${SPIRV-Cross-Dir}/spirv_parser.hpp
+    ${SPIRV-Cross-Dir}/spirv_reflect.hpp
+    ${SPIRV-Cross-Dir}/include/spirv_cross/barrier.hpp
+    ${SPIRV-Cross-Dir}/include/spirv_cross/external_interface.h
+    ${SPIRV-Cross-Dir}/include/spirv_cross/image.hpp
+    ${SPIRV-Cross-Dir}/include/spirv_cross/internal_interface.hpp
+    ${SPIRV-Cross-Dir}/include/spirv_cross/sampler.hpp
+    ${SPIRV-Cross-Dir}/include/spirv_cross/thread_group.hpp
+)
