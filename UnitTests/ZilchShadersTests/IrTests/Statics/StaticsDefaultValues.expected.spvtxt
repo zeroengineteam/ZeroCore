@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 64
+; Bound: 65
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
@@ -43,85 +43,86 @@
           %8 = OpTypeFunction %void %_ptr_Function_StaticsDefaultValues
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float
-%Tau_StaticsDefaultValues = OpVariable %_ptr_Function_float Private
-         %11 = OpTypeFunction %void
-%Two_StaticsDefaultValues = OpVariable %_ptr_Function_float Private
+%_ptr_Private_float = OpTypePointer Private %float
+%Tau_StaticsDefaultValues = OpVariable %_ptr_Private_float Private
+         %12 = OpTypeFunction %void
+%Two_StaticsDefaultValues = OpVariable %_ptr_Private_float Private
     %float_2 = OpConstant %float 2
-%Pi_StaticsDefaultValues = OpVariable %_ptr_Function_float Private
-         %12 = OpTypeFunction %float
+%Pi_StaticsDefaultValues = OpVariable %_ptr_Private_float Private
+         %13 = OpTypeFunction %float
 %float_3_14159274 = OpConstant %float 3.14159274
        %Main = OpFunction %void None %8
        %self = OpFunctionParameter %_ptr_Function_StaticsDefaultValues
-         %20 = OpLabel
+         %21 = OpLabel
         %tau = OpVariable %_ptr_Function_float Function
          %pi = OpVariable %_ptr_Function_float Function
         %two = OpVariable %_ptr_Function_float Function
-         %24 = OpLoad %float %Tau_StaticsDefaultValues
-               OpStore %tau %24
-         %25 = OpLoad %float %Pi_StaticsDefaultValues
-               OpStore %pi %25
-         %26 = OpLoad %float %Two_StaticsDefaultValues
-               OpStore %two %26
+         %25 = OpLoad %float %Tau_StaticsDefaultValues
+               OpStore %tau %25
+         %26 = OpLoad %float %Pi_StaticsDefaultValues
+               OpStore %pi %26
+         %27 = OpLoad %float %Two_StaticsDefaultValues
+               OpStore %two %27
                OpReturn
                OpFunctionEnd
-%StaticsDefaultValues_Tau_Initializer = OpFunction %void None %11
-         %28 = OpLabel
-         %29 = OpLoad %float %Two_StaticsDefaultValues
-         %30 = OpLoad %float %Pi_StaticsDefaultValues
-         %31 = OpFMul %float %29 %30
-               OpStore %Tau_StaticsDefaultValues %31
+%StaticsDefaultValues_Tau_Initializer = OpFunction %void None %12
+         %29 = OpLabel
+         %30 = OpLoad %float %Two_StaticsDefaultValues
+         %31 = OpLoad %float %Pi_StaticsDefaultValues
+         %32 = OpFMul %float %30 %31
+               OpStore %Tau_StaticsDefaultValues %32
                OpReturn
                OpFunctionEnd
-%StaticsDefaultValues_Two_Initializer = OpFunction %void None %11
-         %33 = OpLabel
+%StaticsDefaultValues_Two_Initializer = OpFunction %void None %12
+         %34 = OpLabel
                OpStore %Two_StaticsDefaultValues %float_2
                OpReturn
                OpFunctionEnd
-%StaticsDefaultValues_Pi_Initializer = OpFunction %void None %11
-         %35 = OpLabel
-         %36 = OpFunctionCall %float %Pi
-               OpStore %Pi_StaticsDefaultValues %36
+%StaticsDefaultValues_Pi_Initializer = OpFunction %void None %12
+         %36 = OpLabel
+         %37 = OpFunctionCall %float %Pi
+               OpStore %Pi_StaticsDefaultValues %37
                OpReturn
                OpFunctionEnd
-         %Pi = OpFunction %float None %12
-         %38 = OpLabel
+         %Pi = OpFunction %float None %13
+         %39 = OpLabel
                OpReturnValue %float_3_14159274
                OpFunctionEnd
 %PreConstructor_StaticsDefaultValues = OpFunction %void None %8
      %self_0 = OpFunctionParameter %_ptr_Function_StaticsDefaultValues
-         %41 = OpLabel
+         %42 = OpLabel
                OpReturn
                OpFunctionEnd
 %DefaultConstructor = OpFunction %void None %8
      %self_1 = OpFunctionParameter %_ptr_Function_StaticsDefaultValues
-         %44 = OpLabel
-         %45 = OpFunctionCall %void %PreConstructor_StaticsDefaultValues %self_1
+         %45 = OpLabel
+         %46 = OpFunctionCall %void %PreConstructor_StaticsDefaultValues %self_1
                OpReturn
                OpFunctionEnd
 %CopyInputs_Main = OpFunction %void None %8
      %self_2 = OpFunctionParameter %_ptr_Function_StaticsDefaultValues
-         %48 = OpLabel
+         %49 = OpLabel
                OpReturn
                OpFunctionEnd
 %CopyOutputs_Main = OpFunction %void None %8
      %self_3 = OpFunctionParameter %_ptr_Function_StaticsDefaultValues
-         %51 = OpLabel
+         %52 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main_StaticsDefaultValues = OpFunction %void None %11
-         %53 = OpLabel
+%EntryPoint_Main_StaticsDefaultValues = OpFunction %void None %12
+         %54 = OpLabel
      %self_4 = OpVariable %_ptr_Function_StaticsDefaultValues Function
-         %55 = OpFunctionCall %void %InitializeGlobals
-         %56 = OpFunctionCall %void %DefaultConstructor %self_4
-         %57 = OpFunctionCall %void %CopyInputs_Main %self_4
-         %58 = OpFunctionCall %void %Main %self_4
-         %59 = OpFunctionCall %void %CopyOutputs_Main %self_4
+         %56 = OpFunctionCall %void %InitializeGlobals
+         %57 = OpFunctionCall %void %DefaultConstructor %self_4
+         %58 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %59 = OpFunctionCall %void %Main %self_4
+         %60 = OpFunctionCall %void %CopyOutputs_Main %self_4
                OpReturn
                OpFunctionEnd
-%InitializeGlobals = OpFunction %void None %11
-         %60 = OpLabel
-         %61 = OpFunctionCall %void %StaticsDefaultValues_Two_Initializer
-         %62 = OpFunctionCall %void %StaticsDefaultValues_Pi_Initializer
-         %63 = OpFunctionCall %void %StaticsDefaultValues_Tau_Initializer
+%InitializeGlobals = OpFunction %void None %12
+         %61 = OpLabel
+         %62 = OpFunctionCall %void %StaticsDefaultValues_Two_Initializer
+         %63 = OpFunctionCall %void %StaticsDefaultValues_Pi_Initializer
+         %64 = OpFunctionCall %void %StaticsDefaultValues_Tau_Initializer
                OpReturn
                OpFunctionEnd

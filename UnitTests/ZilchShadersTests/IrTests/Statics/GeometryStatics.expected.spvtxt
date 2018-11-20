@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 81
+; Bound: 83
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
@@ -68,94 +68,96 @@
          %17 = OpTypeFunction %void %_ptr_Function_GeometryStatics %_ptr_Function__arr_GeoData_int_3 %_ptr_Function_OutputStream
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float
- %Pi_GeoData = OpVariable %_ptr_Function_float Private
-         %20 = OpTypeFunction %void
-         %21 = OpTypeFunction %float
+%_ptr_Private_float = OpTypePointer Private %float
+ %Pi_GeoData = OpVariable %_ptr_Private_float Private
+         %21 = OpTypeFunction %void
+         %22 = OpTypeFunction %float
 %float_3_14159274 = OpConstant %float 3.14159274
-%Count_GeometryStatics = OpVariable %_ptr_Function_int Private
+%_ptr_Private_int = OpTypePointer Private %int
+%Count_GeometryStatics = OpVariable %_ptr_Private_int Private
       %int_1 = OpConstant %int 1
-         %22 = OpTypeFunction %void %_ptr_Function_GeometryStatics
-         %23 = OpTypeFunction %void %_ptr_Function_GeometryStatics %_ptr_Function__arr_GeoData_int_3
+         %24 = OpTypeFunction %void %_ptr_Function_GeometryStatics
+         %25 = OpTypeFunction %void %_ptr_Function_GeometryStatics %_ptr_Function__arr_GeoData_int_3
        %Main = OpFunction %void None %17
        %self = OpFunctionParameter %_ptr_Function_GeometryStatics
       %input = OpFunctionParameter %_ptr_Function__arr_GeoData_int_3
      %output = OpFunctionParameter %_ptr_Function_OutputStream
-         %33 = OpLabel
+         %35 = OpLabel
          %pi = OpVariable %_ptr_Function_float Function
       %count = OpVariable %_ptr_Function_int Function
-         %36 = OpLoad %float %Pi_GeoData
-               OpStore %pi %36
-         %37 = OpLoad %int %Count_GeometryStatics
-               OpStore %count %37
+         %38 = OpLoad %float %Pi_GeoData
+               OpStore %pi %38
+         %39 = OpLoad %int %Count_GeometryStatics
+               OpStore %count %39
                OpReturn
                OpFunctionEnd
 %PreConstructor_GeoData = OpFunction %void None %11
      %self_0 = OpFunctionParameter %_ptr_Function_GeoData
-         %40 = OpLabel
+         %42 = OpLabel
                OpReturn
                OpFunctionEnd
 %DefaultConstructor = OpFunction %void None %11
      %self_1 = OpFunctionParameter %_ptr_Function_GeoData
-         %43 = OpLabel
-         %44 = OpFunctionCall %void %PreConstructor_GeoData %self_1
+         %45 = OpLabel
+         %46 = OpFunctionCall %void %PreConstructor_GeoData %self_1
                OpReturn
                OpFunctionEnd
-%GeoData_Pi_Initializer = OpFunction %void None %20
-         %46 = OpLabel
-         %47 = OpFunctionCall %float %Pi
-               OpStore %Pi_GeoData %47
+%GeoData_Pi_Initializer = OpFunction %void None %21
+         %48 = OpLabel
+         %49 = OpFunctionCall %float %Pi
+               OpStore %Pi_GeoData %49
                OpReturn
                OpFunctionEnd
-         %Pi = OpFunction %float None %21
-         %49 = OpLabel
+         %Pi = OpFunction %float None %22
+         %51 = OpLabel
                OpReturnValue %float_3_14159274
                OpFunctionEnd
-%GeometryStatics_Count_Initializer = OpFunction %void None %20
-         %51 = OpLabel
+%GeometryStatics_Count_Initializer = OpFunction %void None %21
+         %53 = OpLabel
                OpStore %Count_GeometryStatics %int_1
                OpReturn
                OpFunctionEnd
-%PreConstructor_GeometryStatics = OpFunction %void None %22
+%PreConstructor_GeometryStatics = OpFunction %void None %24
      %self_2 = OpFunctionParameter %_ptr_Function_GeometryStatics
-         %54 = OpLabel
+         %56 = OpLabel
                OpReturn
                OpFunctionEnd
-%DefaultConstructor_0 = OpFunction %void None %22
+%DefaultConstructor_0 = OpFunction %void None %24
      %self_3 = OpFunctionParameter %_ptr_Function_GeometryStatics
-         %57 = OpLabel
-         %58 = OpFunctionCall %void %PreConstructor_GeometryStatics %self_3
+         %59 = OpLabel
+         %60 = OpFunctionCall %void %PreConstructor_GeometryStatics %self_3
                OpReturn
                OpFunctionEnd
-%CopyInputs_Main = OpFunction %void None %23
+%CopyInputs_Main = OpFunction %void None %25
      %self_4 = OpFunctionParameter %_ptr_Function_GeometryStatics
 %inputStream = OpFunctionParameter %_ptr_Function__arr_GeoData_int_3
-         %62 = OpLabel
+         %64 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main_GeometryStatics = OpFunction %void None %20
-         %64 = OpLabel
+%EntryPoint_Main_GeometryStatics = OpFunction %void None %21
+         %66 = OpLabel
      %self_5 = OpVariable %_ptr_Function_GeometryStatics Function
 %inputStream_0 = OpVariable %_ptr_Function__arr_GeoData_int_3 Function
 %outputStream = OpVariable %_ptr_Function_OutputStream Function
-         %68 = OpFunctionCall %void %InitializeGlobals
-         %69 = OpFunctionCall %void %DefaultConstructor_0 %self_5
-         %70 = OpFunctionCall %void %CopyInputs_Main %self_5 %inputStream_0
-         %71 = OpFunctionCall %void %Main %self_5 %inputStream_0 %outputStream
+         %70 = OpFunctionCall %void %InitializeGlobals
+         %71 = OpFunctionCall %void %DefaultConstructor_0 %self_5
+         %72 = OpFunctionCall %void %CopyInputs_Main %self_5 %inputStream_0
+         %73 = OpFunctionCall %void %Main %self_5 %inputStream_0 %outputStream
                OpReturn
                OpFunctionEnd
      %Append = OpFunction %void None %16
      %stream = OpFunctionParameter %_ptr_Function_OutputStream
  %outputData = OpFunctionParameter %GeoData
    %vertexId = OpFunctionParameter %int
-         %75 = OpLabel
+         %77 = OpLabel
 %outDataLocal = OpVariable %_ptr_Function_GeoData Function
                OpStore %outDataLocal %outputData
                OpEmitVertex
                OpReturn
                OpFunctionEnd
-%InitializeGlobals = OpFunction %void None %20
-         %78 = OpLabel
-         %79 = OpFunctionCall %void %GeoData_Pi_Initializer
-         %80 = OpFunctionCall %void %GeometryStatics_Count_Initializer
+%InitializeGlobals = OpFunction %void None %21
+         %80 = OpLabel
+         %81 = OpFunctionCall %void %GeoData_Pi_Initializer
+         %82 = OpFunctionCall %void %GeometryStatics_Count_Initializer
                OpReturn
                OpFunctionEnd

@@ -38,6 +38,27 @@ public:
   ZilchShaderIRFunction* mCurrentFunction;
 
   ZilchShaderDebugInfo mDebugInfo;
+
+  /// Some function calls need to write some instructions after the
+  /// function call (storage class differences). This data is used to keep
+  /// track of the copies that need to happen afterwards.
+  struct PostableCopy
+  {
+    PostableCopy()
+    {
+      mSource = mDestination = nullptr;
+    }
+    PostableCopy(ZilchShaderIROp* dest, ZilchShaderIROp* source)
+    {
+      mSource = source;
+      mDestination = dest;
+    }
+
+    ZilchShaderIROp* mSource;
+    ZilchShaderIROp* mDestination;
+  };
+
+  Array<PostableCopy> mFunctionPostambleCopies;
 };
 
 
@@ -132,9 +153,6 @@ public:
   void WalkConstructorCallNode(Zilch::FunctionCallNode*& node, Zilch::StaticTypeNode* constructorNode, ZilchSpirVFrontEndContext* context);
   void WalkMemberAccessCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context);
   void WalkMemberAccessFunctionCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
-  void WalkMemberAccessFunctionCall(Array<IZilchShaderIR*>& arguments, Zilch::MemberAccessNode* memberAccessNode, ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GenerateFunctionCall(ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
-  ZilchShaderIROp* GenerateFunctionCall(BasicBlock* block, ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
   void WalkMemberAccessExtensionInstructionCallNode(Zilch::FunctionCallNode*& node, Zilch::MemberAccessNode* memberAccessNode, SpirVExtensionInstruction* extensionInstruction, ZilchSpirVFrontEndContext* context);
 
   void WalkLocalVariable(Zilch::LocalVariableNode*& node, ZilchSpirVFrontEndContext* context);
@@ -243,10 +261,14 @@ public:
   // Build an op to store the source into the target. May generate OpStore or OpCopyMemor depending on the type of source.
   ZilchShaderIROp* BuildStoreOp(IZilchShaderIR* target, IZilchShaderIR* source, ZilchSpirVFrontEndContext* context, bool forceLoadStore = true);
   ZilchShaderIROp* BuildStoreOp(BasicBlock* block, IZilchShaderIR* target, IZilchShaderIR* source, ZilchSpirVFrontEndContext* context, bool forceLoadStore = true);
-  void WriteFunctionCallArguments(Zilch::FunctionCallNode*& node, ZilchShaderIROp* functionCallOp, ZilchSpirVFrontEndContext* context);
-  void WriteFunctionCallArguments(Zilch::FunctionCallNode*& node, Zilch::Type* returnType, ZilchShaderIROp* functionCallOp, ZilchSpirVFrontEndContext* context);
-  void WriteFunctionCallArguments(Array<IZilchShaderIR*> arguments, ZilchShaderIRType* returnType, ZilchShaderIRType* functionType, ZilchShaderIROp* functionCallOp, ZilchSpirVFrontEndContext* context);
+  
+  void GetFunctionCallArguments(Zilch::FunctionCallNode* node, Zilch::MemberAccessNode* memberAccessNode, Array<IZilchShaderIR*>& arguments, ZilchSpirVFrontEndContext* context);
+  void GetFunctionCallArguments(Zilch::FunctionCallNode* node, IZilchShaderIR* thisOp, Array<IZilchShaderIR*>& arguments, ZilchSpirVFrontEndContext* context);
+  void WriteFunctionCallArguments(Array<IZilchShaderIR*> arguments, ZilchShaderIRType* functionType, ZilchShaderIROp* functionCallOp, ZilchSpirVFrontEndContext* context);
   void WriteFunctionCallArgument(IZilchShaderIR* argument, ZilchShaderIROp* functionCallOp, ZilchShaderIRType* paramType, ZilchSpirVFrontEndContext* context);
+  ZilchShaderIROp* GenerateFunctionCall(ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
+  void WriteFunctionCallPostamble(ZilchSpirVFrontEndContext* context);
+  void WriteFunctionCall(Array<IZilchShaderIR*> arguments, ZilchShaderIRFunction* shaderFunction, ZilchSpirVFrontEndContext* context);
 
   // Helpers
   ZilchShaderIROp* GenerateBoolToIntegerCast(BasicBlock* block, ZilchShaderIROp* source, ZilchShaderIRType* destType, ZilchSpirVFrontEndContext* context);
