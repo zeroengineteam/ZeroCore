@@ -68,11 +68,13 @@ struct UnitTestCompilationPipeline : Zilch::EventHandler
     // Set two special constants for the language id and version
     String languageSpecializationName = ZilchShaderSpirVSettings::GetLanguageSpecializationName();
     int languageSpecializationId = e->GetFirstId(languageSpecializationName);
-    e->mSpecializationOverridesById[languageSpecializationId] = "2";
+    if(languageSpecializationId != -1)
+     e->mSpecializationOverridesById[languageSpecializationId] = "2";
 
     String languageVersionSpecializationName = ZilchShaderSpirVSettings::GetLanguageVersionSpecializationName();
     int languageVersionSpecializationId = e->GetFirstId(languageVersionSpecializationName);
-    e->mSpecializationOverridesById[languageVersionSpecializationId] = "450";
+    if(languageVersionSpecializationId != -1)
+      e->mSpecializationOverridesById[languageVersionSpecializationId] = "450";
 
     bool boolValue = true;
     int intValue = 1;
