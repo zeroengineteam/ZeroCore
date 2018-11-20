@@ -59,7 +59,7 @@ void ResolveFixedArrayGet(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNod
   // Generate the access chain to get the element within the array
   IZilchShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   ZilchShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IZilchShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, elementType->mPointerType, selfInstance, indexOperand, context);
+  IZilchShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, indexOperand, context);
 
   context->PushIRStack(accessChainOp);
 }
@@ -82,7 +82,7 @@ void ResolveFixedArraySet(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNod
   // Generate the access chain to get the element within the array
   IZilchShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   ZilchShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IZilchShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, elementType->mPointerType, selfInstance, indexOperand, context);
+  IZilchShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, indexOperand, context);
 
   // Get the source value
   IZilchShaderIR* sourceIR = translator->WalkAndGetResult(functionCallNode->Arguments[1], context);

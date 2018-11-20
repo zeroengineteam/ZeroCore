@@ -1,0 +1,101 @@
+; SPIR-V
+; Version: 1.2
+; Generator: Khronos; 0
+; Bound: 55
+; Schema: 0
+               OpCapability Linkage
+               OpCapability Shader
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %EntryPoint_Main_StaticsAccessChain "EntryPoint_Main_StaticsAccessChain"
+               OpExecutionMode %EntryPoint_Main_StaticsAccessChain OriginUpperLeft
+               OpSource Unknown 100
+               OpName %StaticsAccessChain "StaticsAccessChain"
+               OpMemberName %StaticsAccessChain 0 "Dummy"
+               OpName %Uvs_StaticsAccessChain "Uvs_StaticsAccessChain"
+               OpName %Main "Main"
+               OpName %self "self"
+               OpName %uv "uv"
+               OpName %StaticsAccessChain_Uvs_Initializer "StaticsAccessChain_Uvs_Initializer"
+               OpName %PreConstructor_StaticsAccessChain "PreConstructor_StaticsAccessChain"
+               OpName %self_0 "self"
+               OpName %DefaultConstructor "DefaultConstructor"
+               OpName %self_1 "self"
+               OpName %CopyInputs_Main "CopyInputs_Main"
+               OpName %self_2 "self"
+               OpName %CopyOutputs_Main "CopyOutputs_Main"
+               OpName %self_3 "self"
+               OpName %EntryPoint_Main_StaticsAccessChain "EntryPoint_Main_StaticsAccessChain"
+               OpName %self_4 "self"
+               OpName %InitializeGlobals "InitializeGlobals"
+        %int = OpTypeInt 32 1
+%_ptr_Function_int = OpTypePointer Function %int
+%StaticsAccessChain = OpTypeStruct %int
+%_ptr_Function_StaticsAccessChain = OpTypePointer Function %StaticsAccessChain
+       %void = OpTypeVoid
+%_ptr_Function_void = OpTypePointer Function %void
+          %8 = OpTypeFunction %void %_ptr_Function_StaticsAccessChain
+      %float = OpTypeFloat 32
+%_ptr_Function_float = OpTypePointer Function %float
+    %v2float = OpTypeVector %float 2
+%_ptr_Function_v2float = OpTypePointer Function %v2float
+%_ptr_Private_v2float = OpTypePointer Private %v2float
+      %int_1 = OpConstant %int 1
+%_arr_v2float_int_1 = OpTypeArray %v2float %int_1
+%_ptr_Function__arr_v2float_int_1 = OpTypePointer Function %_arr_v2float_int_1
+%_ptr_Private__arr_v2float_int_1 = OpTypePointer Private %_arr_v2float_int_1
+%Uvs_StaticsAccessChain = OpVariable %_ptr_Private__arr_v2float_int_1 Private
+         %17 = OpTypeFunction %void
+    %float_0 = OpConstant %float 0
+      %int_0 = OpConstant %int 0
+       %Main = OpFunction %void None %8
+       %self = OpFunctionParameter %_ptr_Function_StaticsAccessChain
+         %24 = OpLabel
+         %uv = OpVariable %_ptr_Function_v2float Function
+         %26 = OpAccessChain %_ptr_Private_v2float %Uvs_StaticsAccessChain %int_0
+         %27 = OpLoad %v2float %26
+               OpStore %uv %27
+               OpReturn
+               OpFunctionEnd
+%StaticsAccessChain_Uvs_Initializer = OpFunction %void None %17
+         %29 = OpLabel
+         %30 = OpCompositeConstruct %v2float %float_0 %float_0
+         %31 = OpCompositeConstruct %_arr_v2float_int_1 %30
+               OpStore %Uvs_StaticsAccessChain %31
+               OpReturn
+               OpFunctionEnd
+%PreConstructor_StaticsAccessChain = OpFunction %void None %8
+     %self_0 = OpFunctionParameter %_ptr_Function_StaticsAccessChain
+         %34 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%DefaultConstructor = OpFunction %void None %8
+     %self_1 = OpFunctionParameter %_ptr_Function_StaticsAccessChain
+         %37 = OpLabel
+         %38 = OpFunctionCall %void %PreConstructor_StaticsAccessChain %self_1
+               OpReturn
+               OpFunctionEnd
+%CopyInputs_Main = OpFunction %void None %8
+     %self_2 = OpFunctionParameter %_ptr_Function_StaticsAccessChain
+         %41 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%CopyOutputs_Main = OpFunction %void None %8
+     %self_3 = OpFunctionParameter %_ptr_Function_StaticsAccessChain
+         %44 = OpLabel
+               OpReturn
+               OpFunctionEnd
+%EntryPoint_Main_StaticsAccessChain = OpFunction %void None %17
+         %46 = OpLabel
+     %self_4 = OpVariable %_ptr_Function_StaticsAccessChain Function
+         %48 = OpFunctionCall %void %InitializeGlobals
+         %49 = OpFunctionCall %void %DefaultConstructor %self_4
+         %50 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %51 = OpFunctionCall %void %Main %self_4
+         %52 = OpFunctionCall %void %CopyOutputs_Main %self_4
+               OpReturn
+               OpFunctionEnd
+%InitializeGlobals = OpFunction %void None %17
+         %53 = OpLabel
+         %54 = OpFunctionCall %void %StaticsAccessChain_Uvs_Initializer
+               OpReturn
+               OpFunctionEnd

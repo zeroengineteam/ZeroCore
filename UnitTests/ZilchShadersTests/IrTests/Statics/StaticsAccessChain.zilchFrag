@@ -1,0 +1,14 @@
+[Pixel][UnitTest]
+struct StaticsAccessChain
+{
+  [Static] var Uvs : FixedArray[Real2, 1] = FixedArray[Real2, 1]()
+  {
+    Real2(0.0, 0.0)
+  };
+  
+  [EntryPoint]
+  function Main()
+  {
+    var uv = StaticsAccessChain.Uvs[0];
+  }
+}
