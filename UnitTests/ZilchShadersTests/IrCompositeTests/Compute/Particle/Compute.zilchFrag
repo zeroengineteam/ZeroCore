@@ -1,0 +1,59 @@
+struct ParticleData
+{
+  var Position : Real4;
+  var Velocity : Real4;
+}
+
+[Compute]
+struct ParticleReader
+{
+  [HardwareBuiltInInput] var GlobalInvocationId : Integer3;
+  [FragmentShared][Input] var Particles : RuntimeArray[ParticleData];
+  
+  [Output] var Particle : ParticleData;
+  
+  function Main()
+  {
+    this.Particle = this.Particles[this.GlobalInvocationId.X];
+  }
+}
+
+[Compute]
+struct ParticleForces
+{
+  [Input] var Gravity : Real4;
+  [Input] var LogicTime : Real;
+  [Input][Output] var Particle : ParticleData;
+  
+  function Main()
+  {
+    this.Particle.Velocity += this.Gravity * this.LogicTime;
+  }
+}
+
+[Compute]
+struct ParticleIntegration
+{
+  [Input] var LogicTime : Real;
+  [Input][Output] var Particle : ParticleData;
+  
+  function Main()
+  {
+    this.Particle.Position += this.Particle.Velocity * this.LogicTime;
+  }
+}
+
+[Compute]
+struct ParticleWriter
+{
+  [HardwareBuiltInInput] var GlobalInvocationId : Integer3;
+  [FragmentShared][Input] var Particles : RuntimeArray[ParticleData];
+  
+  [Input] var Particle : ParticleData;
+  
+  function Main()
+  {
+    this.Particles[this.GlobalInvocationId.X] = this.Particle;
+  }
+}
+

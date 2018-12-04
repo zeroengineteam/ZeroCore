@@ -57,9 +57,23 @@ ZilchShaderIRCompositor::ShaderDefinition::ShaderDefinition()
     mResults[i].mFragmentType = (FragmentType::Enum)i;
 }
 
+//-------------------------------------------------------------------ComputeShaderProperties
+ZilchShaderIRCompositor::ComputeShaderProperties::ComputeShaderProperties()
+{
+  mLocalSizeX = mLocalSizeY = mLocalSizeZ = 1;
+}
+
+ZilchShaderIRCompositor::ComputeShaderProperties::ComputeShaderProperties(int localSizeX, int localSizeY, int localSizeZ)
+{
+  mLocalSizeX = localSizeX;
+  mLocalSizeY = localSizeY;
+  mLocalSizeZ = localSizeZ;
+}
+
 //-------------------------------------------------------------------ZilchShaderIRCompositor
 ZilchShaderIRCompositor::ZilchShaderIRCompositor()
 {
+  mComputeShaderProperties = nullptr;
 }
 
 bool ZilchShaderIRCompositor::Composite(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings)
@@ -109,11 +123,12 @@ bool ZilchShaderIRCompositor::Composite(ShaderDefinition& shaderDef, const Shade
   return true;
 }
 
-bool ZilchShaderIRCompositor::CompositeCompute(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings)
+bool ZilchShaderIRCompositor::CompositeCompute(ShaderDefinition& shaderDef, ComputeShaderProperties* computeProperties, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings)
 {
   mSettings = settings;
   mCapabilities = capabilities;
   mShaderCompositeName = shaderDef.mShaderName;
+  mComputeShaderProperties = computeProperties;
   
   Array<ZilchShaderIRType*> fragments;
   // Find all compute fragments
@@ -126,8 +141,8 @@ bool ZilchShaderIRCompositor::CompositeCompute(ShaderDefinition& shaderDef, cons
       fragments.PushBack(shaderType);
   }
 
-  // Compute shader compositing only works on one fragment
-  if(fragments.Empty() || fragments.Size() > 1)
+  // Make sure there are fragments to composite together
+  if(fragments.Empty())
     return false;
 
   // Create 3 stages (cpu, compute, gpu). This is required for re-using a lot of functionality.
@@ -969,6 +984,15 @@ void ZilchShaderIRCompositor::GenerateComputeZilchComposite(StageLinkingInfo* cu
   
 
   Zilch::ComputeFragmentUserData* computeUserData = computeFragmentType->mZilchType->Has<Zilch::ComputeFragmentUserData>();
+  int localSizeX = computeUserData->mLocalSizeX;
+  int localSizeY = computeUserData->mLocalSizeY;
+  int localSizeZ = computeUserData->mLocalSizeZ;
+  if(mComputeShaderProperties != nullptr)
+  {
+    localSizeX = mComputeShaderProperties->mLocalSizeX;
+    localSizeY = mComputeShaderProperties->mLocalSizeY;
+    localSizeZ = mComputeShaderProperties->mLocalSizeZ;
+  }
 
   // Make the name for the fragment. For uniqueness, append the stage's name to the given composite name.
   String stageName = FragmentType::Names[currentStage->mFragmentType];
@@ -976,9 +1000,9 @@ void ZilchShaderIRCompositor::GenerateComputeZilchComposite(StageLinkingInfo* cu
   // Emit the struct declaration (attributes followed by name)
   builder << "[" << stageName;
   // Emit the local size attributes (controls local workgroup size)
-  builder << "(" << "localSizeX : " << ToString(computeUserData->mLocalSizeX) << ",";
-  builder << "localSizeY : " << ToString(computeUserData->mLocalSizeY) << ",";
-  builder << "localSizeZ : " << ToString(computeUserData->mLocalSizeZ) << ")";
+  builder << "(" << nameSettings.mComputeLocalSizeXParam << " : " << ToString(localSizeX) << ",";
+  builder << nameSettings.mComputeLocalSizeYParam << " : " << ToString(localSizeY) << ",";
+  builder << nameSettings.mComputeLocalSizeZParam << " : " << ToString(localSizeZ) << ")";
   builder << "]";
   for(size_t i = 0; i < extraAttributes.Size(); ++i)
     builder.DeclareAttribute(*extraAttributes.GetAtIndex(i));

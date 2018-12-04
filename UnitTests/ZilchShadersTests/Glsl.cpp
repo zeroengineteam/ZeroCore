@@ -80,6 +80,7 @@ GlslRenderer::GlslRenderer(void* context)
   mZilchFragmentTypeToGlsl.Insert(FragmentType::Vertex, GL_VERTEX_SHADER);
   mZilchFragmentTypeToGlsl.Insert(FragmentType::Geometry, GL_GEOMETRY_SHADER);
   mZilchFragmentTypeToGlsl.Insert(FragmentType::Pixel, GL_FRAGMENT_SHADER);
+  mZilchFragmentTypeToGlsl.Insert(FragmentType::Compute, GL_COMPUTE_SHADER);
 }
 
 GlslRenderer::~GlslRenderer()

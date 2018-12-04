@@ -1,0 +1,32 @@
+[Compute(localSizeX : 1,localSizeY : 1,localSizeZ : 1)][UnitTest]
+struct ComputeParticles_Compute
+{
+  [HardwareBuiltInInput] var GlobalInvocationId : Integer3;
+  [PropertyInput] var Gravity_ParticleForces : Real4;
+  [AppBuiltInInput] var LogicTime : Real;
+
+  [EntryPoint]
+  function Main()
+  {
+    var particleReader = ParticleReader();
+    particleReader.GlobalInvocationId = this.GlobalInvocationId;
+    particleReader.Main();
+
+    var particleForces = ParticleForces();
+    particleForces.Gravity = this.Gravity_ParticleForces;
+    particleForces.LogicTime = this.LogicTime;
+    particleForces.Particle = particleReader.Particle;
+    particleForces.Main();
+
+    var particleIntegration = ParticleIntegration();
+    particleIntegration.LogicTime = this.LogicTime;
+    particleIntegration.Particle = particleForces.Particle;
+    particleIntegration.Main();
+
+    var particleWriter = ParticleWriter();
+    particleWriter.GlobalInvocationId = this.GlobalInvocationId;
+    particleWriter.Particle = particleIntegration.Particle;
+    particleWriter.Main();
+
+  }
+}

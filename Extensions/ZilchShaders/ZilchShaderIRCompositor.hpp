@@ -90,14 +90,24 @@ public:
     /// Any extra attributes to add to declared compositor types (mostly for unit tests)
     ShaderIRAttributeList mExtraAttributes;
   };
+  /// Information needed to composite a compute shader. This is used to set properties that
+  /// need to exist for the whole shader that don't make sense to set (and match) on individual fragments.
+  struct ComputeShaderProperties
+  {
+    ComputeShaderProperties();
+    ComputeShaderProperties(int localSizeX, int localSizeY, int localSizeZ);
+    int mLocalSizeX;
+    int mLocalSizeY;
+    int mLocalSizeZ;
+  };
 
   ZilchShaderIRCompositor();
 
   /// Composite a shader for the rendering pipeline. Doesn't handle compute fragments and only allows one geometry fragment.
   bool Composite(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
-  /// Composite a compute shader. Only currently handles one compute fragment.
-  /// This basically takes care of attribute re-mappings and reflection data.
-  bool CompositeCompute(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
+  /// Composite a compute shader. Compute properties should be passed in to override workgroup sizes.
+  /// If null is passed through, the first fragment's properties are used (mostly legacy for unit testing).
+  bool CompositeCompute(ShaderDefinition& shaderDef, ComputeShaderProperties* computeProperties, const ShaderCapabilities& capabilities, ZilchShaderSpirVSettingsRef& settings);
 
   //-------------------------------------------------------------------Internal
   struct StageLinkingInfo;
@@ -143,6 +153,7 @@ public:
   ZilchShaderSpirVSettingsRef mSettings;
   ShaderCapabilities mCapabilities;
   String mShaderCompositeName;
+  ComputeShaderProperties* mComputeShaderProperties;
 
   //-------------------------------------------------------------------FieldLinkingInfo
   /// Used to store how each field on a fragment is linked together in the final shader.

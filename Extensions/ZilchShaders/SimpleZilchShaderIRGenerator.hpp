@@ -182,8 +182,14 @@ public:
 
   //-------------------------------------------------------------------Compositing
   /// Composes the given shader definition of fragments together. Stores the resultant
-  /// zilch shader code in the given definition object. The zilch shader code is also stored cached internally.
+  /// zilch shader code in the given definition object. The zilch shader code is also cached internally.
   bool ComposeShader(ZilchShaderIRCompositor::ShaderDefinition& shaderDef, ShaderCapabilities& capabilities);
+
+  /// Composes the given shader definition of compute fragments. Stores the resultant
+  /// zilch shader code in the given definition object. The zilch shader code is also cached internally.
+  /// Compute properties (such as the local workgroup size) should be passed through (can optionally be
+  /// null to use the first fragment's properties). 
+  bool ComposeComputeShader(ZilchShaderIRCompositor::ShaderDefinition& shaderDef, ShaderCapabilities& capabilities, ZilchShaderIRCompositor::ComputeShaderProperties* computeProperties = nullptr);
 
   //-------------------------------------------------------------------Shaders
   void AddShaderCode(StringParam shaderCode, StringParam fileName, void* userData);

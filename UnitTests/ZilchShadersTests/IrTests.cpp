@@ -350,7 +350,14 @@ void TestCompositeDefinition(SimpleZilchShaderIRGenerator& shaderGenerator, Seri
   shaderGenerator.ClearShadersProjectAndLibrary();
 
   // Compose them together
-  bool successfulComposite = shaderGenerator.ComposeShader(resultShader, capabilities);
+  bool successfulComposite = false;
+
+  // @JoshD: Huge hack. Need to distinguish compute shader pipelines from rendering pipelines
+  // in the shader def at some point. For now just rely on the shader name to contain compute.
+  if(shaderDef.mShaderName.Contains("Compute"))
+    successfulComposite = shaderGenerator.ComposeComputeShader(resultShader, capabilities);
+  else
+    successfulComposite = shaderGenerator.ComposeShader(resultShader, capabilities);
   if(!successfulComposite)
   {
     ReportErrors(shaderGenerator, directory, reporter);

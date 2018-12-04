@@ -1,0 +1,13 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "ComputeParticles",
+    Array FragmentNames = 
+    [
+      "ParticleReader",
+      "ParticleForces",
+      "ParticleIntegration",
+      "ParticleWriter",
+    ],
+  },
+],
