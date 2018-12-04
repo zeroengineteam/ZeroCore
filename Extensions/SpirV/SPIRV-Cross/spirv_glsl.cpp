@@ -1559,6 +1559,10 @@ void CompilerGLSL::emit_buffer_block_native(const SPIRVariable &var)
 	if (ir.meta[type.self].decoration.alias.empty() || block_namespace.find(buffer_name) != end(block_namespace))
 		buffer_name = get_block_fallback_name(var.self);
 
+	// ZERO_EDIT: Temporary edit to deal with duplicate names.
+	// Should eventually get fixed by issue: https://github.com/KhronosGroup/SPIRV-Cross/issues/780
+	update_name_cache(resource_names, buffer_name);
+
 	// Make sure we get something unique.
 	add_variable(block_namespace, buffer_name);
 

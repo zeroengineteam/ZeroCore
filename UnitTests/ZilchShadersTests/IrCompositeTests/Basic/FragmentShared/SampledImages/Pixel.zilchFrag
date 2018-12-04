@@ -1,0 +1,47 @@
+[Pixel]
+struct Pixel1
+{
+  [FragmentShared][PropertyInput] var SampledImage : SampledImage2d;
+  [FragmentShared][PropertyInput] var Sampler : Sampler;
+  [FragmentShared][PropertyInput] var Image2d : Image2d;
+  
+  function Main()
+  {
+    var uv = Real2();
+    var color = ShaderIntrinsics.SampleImplicitLod(this.SampledImage, uv);
+    color = ShaderIntrinsics.SampleImplicitLod(this.Image2d, this.Sampler, uv);
+  }
+}
+
+[Pixel]
+struct Pixel2
+{
+  [FragmentShared][PropertyInput] var Image2d : Image2d;
+  [FragmentShared][PropertyInput] var Sampler : Sampler;
+  [FragmentShared][PropertyInput] var SampledImage : SampledImage2d;
+  
+  function Main()
+  {
+    var uv = Real2();
+    var color = ShaderIntrinsics.SampleImplicitLod(this.SampledImage, uv);
+    color = ShaderIntrinsics.SampleImplicitLod(this.Image2d, this.Sampler, uv);
+  }
+}
+
+[Pixel]
+struct Pixel3
+{
+  // Wrong name
+  [FragmentShared][PropertyInput] var SampledImage2 : SampledImage2d;
+  // Not marked shared
+  [PropertyInput] var Sampler : Sampler;
+  [PropertyInput] var Image2d : Image2d;
+  
+  function Main()
+  {
+    var uv = Real2();
+    var color = ShaderIntrinsics.SampleImplicitLod(this.SampledImage2, uv);
+    color = ShaderIntrinsics.SampleImplicitLod(this.Image2d, this.Sampler, uv);
+  }
+}
+

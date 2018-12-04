@@ -1,0 +1,54 @@
+struct SubStruct
+{
+  var Data : Real;
+}
+
+[Pixel]
+struct Pixel1
+{
+  [FragmentShared][PropertyInput] var Array1 : RuntimeArray[Real];
+  [FragmentShared][PropertyInput] var Array2 : RuntimeArray[Integer];
+  [FragmentShared][PropertyInput] var Array3 : RuntimeArray[SubStruct];
+  
+  function Main()
+  {
+    var real = this.Array1[0];
+    var int = this.Array2[0];
+    var subStruct = this.Array3[0];
+  }
+}
+
+[Pixel]
+struct Pixel2
+{
+  // In opposite order since order shouldn't matter
+  [FragmentShared][PropertyInput] var Array3 : RuntimeArray[SubStruct];
+  [FragmentShared][PropertyInput] var Array2 : RuntimeArray[Integer];
+  [FragmentShared][PropertyInput] var Array1 : RuntimeArray[Real];
+  
+  function Main()
+  {
+    var real = this.Array1[0];
+    var int = this.Array2[0];
+    var subStruct = this.Array3[0];
+  }
+}
+
+[Pixel]
+struct Pixel3
+{
+  // Wrong name
+  [FragmentShared][PropertyInput] var Array1_Real : RuntimeArray[Real];
+  // Wrong type
+  [FragmentShared][PropertyInput] var Array1 : RuntimeArray[Integer];
+  // Not marked shared
+  [PropertyInput] var Array3 : RuntimeArray[SubStruct];
+  
+  function Main()
+  {
+    var real = this.Array1_Real[0];
+    var int = this.Array1[0];
+    var subStruct = this.Array3[0];
+  }
+}
+

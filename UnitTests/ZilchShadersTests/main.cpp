@@ -44,7 +44,10 @@ void RunTests()
   RendererPackage glslPackage;
   glslPackage.mErrorReporter = &glslReporter;
   glslPackage.mRenderer = &glslRenderer;
-  glslPackage.mBackend = new ZilchShaderGlslBackend();
+  ZilchShaderGlslBackend* glslBackend = new ZilchShaderGlslBackend();
+  // Required to test runtime arrays
+  glslBackend->mTargetVersion = 440;
+  glslPackage.mBackend = glslBackend;
 
   UnitTestPackage unitTestPackage;
   unitTestPackage.mBackends.PushBack(new ZilchSpirVDisassemblerBackend());
@@ -66,6 +69,10 @@ void RunTests()
 
   TestDirectory(irGenerator, unitTestPackage, "IrTests", glslReporter, true);
   TestDirectory(irGenerator, unitTestPackage, "IrCompositeTests", glslReporter, true);
+
+  // Currently requires 150 for how uniforms are passed through.
+  // @JoshD: update to uniform buffers later.
+  glslBackend->mTargetVersion = 150;
   TestRunning(irGenerator, unitTestPackage, "RunningIrTests", true);
   
   glslReporter.mAssert = false;

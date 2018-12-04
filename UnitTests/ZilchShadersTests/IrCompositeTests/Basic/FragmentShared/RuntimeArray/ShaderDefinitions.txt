@@ -1,0 +1,12 @@
+Array Shaders = 
+[
+  {
+    string ShaderName = "PixelTest",
+    Array FragmentNames = 
+    [
+      "Pixel1",
+      "Pixel2",
+      "Pixel3",
+    ],
+  },
+],

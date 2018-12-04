@@ -1,0 +1,18 @@
+[Pixel][UnitTest]
+struct PixelTest_Pixel
+{
+
+  [EntryPoint]
+  function Main()
+  {
+    var pixel1 = Pixel1();
+    pixel1.Main();
+
+    var pixel2 = Pixel2();
+    pixel2.Main();
+
+    var pixel3 = Pixel3();
+    pixel3.Main();
+
+  }
+}

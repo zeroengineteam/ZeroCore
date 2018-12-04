@@ -30,6 +30,26 @@ typedef void(*TypeCastResolverIRFn)(ZilchSpirVFrontEnd* translator, Zilch::TypeC
 typedef void(*TemplateTypeIRResloverFn)(ZilchSpirVFrontEnd* translator, Zilch::BoundType* boundType);
 typedef void(*ExpressionInitializerIRResolverFn)(ZilchSpirVFrontEnd* translator, Zilch::ExpressionInitializerNode*& node, ZilchSpirVFrontEndContext* context);
 
+//-------------------------------------------------------------------FragmentSharedKey
+/// Hash key used to lookup fields with the FragmentShared attribute. A shared field
+/// is uniquely described by its type and name (additionally include any storage
+/// class as this is technically part of the type, not sure if this is actually important).
+struct FragmentSharedKey
+{
+  FragmentSharedKey();
+  FragmentSharedKey(spv::StorageClass storageClass, ZilchShaderIRType* fieldType, StringParam varName);
+
+  size_t Hash() const;
+  bool operator==(const FragmentSharedKey& rhs) const;
+
+  spv::StorageClass mStorageClass;
+  ZilchShaderIRType* mFieldType;
+  String mVariableName;
+
+private:
+  template <typename T> void HashCombine(size_t& seed, const T& value) const;
+};
+
 //-------------------------------------------------------------------TypeResolvers
 /// A collection of member/function/etc... resolvers for specific library
 /// translations. Some examples include Math.Dot and samplers.
@@ -145,6 +165,8 @@ public:
   GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField, bool checkDependencies = true);
   /// Find the global variable data associate with the given instance variable op.
   GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies = true);
+  /// Find the global variable data associated with a fragment shared variable.
+  GlobalVariableData* FindFragmentSharedVariable(const FragmentSharedKey& key, bool checkDependencies = true);
 
   /// Find a resolver for a template type
   TemplateTypeIRResloverFn FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies = true);
@@ -190,6 +212,8 @@ public:
   GlobalVariableData* FindGlobalVariable(Zilch::Field* zilchField, bool checkDependencies = true);
   /// Find the global variable data associate with the given instance variable op.
   GlobalVariableData* FindGlobalVariable(ZilchShaderIROp* globalInstance, bool checkDependencies = true);
+  /// Find the global variable data associated with a fragment shared variable.
+  GlobalVariableData* FindFragmentSharedVariable(const FragmentSharedKey& key, bool checkDependencies = true);
   
   // Resolvers for template types (e.g. FixedArray)
   void RegisterTemplateResolver(const TemplateTypeKey& templateKey, TemplateTypeIRResloverFn resolver);
@@ -237,6 +261,7 @@ public:
   PodBlockArray<ShaderIRFunctionMeta*> mOwnedFunctionMeta;
   PodBlockArray<ShaderIRTypeMeta*> mOwnedTypeMeta;
   PodBlockArray<ZilchShaderIROp*> mOwnedSpecializationConstants;
+  PodBlockArray<GlobalVariableData*> mOwnedGlobals;
 
   /// Map of all types by name (Zilch type name). Contains all types generated
   /// (including function pointer types, Real*, etc...), not just bound types.
@@ -253,8 +278,13 @@ public:
   HashMap<void*, ZilchShaderIROp*> mSpecializationConstantMap;
   /// All globals declared in this library. Currently used for samplers.
   HashMap<Zilch::Field*, GlobalVariableData*> mZilchFieldToGlobalVariable;
-  /// Mapping from the global variable ops to the owning field so that the global variable data can be looked up.
-  HashMap<ZilchShaderIROp*, Zilch::Field*> mGlobalVariableToZilchField;
+  /// Maps ops of global variables to their variable data.
+  /// Used for the backend to find the initializer function for globals.
+  HashMap<ZilchShaderIROp*, GlobalVariableData*> mVariableOpLookupMap;
+  /// Lookup map for global variables with the FragmentShared attribute.
+  /// Needed to find if a shared variable has already been created.
+  HashMap<FragmentSharedKey, GlobalVariableData*> mFragmentSharedGlobalVariables;
+  
 
   /// Map of all zilch functions to shader functions
   HashMap<Zilch::Function*, ZilchShaderIRFunction*> mFunctions;
