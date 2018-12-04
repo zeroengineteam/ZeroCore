@@ -1,0 +1,2 @@
+  IrErrorTests\Attributes\FragmentShared\BadFragmentShared1.zilchFrag(4): Attribute [FragmentShared] is only valid on opaque data types:
+  Attribute [FragmentShared] is only valid on opaque data types

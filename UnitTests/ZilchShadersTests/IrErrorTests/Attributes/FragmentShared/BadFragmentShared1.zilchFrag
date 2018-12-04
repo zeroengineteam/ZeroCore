@@ -1,0 +1,9 @@
+[Pixel]
+struct BadFragmentShared1
+{
+  [FragmentShared] var MyVar : Real = 1.0;
+  
+  function Main()
+  {
+  }
+}
