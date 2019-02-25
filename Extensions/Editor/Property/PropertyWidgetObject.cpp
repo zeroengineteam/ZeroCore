@@ -864,20 +864,11 @@ void PropertyWidgetObject::OnViewDoc(ObjectEvent* event)
 //******************************************************************************
 void PropertyWidgetObject::OnViewOnlineDocs(ObjectEvent* event)
 {
-  // View Website with Search pre-filled
-  // Set up Text
-  static const String prefix = "https://docsapi.zeroengine.io/?";
-  String searchTerm = mNode->mObject.StoredType->Name;
-  
   // Assemble URL
   StringBuilder builder;
-  builder.Append(prefix);
-  builder.Append("BuildId=");
-  builder.Append(GetBuildIdString());
-  builder.Append("&ChangeSetDate=");
-  builder.Append(GetChangeSetDateString());
-  builder.Append("&ViewOnlineDocs=");
-  builder.Append(mNode->mObject.StoredType->Name);
+  builder.Append("https://github.com/zeroengineteam/ZeroDocs/blob/master/code_reference/class_reference/");
+  builder.Append(mNode->mObject.StoredType->Name.ToLower());
+  builder.Append(".markdown");
   String url = builder.ToString();
 
   // Open browser with URL
