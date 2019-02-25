@@ -618,7 +618,7 @@ Widget* Editor::ShowBrowser(String url, String title)
 
 Widget* Editor::ShowMarket()
 {
-  const char* cURL = "https://market.zeroengine.io/?q=products";
+  const char* cURL = "https://github.com/zeroengineteam/ZeroMarket";
   WebBrowserSetup setup(cURL, cWebBrowserDefaultSize, false, Vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
   WebBrowserWidget* browser = new WebBrowserWidget(this, setup);
