@@ -93,6 +93,8 @@ public:
   Widget* ShowConsole();
   Widget* ToggleConsole();
   Widget* ShowBrowser();
+  Widget* ShowBrowser(String url);
+  Widget* ShowBrowser(String url, String title);
   Widget* ShowMarket();
   Widget* ShowChat();
 

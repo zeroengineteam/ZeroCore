@@ -24,42 +24,16 @@ public:
 
   // Internal
   void OnSend(Event* event);
-  void OnBrowse(Event* event);
-  void OnBrowseSelected(OsFileSelection* event);
-  void OnUpdate(UpdateEvent* event);
-  
+
   TextBox* mUserName;
   TextBox* mTitle;
+  SelectorButton* mSelectorButton;
   TextButton* mSend;
   TextEditor* mExpected;
   TextEditor* mHappened;
   TextEditor* mRepro;
   
-  TextBox* mIncludeFile;
-  TextButton* mBrowse;
-  TextCheckBox* mIncludeClipboardImage;
-  TextCheckBox* mIncludeScreenshot;
-  TextCheckBox* mIncludeProject;
   bool mSent;
 };
-
-
-class BugReportJob : public Job
-{
-public:
-  int Execute();
-
-  String mFileName;
-  CogId mProject;
-  String mUserName;
-  String mTitle;
-  String mRepro;
-  String mExpected;
-  String mHappened;
-  String mIncludedFile;
-  Image mScreenshot;
-  Image mClipboardImage;
-};
-
 
 }//namespace Zero
