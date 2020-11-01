@@ -10,8 +10,17 @@ namespace Zero
 class Renderer;
 Renderer* CreateRenderer(OsHandle windowHandle, String& error);
 
+extern const String cPostVertex;
+StringParam GetCoreVertexFragmentName(CoreVertexType::Enum type);
+
 // Base types for renderer to implement resource render data
-class MaterialRenderData {};
+class MaterialRenderData
+{
+public:
+  String mCompositeName;
+  u64 mResourceId;
+};
+
 class MeshRenderData {};
 class TextureRenderData {};
 
@@ -272,6 +281,7 @@ public:
   String mCoreVertex;
   String mComposite;
   String mRenderPass;
+  bool mSentToRenderer = false;
 };
 
 class ShaderEntry
