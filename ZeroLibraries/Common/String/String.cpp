@@ -142,7 +142,7 @@ String::String(char character)
 String::String(Rune rune)
 {
   byte utf8Bytes[4];
-  int bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
+  size_t bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
 
   Assign((char*)utf8Bytes, bytesRead);
 }
@@ -797,7 +797,7 @@ String String::ToLower() const
 String String::Repeat(Rune rune, size_t numberOfTimes)
 {
   byte utf8Bytes[4];
-  int bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
+  size_t bytesRead = UTF8::UnpackUtf8RuneIntoBuffer(rune, utf8Bytes);
   // Create a temporary memory buffer that Contains the character repeated over and over
   size_t bufferSize = numberOfTimes * bytesRead;
   char* buffer = (char*)alloca(bufferSize);

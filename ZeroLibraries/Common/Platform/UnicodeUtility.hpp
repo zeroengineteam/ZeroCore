@@ -33,10 +33,10 @@ namespace UTF8
   Rune  ToLower(Rune rune);
   Rune  ToUpper(Rune rune);
 
-  uint Utf8ToUtf32(Rune utf8);
-  size_t UnpackUtf8RuneIntoBuffer(Rune uft8Rune, byte(&utf8Bytes)[4]);
+  u32 Utf8ToUtf32(Rune utf8);
+  u32 UnpackUtf8RuneIntoBuffer(Rune uft8Rune, byte(&utf8Bytes)[4]);
   Rune ReadUtf8Rune(byte* firstByte);
-  size_t EncodedCodepointLength(byte utf8FirstByte);
+  u8 EncodedCodepointLength(byte utf8FirstByte);
 }
 
 }// namespace Zero

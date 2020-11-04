@@ -45,7 +45,7 @@ Pair<StringRange,StringRange> SplitOnLast(StringRange input, Rune delimiter)
   if(input.Empty())
     return Pair<StringRange,StringRange>(input, input);
 
-  uint numRunes = input.ComputeRuneCount();
+  size_t numRunes = input.ComputeRuneCount();
 
   StringRange lastOf = input.FindLastOf(delimiter);
 
@@ -111,7 +111,7 @@ char OnlyAlphaNumeric(char c)
 
 //******************************************************************************
 // Recursive helper for global string Permute below
-static void PermuteRecursive(char *src, uint start, uint end, Array<String>& perms)
+static void PermuteRecursive(char *src, size_t start, size_t end, Array<String>& perms)
 {
   // finished a permutation, add it to the list
   if (start == end)
@@ -120,7 +120,7 @@ static void PermuteRecursive(char *src, uint start, uint end, Array<String>& per
     return;
   }
 
-  for (uint i = start; i < end; ++i)
+  for (size_t i = start; i < end; ++i)
   {
     // swap to get new head
     Swap(src[start], src[i]);
@@ -136,7 +136,7 @@ static void PermuteRecursive(char *src, uint start, uint end, Array<String>& per
 void Permute(StringParam src, Array<String>& perms)
 {
   // convert to std string which is char writable
-  uint srclen = src.SizeInBytes();
+  size_t srclen = src.SizeInBytes();
 
   // create a temp buffer on the stack to manipulate src
   char *buf = (char *)alloca(srclen + 1);
@@ -150,7 +150,7 @@ void Permute(StringParam src, Array<String>& perms)
 void SuperPermute(StringParam src, Array<String>& perms)
 {
   // convert to std string which is char writable
-  uint srclen = src.SizeInBytes();
+  size_t srclen = src.SizeInBytes();
   const char *csrc = src.c_str();
 
   // create a temp buffer on the stack to manipulate src

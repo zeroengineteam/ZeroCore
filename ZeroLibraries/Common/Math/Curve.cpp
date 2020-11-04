@@ -208,7 +208,7 @@ void SplineCurve::MakeContinuous(Vec3Array& points) const
   Vec3 ab = points[0] - points[1];
   points.Insert(points.Begin(),points[0] + ab);
 
-  uint size = points.Size();
+  size_t size = points.Size();
   Vec3 cd = points[size - 1] - points[size - 2];
   points.PushBack(points[size - 1] + cd);
 }
@@ -285,7 +285,7 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, real er
     
     while(stack.Size() != 1)
     {
-      uint size = stack.Size();
+      size_t size = stack.Size();
 
       PointData data0 = stack[size - 1];
       PointData data1 = stack[size - 2];
@@ -409,7 +409,7 @@ void BakedCurve::Bake(const SplineCurve& curve, real error)
 
 uint BakedCurve::Size() const
 {
-  return mArcLengthTable.Size();
+  return static_cast<uint>(mArcLengthTable.Size());
 }
 
 real BakedCurve::GetTotalArcLength() const
@@ -546,7 +546,7 @@ uint BakedCurve::SampleLowerBound(real distance) const
 {
   //binary search for the lower bound
   uint begin = 0;
-  uint end = mArcLengthTable.Size() - 1;
+  uint end = static_cast<uint>(mArcLengthTable.Size()) - 1;
 
   while(begin < end)
   {

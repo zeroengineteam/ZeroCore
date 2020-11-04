@@ -55,9 +55,9 @@ StringRange::StringRange(StringIterator pbegin, size_t sizeInBytes)
   : mOriginalString(pbegin.mIteratorRange.mOriginalString),
     mBegin(pbegin.Data())
 {
-  int bytesToEndFromIterator = mOriginalString.SizeInBytes() - (pbegin.Data() - mOriginalString.Data());
+  ptrdiff_t bytesToEndFromIterator = mOriginalString.SizeInBytes() - (pbegin.Data() - mOriginalString.Data());
   // if someone really messed up bytes to end could be negative, use int.
-  if ((int)sizeInBytes > bytesToEndFromIterator)
+  if ((ptrdiff_t)sizeInBytes > bytesToEndFromIterator)
     mEnd = pbegin.Data() + bytesToEndFromIterator;
   else
     mEnd = pbegin.Data() + sizeInBytes;
@@ -211,7 +211,7 @@ bool StringRange::operator!=(char c) const
 StringRange StringRange::FindFirstOf(Rune rune) const
 {
   byte buffer[4];
-  uint sizeInBytes = UTF8::UnpackUtf8RuneIntoBuffer(rune, buffer);
+  size_t sizeInBytes = UTF8::UnpackUtf8RuneIntoBuffer(rune, buffer);
 
   return FindFirstByBytes((char*)buffer, sizeInBytes);
 }
@@ -224,7 +224,7 @@ StringRange StringRange::FindFirstOf(StringRangeParam value) const
 StringRange StringRange::FindLastOf(Rune rune) const
 {
   byte buffer[4];
-  uint sizeInBytes = UTF8::UnpackUtf8RuneIntoBuffer(rune, buffer);
+  size_t sizeInBytes = UTF8::UnpackUtf8RuneIntoBuffer(rune, buffer);
 
   return FindLastByBytes((char*)buffer, sizeInBytes);
 }
@@ -234,18 +234,18 @@ StringRange StringRange::FindLastOf(StringRangeParam value) const
   return FindLastByBytes(value.mBegin, value.SizeInBytes());
 }
 
-StringRange StringRange::FindFirstByBytes(cstr buffer, uint valueSizeInBytes) const
+StringRange StringRange::FindFirstByBytes(cstr buffer, size_t valueSizeInBytes) const
 {
   size_t rangeSize = SizeInBytes();
 
   if (!valueSizeInBytes || valueSizeInBytes > rangeSize)
     return StringRange();
 
-  uint searchSize = rangeSize - valueSizeInBytes;
+  size_t searchSize = rangeSize - valueSizeInBytes;
 
-  for (uint i = 0; i <= searchSize; i += UTF8::EncodedCodepointLength(mBegin[i]))
+  for (size_t i = 0; i <= searchSize; i += UTF8::EncodedCodepointLength(mBegin[i]))
   {
-    uint j;
+    size_t j;
     for (j = 0; j < valueSizeInBytes; ++j)
     {
       if (mBegin[i + j] != buffer[j])
@@ -259,7 +259,7 @@ StringRange StringRange::FindFirstByBytes(cstr buffer, uint valueSizeInBytes) co
   return StringRange();
 }
 
-StringRange StringRange::FindLastByBytes(cstr buffer, uint valueSizeInBytes) const
+StringRange StringRange::FindLastByBytes(cstr buffer, size_t valueSizeInBytes) const
 {
   size_t rangeSize = SizeInBytes();
 
@@ -791,14 +791,14 @@ bool StringIterator::operator>(const StringIterator& rhs) const
   return false;
 }
 
-StringIterator StringIterator::operator+(uint numElements) const
+StringIterator StringIterator::operator+(ptrdiff_t numElements) const
 {
   StringIterator it = *this;
   it += numElements;
   return it;
 }
 
-StringIterator StringIterator::operator-(uint numElements) const
+StringIterator StringIterator::operator-(ptrdiff_t numElements) const
 {
   StringIterator it = *this;
   it -= numElements;
@@ -817,7 +817,7 @@ int StringIterator::operator-(StringIterator rhs) const
   return elements;
 }
 
-StringIterator& StringIterator::operator+=(uint numElements)
+StringIterator& StringIterator::operator+=(ptrdiff_t numElements)
 {
   while (numElements)
   {
@@ -827,7 +827,7 @@ StringIterator& StringIterator::operator+=(uint numElements)
   return *this;
 }
 
-StringIterator& StringIterator::operator-=(uint numElements)
+StringIterator& StringIterator::operator-=(ptrdiff_t numElements)
 {
   while (numElements)
   {
@@ -838,7 +838,7 @@ StringIterator& StringIterator::operator-=(uint numElements)
 }
 
 //Backwards compatibility, should modify later
-char StringIterator::operator[](uint numBytes) const
+char StringIterator::operator[](ptrdiff_t numBytes) const
 {
   return (char)*(mIteratorRange.mBegin + numBytes);
 }

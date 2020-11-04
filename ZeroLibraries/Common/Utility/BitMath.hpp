@@ -21,7 +21,7 @@ static_assert(CHAR_BIT == 8, "Platform byte length must be 8 bits");
 /// Converts Bits to Bytes
 #define BITS_TO_BYTES(b) (((b) + 7) >> 3)
 /// Converts Bytes to Bits
-#define BYTES_TO_BITS(B) ((B) * 8)
+#define BYTES_TO_BITS(B) (static_cast<Bits>((B) * 8))
 
 /// Unsigned integer bit size
 #define UINT_BITS    (BYTES_TO_BITS(sizeof(uint)))

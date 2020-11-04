@@ -59,8 +59,8 @@ public:
   StringRange FindLastOf(Rune rune) const;
   StringRange FindLastOf(StringRangeParam value) const;
 
-  StringRange FindFirstByBytes(cstr buffer, uint valueSizeInBytes) const;
-  StringRange FindLastByBytes(cstr buffer, uint valueSizeInBytes) const;
+  StringRange FindFirstByBytes(cstr buffer, size_t valueSizeInBytes) const;
+  StringRange FindLastByBytes(cstr buffer, size_t valueSizeInBytes) const;
 
   StringIterator FindFirstNonWhitespaceRuneIt() const;
   StringIterator FindLastNonWhitespaceRuneIt() const;
@@ -165,12 +165,12 @@ public:
   bool operator<(StringIteratorParam rhs) const;
   bool operator>(StringIteratorParam rhs) const;
 
-  StringIterator operator+(uint numElements) const;
-  StringIterator operator-(uint numElements) const;
+  StringIterator operator+(ptrdiff_t numElements) const;
+  StringIterator operator-(ptrdiff_t numElements) const;
   int operator-(StringIterator rhs) const;
-  StringIterator& operator+=(uint numElements);
-  StringIterator& operator-=(uint numElements);
-  char operator[](uint numBytes) const;
+  StringIterator& operator+=(ptrdiff_t numElements);
+  StringIterator& operator-=(ptrdiff_t numElements);
+  char operator[](ptrdiff_t numBytes) const;
   
   StringIterator& operator++();
   StringIterator& operator--();

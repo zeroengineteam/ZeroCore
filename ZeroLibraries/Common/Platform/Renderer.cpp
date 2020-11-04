@@ -1279,7 +1279,7 @@ void RenderQueues::AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1,
   mStreamedVertices.PushBack(v3);
   mStreamedVertices.PushBack(v0);
 
-  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = static_cast<uint>(mStreamedVertices.Size()) - viewNode.mStreamedVertexStart;
   viewNode.mStreamedVertexType = PrimitiveType::Lines;
 }
 
@@ -1298,7 +1298,7 @@ void RenderQueues::AddStreamedQuad(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec
   mStreamedVertices.PushBack(v3);
   mStreamedVertices.PushBack(v0);
 
-  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = static_cast<uint>(mStreamedVertices.Size()) - viewNode.mStreamedVertexStart;
 }
 
 //**************************************************************************************************
@@ -1440,7 +1440,7 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode, Vec3 pos0, Vec3
     }
   }
 
-  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = static_cast<uint>(mStreamedVertices.Size()) - viewNode.mStreamedVertexStart;
 }
 
 //**************************************************************************************************
@@ -1458,7 +1458,7 @@ void RenderQueues::AddStreamedQuadView(ViewNode& viewNode, Vec3 pos[4], Vec2 uv0
   mStreamedVertices.PushBack(v3);
   mStreamedVertices.PushBack(v0);
 
-  viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
+  viewNode.mStreamedVertexCount = static_cast<uint>(mStreamedVertices.Size()) - viewNode.mStreamedVertexStart;
 }
 
 //**************************************************************************************************

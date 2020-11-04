@@ -15,7 +15,7 @@
 namespace Zero
 {
 
-const int ObjListPtrDebugValue = 0xFFFFDEAD;
+const size_t ObjListPtrDebugValue = 0xFFFFDEAD;
 
 #ifndef DEBUGLINKS
 #if ZeroDebug

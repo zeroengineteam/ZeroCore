@@ -32,7 +32,7 @@ struct Guid
 
   explicit operator bool() const { return mValue; }
   explicit operator u64() const { return mValue; }
-  explicit operator size_t() const { return (size_t)mValue; }
+  explicit operator uint() const { return (uint)mValue; }
 
   size_t Hash() const;
 

@@ -705,7 +705,7 @@ void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotati
 
   // Sometimes sheer can cause the rotation matrix to not be normalized.
   // As a temp fix just force it to be normalized here.
-  for(size_t i = 0; i < 3; ++i)
+  for(uint i = 0; i < 3; ++i)
   {
     Vector3 basis = rotation.GetBasis(i);
     basis.AttemptNormalize();

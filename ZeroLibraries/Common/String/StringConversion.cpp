@@ -54,10 +54,10 @@ Guid ReadHexString(const StringRange& originalRange)
   return (Guid)result;
 }
 
-uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue, bool exclude0x)
+size_t WriteToHexSize(char* buffer, size_t bufferSize, size_t places, u64 integerValue, bool exclude0x)
 {
   // + 2 for '0x' at the start of the hex string if we're including the '0x'
-  uint offset0x = exclude0x ? 0 : 2;
+  size_t offset0x = exclude0x ? 0 : 2;
   if(bufferSize < places + 1 + offset0x)
     return 0;
 
@@ -68,13 +68,13 @@ uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue
     buffer[1] = 'x';
   }
 
-  for(uint i = 0; i < places; ++i)
+  for(size_t i = 0; i < places; ++i)
   {
     // Get the value of the right most hex value
-    uint indexVal = uint(integerValue & 0x0000000F);
+    size_t indexVal = size_t(integerValue & 0x0000000F);
 
     // Convert the hex value to the correct character
-    uint charVal = 0;
+    size_t charVal = 0;
     if(indexVal <= 9)
       charVal = indexVal + '0';
     else if(10 <= indexVal && indexVal <= 16)
@@ -92,18 +92,18 @@ uint WriteToHexSize(char* buffer, uint bufferSize, uint places, u64 integerValue
   return places + offset0x;
 }
 
-uint WriteToHex(char* buffer, uint bufferSize, u64 integerValue, bool exclude0x)
+size_t WriteToHex(char* buffer, size_t bufferSize, u64 integerValue, bool exclude0x)
 {
   return WriteToHexSize(buffer, bufferSize, cHex64Size, integerValue, exclude0x);
 }
 
-uint WriteToHex(char* buffer, uint bufferSize, u32 integerValue, bool exclude0x)
+size_t WriteToHex(char* buffer, size_t bufferSize, u32 integerValue, bool exclude0x)
 {
   return WriteToHexSize(buffer, bufferSize, 8, (u64)integerValue, exclude0x);
 }
 
 //Max 4294967295
-const uint cMaxIntSize = 12;
+const size_t cMaxIntSize = 12;
 
 void ReverseString(char* start, char* end)
 {
@@ -135,7 +135,7 @@ String ReverseString(StringParam string)
   return String(reverseString);
 }
 
-uint ToString(char* buffer, uint bufferSize, s64 value)
+size_t ToString(char* buffer, size_t bufferSize, s64 value)
 {
   if(bufferSize < cMaxIntSize)
     return 0;
@@ -147,7 +147,7 @@ uint ToString(char* buffer, uint bufferSize, s64 value)
     valueIsNegative = true;
   }
 
-  uint index = 0;
+  size_t index = 0;
   do 
   {
     char c = value % 10 + '0';
@@ -262,16 +262,16 @@ void ToValue(StringRangeParam range, Guid& value)
 // ToBuffer Functions
 //
 
-uint ToBuffer(char* buffer, uint bufferSize, String value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, String value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%s", value.c_str());
 }
-uint ToBuffer(char* buffer, uint bufferSize, StringRange value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, StringRange value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%s", value.mBegin);
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, bool value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, bool value, bool shortFormat)
 {
   if(value)
   {
@@ -285,58 +285,58 @@ uint ToBuffer(char* buffer, uint bufferSize, bool value, bool shortFormat)
   }
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, char value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, char value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%c", value);
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, int8 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, int8 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%hhd", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, int16 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, int16 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%hd", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, int32 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, int32 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%d", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, int64 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, int64 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%lld", value);
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, uint8 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, uint8 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%hhu", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, uint16 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, uint16 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%hu", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, uint32 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, uint32 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%u", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, uint64 value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, uint64 value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%llu", value);
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, ulong value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, ulong value, bool shortFormat)
 {
   return ZeroSPrintf(buffer, bufferSize, "%llu", (uint64)value);
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, float value, bool shortFormat)
 {
   if(shortFormat)
     return ZeroSPrintf(buffer, bufferSize, "%g", value);
   else
     return ZeroSPrintf(buffer, bufferSize, "%.9g", value);
 }
-uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, double value, bool shortFormat)
 {
   if(shortFormat)
     return ZeroSPrintf(buffer, bufferSize, "%f", value);
@@ -344,10 +344,10 @@ uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat)
     return ZeroSPrintf(buffer, bufferSize, "%.9f", value);
 }
 
-uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat)
+size_t ToBuffer(char* buffer, size_t bufferSize, Guid value, bool shortFormat)
 {
   // 16 characters for Hex, 2 for the '0x' at the start
-  const uint cMinSize = cHex64Size + 2;
+  const size_t cMinSize = cHex64Size + 2;
   ErrorIf(bufferSize < cMinSize, "Buffer is not large enough for hex value.");
   if(bufferSize > cMinSize)
     return WriteToHex(buffer, bufferSize, value.mValue, shortFormat);
@@ -356,7 +356,7 @@ uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat)
 }
 
 //Basic conversion function (input must be UTF-16/2) DestAscii must be unicodeLength +1
-void ConvertUnicodeToAscii(char* destAscii, uint bufferSize, 
+void ConvertUnicodeToAscii(char* destAscii, size_t bufferSize,
                            const wchar_t* unicodeData, size_t unicodeLength)
 {
   if(bufferSize < unicodeLength +1)
@@ -366,7 +366,7 @@ void ConvertUnicodeToAscii(char* destAscii, uint bufferSize,
   }
   else
   {
-    for(uint i=0;i<unicodeLength;++i)
+    for(size_t i=0;i<unicodeLength;++i)
     {
       if(unicodeData[i] > 128)
       {
