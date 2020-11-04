@@ -39,8 +39,8 @@ struct ZeroShared Quaternion
   Quaternion() {};
   explicit Quaternion(real x, real y, real z, real w);
 
-  real& operator[](uint index);
-  real operator[](uint index) const;
+  real& operator[](size_t index);
+  real operator[](size_t index) const;
 
   // Unary Operators
   Quaternion operator-() const;

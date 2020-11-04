@@ -25,13 +25,13 @@ BoolVector3::BoolVector3(bool x_, bool y_, bool z_)
   z = z_;
 }
 
-bool& BoolVector3::operator[](uint index)
+bool& BoolVector3::operator[](size_t index)
 {
   ErrorIf(index > 2, "Math::BoolVector3 - Subscript out of range.");
   return array[index];
 }
 
-bool BoolVector3::operator[](uint index) const
+bool BoolVector3::operator[](size_t index) const
 {
   ErrorIf(index > 2, "Math::BoolVector3 - Subscript out of range.");
   return array[index];

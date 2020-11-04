@@ -30,8 +30,8 @@ struct ZeroShared Vector3
   explicit Vector3(Vec2Param vec2, real z = real(0.0));
   explicit Vector3(ConstRealPointer data);
 
-  real& operator[](uint index);
-  real operator[](uint index) const;
+  real& operator[](size_t index);
+  real operator[](size_t index) const;
 
   // Unary Operators
   Vector3 operator-() const;

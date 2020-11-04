@@ -25,22 +25,22 @@ Matrix2::Matrix2(ConstRealPointer data_)
   m10 = data_[2]; m11 = data_[3];
 }
 
-Vec2Ref Matrix2::operator[](uint index)
+Vec2Ref Matrix2::operator[](size_t index)
 {
   return ((Vector2*)this)[index];
 }
 
-Vec2Param Matrix2::operator[](uint index) const
+Vec2Param Matrix2::operator[](size_t index) const
 {
   return ((Vector2*)this)[index];
 }
 
-real& Matrix2::operator()(uint r, uint c)
+real& Matrix2::operator()(size_t r, size_t c)
 {
   return array[c + r * 2];
 }
 
-real Matrix2::operator()(uint r, uint c) const
+real Matrix2::operator()(size_t r, size_t c) const
 {
   return array[c + r * 2];
 }

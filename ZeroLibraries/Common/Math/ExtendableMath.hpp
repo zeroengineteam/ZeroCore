@@ -14,27 +14,27 @@ namespace Math
 //-------------------------------------------------------------------ExtendableVector
 struct ZeroShared ExtendableVector
 {
-  void Resize(uint size);
+  void Resize(size_t size);
 
-  real& operator[](uint index);
-  real operator[](uint index) const;
+  real& operator[](size_t index);
+  real operator[](size_t index) const;
 
-  uint GetSize() const;
+  size_t GetSize() const;
 
-  uint mSize;
+  size_t mSize;
   Zero::Array<real> mData;
 };
 
 //-------------------------------------------------------------------ExtendableMatrix
 struct ZeroShared ExtendableMatrix
 {
-  void Resize(uint sizeX, uint sizeY);
+  void Resize(size_t sizeX, size_t sizeY);
 
-  real& operator()(uint y, uint x);
-  real operator()(uint y, uint x) const;
+  real& operator()(size_t y, size_t x);
+  real operator()(size_t y, size_t x) const;
 
-  uint mSizeX;
-  uint mSizeY;
+  size_t mSizeX;
+  size_t mSizeY;
   Zero::Array<real> mData;
 };
 
@@ -56,12 +56,12 @@ struct ZeroSharedTemplate FixedVector
     mSize = size;
   }
 
-  DataType& operator[](uint index)
+  DataType& operator[](size_t index)
   {
     ErrorIf(index >= mSize, "Access array out of bounds");
     return mData[index];
   }
-  DataType operator[](uint index) const
+  DataType operator[](size_t index) const
   {
     ErrorIf(index >= mSize, "Access array out of bounds");
     return mData[index];
@@ -80,12 +80,12 @@ struct ZeroSharedTemplate FixedVector
 template <size_t SizeX, size_t SizeY>
 struct ZeroSharedTemplate FixedMatrix
 {
-  real& operator()(uint y, uint x)
+  real& operator()(size_t y, size_t x)
   {
     ErrorIf(y > SizeY || x > SizeX, "Access matrix out of bounds");
     return mData[x + SizeX * y];
   }
-  real operator()(uint y, uint x) const
+  real operator()(size_t y, size_t x) const
   {
     ErrorIf(y > SizeY || x > SizeX, "Access matrix out of bounds");
     return mData[x + SizeX * y];

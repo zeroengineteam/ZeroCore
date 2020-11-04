@@ -27,13 +27,13 @@ IntVector4::IntVector4(int x_, int y_, int z_, int w_)
   w = w_;
 }
 
-int& IntVector4::operator[](uint index)
+int& IntVector4::operator[](size_t index)
 {
   ErrorIf(index > 3, "IntVector4 - Subscript out of range.");
   return array[index];
 }
 
-int IntVector4::operator[](uint index) const
+int IntVector4::operator[](size_t index) const
 {
   ErrorIf(index > 3, "IntVector4 - Subscript out of range.");
   return array[index];

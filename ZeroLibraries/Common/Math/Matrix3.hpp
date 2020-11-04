@@ -48,10 +48,10 @@ public:
                    real p20, real p21, real p22);
   explicit Matrix3(ConstRealPointer data_);
 
-  Vector3& operator[](uint index);
-  const Vector3& operator[](uint index) const;
-  real& operator()(uint r, uint c);
-  real operator()(uint r, uint c) const;
+  Vector3& operator[](size_t index);
+  const Vector3& operator[](size_t index) const;
+  real& operator()(size_t r, size_t c);
+  real operator()(size_t r, size_t c) const;
 
   // Binary operators (reals)
   void operator*=(real rhs);

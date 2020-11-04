@@ -26,10 +26,10 @@ public:
           real p10, real p11);
   Matrix2(ConstRealPointer data_);
 
-  Vec2Ref operator[](uint index);
-  Vec2Param operator[](uint index) const;
-  real& operator()(uint r, uint c);
-  real operator()(uint r, uint c) const;
+  Vec2Ref operator[](size_t index);
+  Vec2Param operator[](size_t index) const;
+  real& operator()(size_t r, size_t c);
+  real operator()(size_t r, size_t c) const;
 
   // Binary operators (reals)
   void operator*=(real rhs);

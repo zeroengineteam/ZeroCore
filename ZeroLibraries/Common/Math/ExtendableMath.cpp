@@ -12,41 +12,41 @@ namespace Math
 {
 
 //-------------------------------------------------------------------ExtendableVector
-void ExtendableVector::Resize(uint size)
+void ExtendableVector::Resize(size_t size)
 {
   mSize = size;
   mData.Resize(mSize);
 }
 
-real& ExtendableVector::operator[](uint index)
+real& ExtendableVector::operator[](size_t index)
 {
   return mData[index];
 }
 
-real ExtendableVector::operator[](uint index) const
+real ExtendableVector::operator[](size_t index) const
 {
   return mData[index];
 }
 
-uint ExtendableVector::GetSize() const
+size_t ExtendableVector::GetSize() const
 {
   return mSize;
 }
 
 //-------------------------------------------------------------------ExtendableMatrix
-void ExtendableMatrix::Resize(uint sizeX, uint sizeY)
+void ExtendableMatrix::Resize(size_t sizeX, size_t sizeY)
 {
   mSizeX = sizeX;
   mSizeY = sizeY;
   mData.Resize(mSizeX * mSizeY);
 }
 
-real& ExtendableMatrix::operator()(uint y, uint x)
+real& ExtendableMatrix::operator()(size_t y, size_t x)
 {
   return mData[x + mSizeX * y];
 }
 
-real ExtendableMatrix::operator()(uint y, uint x) const
+real ExtendableMatrix::operator()(size_t y, size_t x) const
 {
   return mData[x + mSizeX * y];
 }

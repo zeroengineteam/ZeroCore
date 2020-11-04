@@ -41,17 +41,17 @@ Matrix4::Matrix4(ConstRealPointer data_)
   m30 = data_[12];  m31 = data_[13];  m32 = data_[14];  m33 = data_[15];
 }
 
-const Vector4& Matrix4::operator[](uint index) const
+const Vector4& Matrix4::operator[](size_t index) const
 {
   return ((Vector4*)this)[index];
 }
 
-Vector4& Matrix4::operator[](uint index)
+Vector4& Matrix4::operator[](size_t index)
 {
   return ((Vector4*)this)[index];
 }
 
-real Matrix4::operator()(uint r, uint c) const
+real Matrix4::operator()(size_t r, size_t c) const
 {
   ErrorIf(r > 3, "Matrix4 - Index out of range.");
   ErrorIf(c > 3, "Matrix4 - Index out of range.");
@@ -63,7 +63,7 @@ real Matrix4::operator()(uint r, uint c) const
 #endif
 }
 
-real& Matrix4::operator()(uint r, uint c)
+real& Matrix4::operator()(size_t r, size_t c)
 {
   ErrorIf(r > 3, "Matrix4 - Index out of range.");
   ErrorIf(c > 3, "Matrix4 - Index out of range.");

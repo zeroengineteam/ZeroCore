@@ -14,18 +14,18 @@ uint BlockVector3::GetSize() const
   return static_cast<uint>(mBlocks.Size());
 }
 
-void BlockVector3::SetSize(uint size)
+void BlockVector3::SetSize(size_t size)
 {
   mBlocks.Resize(size,Vector3::cZero);
 }
 
-Vector3& BlockVector3::operator[](uint index)
+Vector3& BlockVector3::operator[](size_t index)
 {
   ErrorIf(index > mBlocks.Size(), "Math::BlockVector3 - Subscript out of range.");
   return mBlocks[index];
 }
 
-Vector3 BlockVector3::operator[](uint index) const
+Vector3 BlockVector3::operator[](size_t index) const
 {
   ErrorIf(index > mBlocks.Size(), "Math::BlockVector3 - Subscript out of range.");
   return mBlocks[index];

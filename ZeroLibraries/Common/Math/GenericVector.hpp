@@ -14,7 +14,7 @@
 namespace Math
 {
 
-template <typename ScalarType, uint Dimension>
+template <typename ScalarType, size_t Dimension>
 struct ZeroSharedTemplate GenericVector
 {
   //should technically add a trait type for the scalar type to do things
@@ -29,8 +29,8 @@ struct ZeroSharedTemplate GenericVector
   GenericVector();
   explicit GenericVector(scalar* data);
 
-  scalar& operator[](uint index);
-  scalar operator[](uint index) const;
+  scalar& operator[](size_t index);
+  scalar operator[](size_t index) const;
 
   //Unary Operators
   SelfType operator-(void) const;

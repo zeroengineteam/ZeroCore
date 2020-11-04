@@ -26,8 +26,8 @@ struct ZeroShared IntVector2
   IntVector2(void) {}
   explicit IntVector2(int x, int y);
 
-  int& operator[](uint index);
-  int operator[](uint index) const;
+  int& operator[](size_t index);
+  int operator[](size_t index) const;
 
   //Unary Operators
   IntVector2 operator-(void) const;

@@ -23,13 +23,13 @@ IntVector2::IntVector2(int x_, int y_)
   y = y_;
 }
 
-int& IntVector2::operator[](uint index)
+int& IntVector2::operator[](size_t index)
 {
   ErrorIf(index > 1, "Math::IntVector2 - Subscript out of range.");
   return array[index];
 }
 
-int IntVector2::operator[](uint index) const
+int IntVector2::operator[](size_t index) const
 {
   ErrorIf(index > 1, "Math::IntVector2 - Subscript out of range.");
   return array[index];

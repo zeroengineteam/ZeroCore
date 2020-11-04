@@ -21,13 +21,13 @@ Quaternion::Quaternion(real xx, real yy, real zz, real ww)
   w = ww;
 }
 
-real& Quaternion::operator[](uint index)
+real& Quaternion::operator[](size_t index)
 {
   ErrorIf(index > 3, "Quaternion - Subscript out of range.");
   return V4()[index];
 }
 
-real Quaternion::operator[](uint index) const
+real Quaternion::operator[](size_t index) const
 {
   ErrorIf(index > 3, "Quaternion - Subscript out of range.");
   return V4()[index];

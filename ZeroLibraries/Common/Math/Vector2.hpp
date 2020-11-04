@@ -27,8 +27,8 @@ struct ZeroShared Vector2
   explicit Vector2(real xy);
   explicit Vector2(ConstRealPointer data);
 
-  real& operator[](uint index);
-  real operator[](uint index) const;
+  real& operator[](size_t index);
+  real operator[](size_t index) const;
 
   // Unary Operators
   Vector2 operator-() const;

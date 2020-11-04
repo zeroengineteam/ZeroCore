@@ -26,8 +26,8 @@ struct ZeroShared IntVector3
   IntVector3(void) {}
   explicit IntVector3(int x, int y, int z);
 
-  int& operator[](uint index);
-  int operator[](uint index) const;
+  int& operator[](size_t index);
+  int operator[](size_t index) const;
 
   //Unary Operators
   IntVector3 operator-(void) const;

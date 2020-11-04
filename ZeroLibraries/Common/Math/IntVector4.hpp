@@ -26,8 +26,8 @@ struct ZeroShared IntVector4
   IntVector4(void) {}
   explicit IntVector4(int x, int y, int z, int w);
 
-  int& operator[](uint index);
-  int operator[](uint index) const;
+  int& operator[](size_t index);
+  int operator[](size_t index) const;
 
   //Unary Operators
   IntVector4 operator-(void) const;

@@ -27,8 +27,8 @@ struct ZeroShared Vector4
   explicit Vector4(real xyzw);
   explicit Vector4(ConstRealPointer data);
 
-  real& operator[](uint index);
-  real operator[](uint index) const;
+  real& operator[](size_t index);
+  real operator[](size_t index) const;
 
   //Unary Operators
   Vector4 operator-() const;

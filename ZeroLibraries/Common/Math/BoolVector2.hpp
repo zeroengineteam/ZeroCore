@@ -25,8 +25,8 @@ struct ZeroShared BoolVector2
   BoolVector2(void) {}
   explicit BoolVector2(bool x, bool y);
 
-  bool& operator[](uint index);
-  bool operator[](uint index) const;
+  bool& operator[](size_t index);
+  bool operator[](size_t index) const;
 
   //Unary Operators
   BoolVector2 operator!(void) const;

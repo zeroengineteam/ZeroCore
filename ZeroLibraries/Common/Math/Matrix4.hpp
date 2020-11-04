@@ -50,10 +50,10 @@ public:
           Vec4Param basisZ, Vec4Param basisW);
   Matrix4(ConstRealPointer data_);
 
-  const Vector4& operator[](uint index) const;
-  Vector4& operator[](uint index);
-  real operator()(uint r, uint c) const;
-  real& operator()(uint r, uint c);
+  const Vector4& operator[](size_t index) const;
+  Vector4& operator[](size_t index);
+  real operator()(size_t r, size_t c) const;
+  real& operator()(size_t r, size_t c);
 
   // Binary operators (reals)
   void operator*=(real rhs);

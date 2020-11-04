@@ -25,8 +25,8 @@ struct ZeroShared BoolVector4
   BoolVector4(void) {}
   explicit BoolVector4(bool x, bool y, bool z, bool w);
 
-  bool& operator[](uint index);
-  bool operator[](uint index) const;
+  bool& operator[](size_t index);
+  bool operator[](size_t index) const;
 
   //Unary Operators
   BoolVector4 operator!(void) const;

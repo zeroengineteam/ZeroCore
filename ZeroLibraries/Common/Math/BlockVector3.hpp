@@ -12,10 +12,10 @@ namespace Math
 struct ZeroShared BlockVector3
 {
   uint GetSize() const;
-  void SetSize(uint size);
+  void SetSize(size_t size);
 
-  Vector3 operator[](uint index) const;
-  Vector3& operator[](uint index);
+  Vector3 operator[](size_t index) const;
+  Vector3& operator[](size_t index);
 
   real& GlobalIndex(uint index);
   

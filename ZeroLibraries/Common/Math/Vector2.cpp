@@ -33,13 +33,13 @@ Vector2::Vector2(ConstRealPointer data)
   array[1] = data[1];
 }
 
-real& Vector2::operator[](uint index)
+real& Vector2::operator[](size_t index)
 {
   ErrorIf(index > 1, "Math::Vector2 - Subscript out of range.");
   return array[index];
 }
 
-real Vector2::operator[](uint index) const
+real Vector2::operator[](size_t index) const
 {
   ErrorIf(index > 1, "Math::Vector2 - Subscript out of range.");
   return array[index];

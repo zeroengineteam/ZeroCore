@@ -25,13 +25,13 @@ IntVector3::IntVector3(int x_, int y_, int z_)
   z = z_;
 }
 
-int& IntVector3::operator[](uint index)
+int& IntVector3::operator[](size_t index)
 {
   ErrorIf(index > 2, "IntVector3 - Subscript out of range.");
   return array[index];
 }
 
-int IntVector3::operator[](uint index) const
+int IntVector3::operator[](size_t index) const
 {
   ErrorIf(index > 2, "IntVector3 - Subscript out of range.");
   return array[index];

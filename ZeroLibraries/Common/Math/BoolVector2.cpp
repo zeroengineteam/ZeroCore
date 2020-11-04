@@ -23,13 +23,13 @@ BoolVector2::BoolVector2(bool x_, bool y_)
   y = y_;
 }
 
-bool& BoolVector2::operator[](uint index)
+bool& BoolVector2::operator[](size_t index)
 {
   ErrorIf(index > 1, "Math::BoolVector2 - Subscript out of range.");
   return array[index];
 }
 
-bool BoolVector2::operator[](uint index) const
+bool BoolVector2::operator[](size_t index) const
 {
   ErrorIf(index > 1, "Math::BoolVector2 - Subscript out of range.");
   return array[index];
