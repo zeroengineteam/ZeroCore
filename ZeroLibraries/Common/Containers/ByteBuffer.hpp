@@ -137,7 +137,7 @@ public:
   size_t Write(byte value);
 
   //Seek to position
-  void Seek(int offset, uint origin);
+  void Seek(size_t offset, uint origin);
 
   //Pointer to current position in buffer.
   byte* GetCurrent();

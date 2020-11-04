@@ -19,7 +19,7 @@ namespace Zero
   {
   public:
     z_stream stream;
-    int written;
+    size_t written;
     Deflater(int level)
     {
       //allocate inflate state
@@ -36,12 +36,12 @@ namespace Zero
       deflateEnd(&stream);
     }
 
-    void Deflate(byte* input, byte* output, int availableIn, int availableOut, int finished)
+    void Deflate(byte* input, byte* output, size_t availableIn, size_t availableOut, int finished)
     {
       int flushStatus = finished ? Z_FINISH : Z_NO_FLUSH;
-      stream.avail_in = availableIn;
+      stream.avail_in = (uInt)availableIn;
       stream.next_in = input;
-      stream.avail_out = availableOut;
+      stream.avail_out = (uInt)availableOut;
       stream.next_out = output;
       deflate(&stream, flushStatus);
       written = availableOut - stream.avail_out;
@@ -52,7 +52,7 @@ namespace Zero
   {
   public:
     z_stream stream;
-    int written;
+    size_t written;
     bool done;
 
     Inflater()
@@ -71,11 +71,11 @@ namespace Zero
       inflateEnd(&stream);
     }
 
-    void Inflate(byte* input, byte* output, int availableIn, int availableOut)
+    void Inflate(byte* input, byte* output, size_t availableIn, size_t availableOut)
     {
-      stream.avail_in = availableIn;
+      stream.avail_in = (uInt)availableIn;
       stream.next_in = input;
-      stream.avail_out = availableOut;
+      stream.avail_out = (uInt)availableOut;
       stream.next_out = output;
       int zstatus = inflate(&stream, Z_SYNC_FLUSH);
       written = availableOut - stream.avail_out;
@@ -85,14 +85,14 @@ namespace Zero
     }
   };
 
-  int RawDeflate(byte* outputData, uint outsize, byte* inputData, uint inSize, int level)
+  size_t RawDeflate(byte* outputData, size_t outsize, byte* inputData, size_t inSize, int level)
   {
     Deflater deflater(level);
     deflater.Deflate(inputData, outputData, inSize, outsize, true);
     return deflater.written;
   }
 
-  int RawInflate(byte* outputData, uint outSize, byte* inputData, uint inSize)
+  size_t RawInflate(byte* outputData, size_t outSize, byte* inputData, size_t inSize)
   {
     Inflater inflater;
     inflater.Inflate(inputData, outputData, inSize, outSize);
@@ -165,11 +165,11 @@ void Archive::AddFileRelative(StringParam basePath, StringParam relativeName)
 void Archive::AddFileBlock(StringParam relativeName, DataBlock sourceBlock)
 {
   byte* destBuffer = 0;
-  uLong compressedSize = 0;
+  size_t compressedSize = 0;
 
   //Compute Crc
   uLong crcTemp = crc32(0L, Z_NULL, 0);
-  uLong crc = crc32(crcTemp, sourceBlock.Data, sourceBlock.Size);
+  uLong crc = crc32(crcTemp, sourceBlock.Data, static_cast<uint>(sourceBlock.Size));
 
   if(mCompressionLevel==0)
   {
@@ -181,7 +181,7 @@ void Archive::AddFileBlock(StringParam relativeName, DataBlock sourceBlock)
   else
   {
     //Get the upper bound for the compressed data
-    uint maxCompressedSize = compressBound(sourceBlock.Size);
+    uint maxCompressedSize = compressBound((uLong)sourceBlock.Size);
 
     //Allocate the output buffer
     destBuffer = (byte*)zAllocate(maxCompressedSize);
@@ -315,9 +315,9 @@ struct FileInfo
   //Cyclic redundancy check 32
   u32 Crc;
   //Compressed size in bytes.
-  u32 CompressedSize;
+  size_t CompressedSize;
   //Uncompressed size
-  u32 UncompressedSize;
+  size_t UncompressedSize;
   //File name length
   u16 FileNameLength;
   //Extra field length
@@ -348,7 +348,7 @@ struct ZipCentralFileHeader
   //External File Attributes
   u32 ExternalAttributes;
   //RelativeOffset
-  u32 Offset;
+  size_t Offset;
 };
 
 struct EndCentral
@@ -424,10 +424,10 @@ void FillEntry(FileInfo& info, ArchiveEntry& entry, uint compressionMethod)
   info.MinVersion = 20;
 }
 
-uint Archive::ComputeZipSize()
+size_t Archive::ComputeZipSize()
 {
-  uint sizeOfallNames = 0;
-  uint sizeOfAllData = 0;
+  size_t sizeOfallNames = 0;
+  size_t sizeOfAllData = 0;
   
   //Sum the size of all file name strings
   forRange(ArchiveEntry& entry, Entries.All())
@@ -436,8 +436,8 @@ uint Archive::ComputeZipSize()
     sizeOfAllData += entry.Compressed.Size;
   }
 
-  uint entryCount = Entries.Size();
-  uint size = 0;
+  size_t entryCount = Entries.Size();
+  size_t size = 0;
 
   //For each entry there is a ZipLocalFileHeader followed by the name and the data
   size += sizeof(ZipLocalFileHeader) * entryCount + sizeOfallNames + sizeOfAllData;

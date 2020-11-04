@@ -20,8 +20,8 @@ class ByteBuffer;
 class ByteBufferBlock;
 class FileFilter;
 
-int RawDeflate(byte* outputData, uint outsize, byte* inputData, uint inSize, int level);
-int RawInflate(byte* outputData, uint outSize, byte* inputData, uint inSize);
+size_t RawDeflate(byte* outputData, size_t outsize, byte* inputData, size_t inSize, int level);
+size_t RawInflate(byte* outputData, size_t outSize, byte* inputData, size_t inSize);
 
 struct ArchiveEntry
 {
@@ -118,12 +118,12 @@ public:
   //Write or Read to a file.
   void WriteZipFile(StringParam filename);
   void ReadZipFile(ArchiveReadFlags::Enum readFlags, StringParam filename);
-  uint ComputeZipSize();
+  size_t ComputeZipSize();
   //Entry Access
 
   //Clear all entries
   void Clear();
-  uint EntryCount(){return Entries.Size();}
+  size_t EntryCount(){return Entries.Size();}
   typedef Array<ArchiveEntry>::range range;
   range GetEntries(){return Entries.All();}
 

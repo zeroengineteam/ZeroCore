@@ -21,7 +21,7 @@ namespace Zero
 static int StbRead(void* userData, char* data, int size)
 {
   Stream* stream = (Stream*)userData;
-  return stream->Read((byte*)data, size);
+  return (int)stream->Read((byte*)data, size);
 }
 
 static void StbSkip(void* userData, int bytes)
@@ -293,7 +293,7 @@ void LoadImage(Status& status, Stream* stream, byte** output, uint* width, uint*
       
       // Note that when a gif loads, it will be much larger in memory because of the extra frames.
       int frames = 0;
-      stbi_uc* allFrames = stbi_load_gif_from_memory(block.GetBegin(), block.Size(), nullptr, (int*)width, (int*)height, &frames, &componentsOut, requireComponents);
+      stbi_uc* allFrames = stbi_load_gif_from_memory(block.GetBegin(), (int)block.Size(), nullptr, (int*)width, (int*)height, &frames, &componentsOut, requireComponents);
 
       // If we have required components, then the original number of components in the file isn't useful.
       if (requireComponents != 0)

@@ -414,10 +414,10 @@ template<typename rangeType, typename valueType, typename predicate>
 rangeType LowerBound(rangeType r, const valueType& value, predicate pred)
 {
   rangeType newRange = r;
-  int count = newRange.Length();
+  auto count = newRange.Length();
   while(count > 0)
   {
-    int step = count / 2;
+    auto step = count / 2;
     typename rangeType::reference newValue = newRange[step];
     if( pred(newValue, value) )
     {
@@ -441,10 +441,10 @@ template<typename rangeType, typename valueType, typename predicate>
 rangeType UpperBound(rangeType r, const valueType& value, predicate pred)
 {
   rangeType newRange = r;
-  int count = newRange.Length();
+  auto count = newRange.Length();
   while(count > 0)
   {
-    int step = count / 2;
+    auto step = count / 2;
     typename rangeType::reference newValue = newRange[step];
     if( !pred(value, newValue) )
     {

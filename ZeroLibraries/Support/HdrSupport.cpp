@@ -462,7 +462,7 @@ void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint
   header.Append(String::Format("-Y %d +X %d\n", height, width));
 
   // Write header
-  uint headerSize = header.GetSize();
+  size_t headerSize = header.GetSize();
   byte* headerData = new byte[headerSize];
   header.ExtractInto(headerData, headerSize);
   stream->Write(headerData, headerSize);

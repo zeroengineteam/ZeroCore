@@ -27,7 +27,7 @@ struct Replacement
   String ReplaceString;
 
   char operator[](uint index)const{ return *(MatchString.Data() + index); }
-  uint SizeInBytes()const {return MatchString.SizeInBytes(); };
+  size_t SizeInBytes()const {return MatchString.SizeInBytes(); };
 
   bool operator<(const Replacement& right)const{return MatchString < right.MatchString;}
 };
