@@ -44,7 +44,6 @@ public:
   void ShowFindAll(CommandEvent* event);
   void ShowReplaceNext(CommandEvent* event);
   void ShowReplaceAll(CommandEvent* event);
-  void ShowBugReporter(CommandEvent* event);
   void EditColorScheme(CommandEvent* event);
   void ClearConsole(CommandEvent* event);
   void OnNameActivated(TypeEvent* event);

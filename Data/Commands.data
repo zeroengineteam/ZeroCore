@@ -459,14 +459,6 @@ Commands commands =
 
 	Command =
 	{
-		string Name = "ReportBug",
-		string Description = "Report a bug",
-		string IconName = "BugIcon",
-		string Tags = "Windows",
-	},
-
-	Command =
-	{
 		string Name = "Commands",
 		string Description = "Show the Command List Viewer",
 		string IconName = "Commands",

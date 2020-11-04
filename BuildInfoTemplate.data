@@ -1,0 +1,5 @@
+BuildInfo = {
+string ProjectName = "ZeroEditor",
+string Source = "${SourceDir}",
+string Output = "${OutputDir}",
+}

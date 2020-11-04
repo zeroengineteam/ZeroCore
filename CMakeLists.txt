@@ -59,8 +59,8 @@ set(zero_unit_test_dir ${zero_core_path}/UnitTests)
 # Define any user options
 ################################################################################
 option(generate_with_unit_tests "If set to 'ON', project will be generated with the unit tests included." OFF)
-option(generate_spirv_projects "If set to 'ON', spirv tools projects will be created. Allows static linking or generation of dll for tools." OFF)
-option(use_spirv_shared_library "If set to 'ON', project will link against a dll of spirv (allows release dll in debug mode)." ON)
+option(generate_spirv_projects "If set to 'ON', spirv tools projects will be created. Allows static linking or generation of dll for tools." ON)
+option(use_spirv_shared_library "If set to 'ON', project will link against a dll of spirv (allows release dll in debug mode)." OFF)
 
 if(NOT generate_spirv_projects AND NOT use_spirv_shared_library)
   message(FATAL_ERROR "spirv project cannot be statically linked without also generating the spirv projects.")
@@ -87,6 +87,7 @@ set(CMAKE_MODULE_PATH "${Source_Root}/cmake/modules/")
 include(${cmake_utilities_dir}/zero_source_group.cmake)
 include(${cmake_utilities_dir}/Zero_Mulitarget_Functions.cmake)
 include(${cmake_utilities_dir}/Zero_Custom_Commands.cmake)
+include(${cmake_utilities_dir}/Zero_Common_Helpers.cmake)
 
 ################################################################################
 # Separate Projects into folders for IDEs.
@@ -101,9 +102,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 add_subdirectory(External)
 
 # zero source and related projects
-add_subdirectory(Extensions)
-add_subdirectory(Systems)
 add_subdirectory(ZeroLibraries)
+add_subdirectory(Systems)
+add_subdirectory(Extensions)
 add_subdirectory(Projects)
 
 if (generate_with_unit_tests)

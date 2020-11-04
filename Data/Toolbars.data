@@ -102,7 +102,6 @@ Menus menus =
 			"Chat",
 			"Market",
 			"Divider",
-			"ReportBug",
 		]
 	}
 },	

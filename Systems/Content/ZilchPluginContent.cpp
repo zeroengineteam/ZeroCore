@@ -82,7 +82,7 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
   //builder.Append('-');
 
   // Append the operating system name (or some grouped name for all OSes that support this shared library)
-#if defined(PLATFORM_WINDOWS)
+#if defined(ZERO_PLATFORM_WINDOWS)
   builder.Append("Windows_NT");
 #else
   builder.Append("Unknown");
@@ -91,7 +91,7 @@ String ZilchPluginBuilder::GetSharedLibraryPlatformName()
   builder.Append('-');
   
   // Append the target machine architecture
-#if defined(PLATFORM_WINDOWS)
+#if defined(ZERO_PLATFORM_WINDOWS)
   #if defined(PLATFORM_32)
     builder.Append("x86");
   #else

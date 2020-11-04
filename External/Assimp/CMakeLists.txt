@@ -1,0 +1,610 @@
+add_library(Assimp)
+
+set(AssimpDir ${CMAKE_CURRENT_LIST_DIR}/Repo)
+
+zero_set_all_common_external_project_settings(
+  Target Assimp 
+  Filter External 
+  PrecompiledHeader "Precompiled.hpp"
+  PrecompiledSource "Precompiled.cpp"
+  IgnorePrecompiledHeader ${AssimpDir}/contrib/unzip/ioapi.c ${AssimpDir}/contrib/unzip/unzip.c ${AssimpDir}/contrib/zip/src/zip.c
+)
+
+target_compile_definitions(Assimp
+  PUBLIC
+    OPENDDL_STATIC_LIBARY
+    ASSIMP_BUILD_NO_OWN_ZLIB
+    ASSIMP_BUILD_NO_C4D_IMPORTER
+)
+
+target_link_libraries(Assimp
+  PUBLIC
+  Zlib2
+)
+
+target_include_directories(Assimp
+  PUBLIC
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${AssimpDir}/
+    ${AssimpDir}/include/
+    ${AssimpDir}/contrib/irrXML/
+    ${AssimpDir}/contrib/rapidjson/include/
+    ${AssimpDir}/contrib/openddlparser/include/
+)
+
+target_sources(Assimp
+  PRIVATE
+#Compiler
+    ${AssimpDir}/include/assimp/Compiler/pushpack1.h
+    ${AssimpDir}/include/assimp/Compiler/poppack1.h
+    ${AssimpDir}/include/assimp/Compiler/pstdint.h
+#Includes
+    ${AssimpDir}/include/assimp/anim.h
+    ${AssimpDir}/include/assimp/ai_assert.h
+    ${AssimpDir}/include/assimp/camera.h
+    ${AssimpDir}/include/assimp/color4.h
+    ${AssimpDir}/include/assimp/color4.inl
+    ${AssimpDir}/include/assimp/defs.h
+    ${AssimpDir}/include/assimp/Defines.h
+    ${AssimpDir}/include/assimp/cfileio.h
+    ${AssimpDir}/include/assimp/light.h
+    ${AssimpDir}/include/assimp/material.h
+    ${AssimpDir}/include/assimp/material.inl
+    ${AssimpDir}/include/assimp/matrix3x3.h
+    ${AssimpDir}/include/assimp/matrix3x3.inl
+    ${AssimpDir}/include/assimp/matrix4x4.h
+    ${AssimpDir}/include/assimp/matrix4x4.inl
+    ${AssimpDir}/include/assimp/mesh.h
+    ${AssimpDir}/include/assimp/postprocess.h
+    ${AssimpDir}/include/assimp/quaternion.h
+    ${AssimpDir}/include/assimp/quaternion.inl
+    ${AssimpDir}/include/assimp/scene.h
+    ${AssimpDir}/include/assimp/metadata.h
+    ${AssimpDir}/include/assimp/texture.h
+    ${AssimpDir}/include/assimp/types.h
+    ${AssimpDir}/include/assimp/vector2.h
+    ${AssimpDir}/include/assimp/vector2.inl
+    ${AssimpDir}/include/assimp/vector3.h
+    ${AssimpDir}/include/assimp/vector3.inl
+    ${AssimpDir}/include/assimp/version.h
+    ${AssimpDir}/include/assimp/cimport.h
+    ${AssimpDir}/include/assimp/importerdesc.h
+    ${AssimpDir}/include/assimp/Importer.hpp
+    ${AssimpDir}/include/assimp/DefaultLogger.hpp
+    ${AssimpDir}/include/assimp/ProgressHandler.hpp
+    ${AssimpDir}/include/assimp/IOStream.hpp
+    ${AssimpDir}/include/assimp/IOSystem.hpp
+    ${AssimpDir}/include/assimp/Logger.hpp
+    ${AssimpDir}/include/assimp/LogStream.hpp
+    ${AssimpDir}/include/assimp/NullLogger.hpp
+    ${AssimpDir}/include/assimp/cexport.h
+    ${AssimpDir}/include/assimp/Exporter.hpp
+    ${AssimpDir}/include/assimp/DefaultIOStream.h
+    ${AssimpDir}/include/assimp/DefaultIOSystem.h
+    ${AssimpDir}/include/assimp/SceneCombiner.h
+#Core
+    ${AssimpDir}/code/Assimp.cpp
+#Logging
+    ${AssimpDir}/code/DefaultLogger.cpp
+    ${AssimpDir}/code/FileLogStream.h
+    ${AssimpDir}/code/StdOStreamLogStream.h
+#Common
+    ${AssimpDir}/code/fast_atof.h
+    ${AssimpDir}/code/qnan.h
+    ${AssimpDir}/code/BaseImporter.cpp
+    ${AssimpDir}/code/BaseImporter.h
+    ${AssimpDir}/code/BaseProcess.cpp
+    ${AssimpDir}/code/BaseProcess.h
+    ${AssimpDir}/code/Importer.h
+    ${AssimpDir}/code/ScenePrivate.h
+    ${AssimpDir}/code/PostStepRegistry.cpp
+    ${AssimpDir}/code/ImporterRegistry.cpp
+    ${AssimpDir}/code/ByteSwapper.h
+    ${AssimpDir}/code/DefaultProgressHandler.h
+    ${AssimpDir}/code/DefaultIOStream.cpp
+    ${AssimpDir}/code/DefaultIOSystem.cpp
+    ${AssimpDir}/code/CInterfaceIOWrapper.cpp
+    ${AssimpDir}/code/CInterfaceIOWrapper.h
+    ${AssimpDir}/code/Hash.h
+    ${AssimpDir}/code/Importer.cpp
+    ${AssimpDir}/code/IFF.h
+    ${AssimpDir}/code/MemoryIOWrapper.h
+    ${AssimpDir}/code/ParsingUtils.h
+    ${AssimpDir}/code/StreamReader.h
+    ${AssimpDir}/code/StreamWriter.h
+    ${AssimpDir}/code/StringComparison.h
+    ${AssimpDir}/code/StringUtils.h
+    ${AssimpDir}/code/SGSpatialSort.cpp
+    ${AssimpDir}/code/SGSpatialSort.h
+    ${AssimpDir}/code/VertexTriangleAdjacency.cpp
+    ${AssimpDir}/code/VertexTriangleAdjacency.h
+    ${AssimpDir}/code/GenericProperty.h
+    ${AssimpDir}/code/SpatialSort.cpp
+    ${AssimpDir}/code/SpatialSort.h
+    ${AssimpDir}/code/SceneCombiner.cpp
+    ${AssimpDir}/code/ScenePreprocessor.cpp
+    ${AssimpDir}/code/ScenePreprocessor.h
+    ${AssimpDir}/code/SkeletonMeshBuilder.cpp
+    ${AssimpDir}/code/SkeletonMeshBuilder.h
+    ${AssimpDir}/code/SplitByBoneCountProcess.cpp
+    ${AssimpDir}/code/SplitByBoneCountProcess.h
+    ${AssimpDir}/code/ScaleProcess.cpp
+    ${AssimpDir}/code/ScaleProcess.h
+    ${AssimpDir}/code/SmoothingGroups.h
+    ${AssimpDir}/code/StandardShapes.cpp
+    ${AssimpDir}/code/StandardShapes.h
+    ${AssimpDir}/code/TargetAnimation.cpp
+    ${AssimpDir}/code/TargetAnimation.h
+    ${AssimpDir}/code/RemoveComments.cpp
+    ${AssimpDir}/code/RemoveComments.h
+    ${AssimpDir}/code/Subdivision.cpp
+    ${AssimpDir}/code/Subdivision.h
+    ${AssimpDir}/code/scene.cpp
+    ${AssimpDir}/code/Vertex.h
+    ${AssimpDir}/code/LineSplitter.h
+    ${AssimpDir}/code/TinyFormatter.h
+    ${AssimpDir}/code/Profiler.h
+    ${AssimpDir}/code/LogAux.h
+    ${AssimpDir}/code/Bitmap.cpp
+    ${AssimpDir}/code/Bitmap.h
+    ${AssimpDir}/code/XMLTools.h
+    ${AssimpDir}/code/Version.cpp
+    ${AssimpDir}/code/IOStreamBuffer.h
+    ${AssimpDir}/code/CreateAnimMesh.h
+    ${AssimpDir}/code/CreateAnimMesh.cpp
+#AMF
+    ${AssimpDir}/code/AMFImporter.hpp
+    ${AssimpDir}/code/AMFImporter_Macro.hpp
+    ${AssimpDir}/code/AMFImporter_Node.hpp
+    ${AssimpDir}/code/AMFImporter.cpp
+    ${AssimpDir}/code/AMFImporter_Geometry.cpp
+    ${AssimpDir}/code/AMFImporter_Material.cpp
+    ${AssimpDir}/code/AMFImporter_Postprocess.cpp
+#3DS
+    ${AssimpDir}/code/3DSConverter.cpp
+    ${AssimpDir}/code/3DSHelper.h
+    ${AssimpDir}/code/3DSLoader.cpp
+    ${AssimpDir}/code/3DSLoader.h
+    ${AssimpDir}/code/3DSExporter.h
+    ${AssimpDir}/code/3DSExporter.cpp
+#AC
+    ${AssimpDir}/code/ACLoader.cpp
+    ${AssimpDir}/code/ACLoader.h
+#ASE
+    ${AssimpDir}/code/ASELoader.cpp
+    ${AssimpDir}/code/ASELoader.h
+    ${AssimpDir}/code/ASEParser.cpp
+    ${AssimpDir}/code/ASEParser.h
+#ASSBIN
+    ${AssimpDir}/code/AssbinExporter.h
+    ${AssimpDir}/code/AssbinExporter.cpp
+    ${AssimpDir}/code/AssbinLoader.h
+    ${AssimpDir}/code/AssbinLoader.cpp
+#ASSXML
+    ${AssimpDir}/code/AssxmlExporter.h
+    ${AssimpDir}/code/AssxmlExporter.cpp
+#B3D
+    ${AssimpDir}/code/B3DImporter.cpp
+    ${AssimpDir}/code/B3DImporter.h
+#BVH
+    ${AssimpDir}/code/BVHLoader.cpp
+    ${AssimpDir}/code/BVHLoader.h
+#COLLADA
+    ${AssimpDir}/code/ColladaHelper.h
+    ${AssimpDir}/code/ColladaLoader.cpp
+    ${AssimpDir}/code/ColladaLoader.h
+    ${AssimpDir}/code/ColladaParser.cpp
+    ${AssimpDir}/code/ColladaParser.h
+    ${AssimpDir}/code/ColladaExporter.h
+    ${AssimpDir}/code/ColladaExporter.cpp
+#DXF
+    ${AssimpDir}/code/DXFLoader.cpp
+    ${AssimpDir}/code/DXFLoader.h
+    ${AssimpDir}/code/DXFHelper.h
+#CSM
+    ${AssimpDir}/code/CSMLoader.cpp
+    ${AssimpDir}/code/CSMLoader.h
+#HMP
+    ${AssimpDir}/code/HMPFileData.h
+    ${AssimpDir}/code/HMPLoader.cpp
+    ${AssimpDir}/code/HMPLoader.h
+    ${AssimpDir}/code/HalfLifeFileData.h
+#IRRMESH
+    ${AssimpDir}/code/IRRMeshLoader.cpp
+    ${AssimpDir}/code/IRRMeshLoader.h
+    ${AssimpDir}/code/IRRShared.cpp
+    ${AssimpDir}/code/IRRShared.h
+#IRR
+    ${AssimpDir}/code/IRRLoader.cpp
+    ${AssimpDir}/code/IRRLoader.h
+    ${AssimpDir}/code/IRRShared.cpp
+    ${AssimpDir}/code/IRRShared.h
+#LWO
+    ${AssimpDir}/code/LWOAnimation.cpp
+    ${AssimpDir}/code/LWOAnimation.h
+    ${AssimpDir}/code/LWOBLoader.cpp
+    ${AssimpDir}/code/LWOFileData.h
+    ${AssimpDir}/code/LWOLoader.cpp
+    ${AssimpDir}/code/LWOLoader.h
+    ${AssimpDir}/code/LWOMaterial.cpp
+#LWS
+    ${AssimpDir}/code/LWSLoader.cpp
+    ${AssimpDir}/code/LWSLoader.h
+#MD2
+    ${AssimpDir}/code/MD2FileData.h
+    ${AssimpDir}/code/MD2Loader.cpp
+    ${AssimpDir}/code/MD2Loader.h
+    ${AssimpDir}/code/MD2NormalTable.h
+#MD3
+    ${AssimpDir}/code/MD3FileData.h
+    ${AssimpDir}/code/MD3Loader.cpp
+    ${AssimpDir}/code/MD3Loader.h
+#MD5
+    ${AssimpDir}/code/MD5Loader.cpp
+    ${AssimpDir}/code/MD5Loader.h
+    ${AssimpDir}/code/MD5Parser.cpp
+    ${AssimpDir}/code/MD5Parser.h
+#MDC
+    ${AssimpDir}/code/MDCFileData.h
+    ${AssimpDir}/code/MDCLoader.cpp
+    ${AssimpDir}/code/MDCLoader.h
+    ${AssimpDir}/code/MDCNormalTable.h
+#MDL
+    ${AssimpDir}/code/MDLDefaultColorMap.h
+    ${AssimpDir}/code/MDLFileData.h
+    ${AssimpDir}/code/MDLLoader.cpp
+    ${AssimpDir}/code/MDLLoader.h
+    ${AssimpDir}/code/MDLMaterialLoader.cpp
+#MaterialSystem
+    ${AssimpDir}/code/MaterialSystem.cpp
+    ${AssimpDir}/code/MaterialSystem.h
+#NFF
+    ${AssimpDir}/code/NFFLoader.cpp
+    ${AssimpDir}/code/NFFLoader.h
+#NDO
+    ${AssimpDir}/code/NDOLoader.cpp
+    ${AssimpDir}/code/NDOLoader.h
+#OFF
+    ${AssimpDir}/code/OFFLoader.cpp
+    ${AssimpDir}/code/OFFLoader.h
+#OBJ
+    ${AssimpDir}/code/ObjFileData.h
+    ${AssimpDir}/code/ObjFileImporter.cpp
+    ${AssimpDir}/code/ObjFileImporter.h
+    ${AssimpDir}/code/ObjFileMtlImporter.cpp
+    ${AssimpDir}/code/ObjFileMtlImporter.h
+    ${AssimpDir}/code/ObjFileParser.cpp
+    ${AssimpDir}/code/ObjFileParser.h
+    ${AssimpDir}/code/ObjTools.h
+    ${AssimpDir}/code/ObjExporter.h
+    ${AssimpDir}/code/ObjExporter.cpp
+#OGRE
+    ${AssimpDir}/code/OgreImporter.h
+    ${AssimpDir}/code/OgreStructs.h
+    ${AssimpDir}/code/OgreParsingUtils.h
+    ${AssimpDir}/code/OgreBinarySerializer.h
+    ${AssimpDir}/code/OgreXmlSerializer.h
+    ${AssimpDir}/code/OgreImporter.cpp
+    ${AssimpDir}/code/OgreStructs.cpp
+    ${AssimpDir}/code/OgreBinarySerializer.cpp
+    ${AssimpDir}/code/OgreXmlSerializer.cpp
+    ${AssimpDir}/code/OgreMaterial.cpp
+#OPENGEX
+    ${AssimpDir}/code/OpenGEXExporter.cpp
+    ${AssimpDir}/code/OpenGEXExporter.h
+    ${AssimpDir}/code/OpenGEXImporter.cpp
+    ${AssimpDir}/code/OpenGEXImporter.h
+    ${AssimpDir}/code/OpenGEXStructs.h
+#PLY
+    ${AssimpDir}/code/PlyLoader.cpp
+    ${AssimpDir}/code/PlyLoader.h
+    ${AssimpDir}/code/PlyParser.cpp
+    ${AssimpDir}/code/PlyParser.h
+    ${AssimpDir}/code/PlyExporter.cpp
+    ${AssimpDir}/code/PlyExporter.h
+#MS3D
+    ${AssimpDir}/code/MS3DLoader.cpp
+    ${AssimpDir}/code/MS3DLoader.h
+#COB
+    ${AssimpDir}/code/COBLoader.cpp
+    ${AssimpDir}/code/COBLoader.h
+    ${AssimpDir}/code/COBScene.h
+#BLEND
+    ${AssimpDir}/code/BlenderLoader.cpp
+    ${AssimpDir}/code/BlenderLoader.h
+    ${AssimpDir}/code/BlenderDNA.cpp
+    ${AssimpDir}/code/BlenderDNA.h
+    ${AssimpDir}/code/BlenderDNA.inl
+    ${AssimpDir}/code/BlenderScene.cpp
+    ${AssimpDir}/code/BlenderScene.h
+    ${AssimpDir}/code/BlenderSceneGen.h
+    ${AssimpDir}/code/BlenderIntermediate.h
+    ${AssimpDir}/code/BlenderModifier.h
+    ${AssimpDir}/code/BlenderModifier.cpp
+    ${AssimpDir}/code/BlenderBMesh.h
+    ${AssimpDir}/code/BlenderBMesh.cpp
+    ${AssimpDir}/code/BlenderTessellator.h
+    ${AssimpDir}/code/BlenderTessellator.cpp
+#IFC
+    ${AssimpDir}/code/IFCLoader.cpp
+    ${AssimpDir}/code/IFCLoader.h
+    ${AssimpDir}/code/IFCReaderGen1.cpp
+    ${AssimpDir}/code/IFCReaderGen2.cpp
+    ${AssimpDir}/code/IFCReaderGen.h
+    ${AssimpDir}/code/IFCUtil.h
+    ${AssimpDir}/code/IFCUtil.cpp
+    ${AssimpDir}/code/IFCGeometry.cpp
+    ${AssimpDir}/code/IFCMaterial.cpp
+    ${AssimpDir}/code/IFCProfile.cpp
+    ${AssimpDir}/code/IFCCurve.cpp
+    ${AssimpDir}/code/IFCBoolean.cpp
+    ${AssimpDir}/code/IFCOpenings.cpp
+    ${AssimpDir}/code/STEPFile.h
+    ${AssimpDir}/code/STEPFileReader.h
+    ${AssimpDir}/code/STEPFileReader.cpp
+    ${AssimpDir}/code/STEPFileEncoding.cpp
+    ${AssimpDir}/code/STEPFileEncoding.h
+#XGL
+    ${AssimpDir}/code/XGLLoader.cpp
+    ${AssimpDir}/code/XGLLoader.h
+#FBX
+    ${AssimpDir}/code/FBXImporter.cpp
+    ${AssimpDir}/code/FBXCompileConfig.h
+    ${AssimpDir}/code/FBXImporter.h
+    ${AssimpDir}/code/FBXParser.cpp
+    ${AssimpDir}/code/FBXParser.h
+    ${AssimpDir}/code/FBXTokenizer.cpp
+    ${AssimpDir}/code/FBXTokenizer.h
+    ${AssimpDir}/code/FBXImportSettings.h
+    ${AssimpDir}/code/FBXConverter.h
+    ${AssimpDir}/code/FBXConverter.cpp
+    ${AssimpDir}/code/FBXUtil.h
+    ${AssimpDir}/code/FBXUtil.cpp
+    ${AssimpDir}/code/FBXDocument.h
+    ${AssimpDir}/code/FBXDocument.cpp
+    ${AssimpDir}/code/FBXProperties.h
+    ${AssimpDir}/code/FBXProperties.cpp
+    ${AssimpDir}/code/FBXMeshGeometry.h
+    ${AssimpDir}/code/FBXMeshGeometry.cpp
+    ${AssimpDir}/code/FBXMaterial.cpp
+    ${AssimpDir}/code/FBXModel.cpp
+    ${AssimpDir}/code/FBXAnimation.cpp
+    ${AssimpDir}/code/FBXNodeAttribute.cpp
+    ${AssimpDir}/code/FBXDeformer.cpp
+    ${AssimpDir}/code/FBXBinaryTokenizer.cpp
+    ${AssimpDir}/code/FBXDocumentUtil.cpp
+#PostProcessing
+    ${AssimpDir}/code/CalcTangentsProcess.cpp
+    ${AssimpDir}/code/CalcTangentsProcess.h
+    ${AssimpDir}/code/ComputeUVMappingProcess.cpp
+    ${AssimpDir}/code/ComputeUVMappingProcess.h
+    ${AssimpDir}/code/ConvertToLHProcess.cpp
+    ${AssimpDir}/code/ConvertToLHProcess.h
+    ${AssimpDir}/code/FindDegenerates.cpp
+    ${AssimpDir}/code/FindDegenerates.h
+    ${AssimpDir}/code/FindInstancesProcess.cpp
+    ${AssimpDir}/code/FindInstancesProcess.h
+    ${AssimpDir}/code/FindInvalidDataProcess.cpp
+    ${AssimpDir}/code/FindInvalidDataProcess.h
+    ${AssimpDir}/code/FixNormalsStep.cpp
+    ${AssimpDir}/code/FixNormalsStep.h
+    ${AssimpDir}/code/GenFaceNormalsProcess.cpp
+    ${AssimpDir}/code/GenFaceNormalsProcess.h
+    ${AssimpDir}/code/GenVertexNormalsProcess.cpp
+    ${AssimpDir}/code/GenVertexNormalsProcess.h
+    ${AssimpDir}/code/PretransformVertices.cpp
+    ${AssimpDir}/code/PretransformVertices.h
+    ${AssimpDir}/code/ImproveCacheLocality.cpp
+    ${AssimpDir}/code/ImproveCacheLocality.h
+    ${AssimpDir}/code/JoinVerticesProcess.cpp
+    ${AssimpDir}/code/JoinVerticesProcess.h
+    ${AssimpDir}/code/LimitBoneWeightsProcess.cpp
+    ${AssimpDir}/code/LimitBoneWeightsProcess.h
+    ${AssimpDir}/code/RemoveRedundantMaterials.cpp
+    ${AssimpDir}/code/RemoveRedundantMaterials.h
+    ${AssimpDir}/code/RemoveVCProcess.cpp
+    ${AssimpDir}/code/RemoveVCProcess.h
+    ${AssimpDir}/code/SortByPTypeProcess.cpp
+    ${AssimpDir}/code/SortByPTypeProcess.h
+    ${AssimpDir}/code/SplitLargeMeshes.cpp
+    ${AssimpDir}/code/SplitLargeMeshes.h
+    ${AssimpDir}/code/TextureTransform.cpp
+    ${AssimpDir}/code/TextureTransform.h
+    ${AssimpDir}/code/TriangulateProcess.cpp
+    ${AssimpDir}/code/TriangulateProcess.h
+    ${AssimpDir}/code/ValidateDataStructure.cpp
+    ${AssimpDir}/code/ValidateDataStructure.h
+    ${AssimpDir}/code/OptimizeGraph.cpp
+    ${AssimpDir}/code/OptimizeGraph.h
+    ${AssimpDir}/code/OptimizeMeshes.cpp
+    ${AssimpDir}/code/OptimizeMeshes.h
+    ${AssimpDir}/code/DeboneProcess.cpp
+    ${AssimpDir}/code/DeboneProcess.h
+    ${AssimpDir}/code/ProcessHelper.h
+    ${AssimpDir}/code/ProcessHelper.cpp
+    ${AssimpDir}/code/PolyTools.h
+    ${AssimpDir}/code/MakeVerboseFormat.cpp
+    ${AssimpDir}/code/MakeVerboseFormat.h
+#Q3D
+    ${AssimpDir}/code/Q3DLoader.cpp
+    ${AssimpDir}/code/Q3DLoader.h
+#Q3BSP
+    ${AssimpDir}/code/Q3BSPFileData.h
+    ${AssimpDir}/code/Q3BSPFileParser.h
+    ${AssimpDir}/code/Q3BSPFileParser.cpp
+    ${AssimpDir}/code/Q3BSPFileImporter.h
+    ${AssimpDir}/code/Q3BSPFileImporter.cpp
+    ${AssimpDir}/code/Q3BSPZipArchive.h
+    ${AssimpDir}/code/Q3BSPZipArchive.cpp
+#RAW
+    ${AssimpDir}/code/RawLoader.cpp
+    ${AssimpDir}/code/RawLoader.h
+#SIB
+    ${AssimpDir}/code/SIBImporter.cpp
+    ${AssimpDir}/code/SIBImporter.h
+#SMD
+    ${AssimpDir}/code/SMDLoader.cpp
+    ${AssimpDir}/code/SMDLoader.h
+#STL
+    ${AssimpDir}/code/STLLoader.cpp
+    ${AssimpDir}/code/STLLoader.h
+    ${AssimpDir}/code/STLExporter.h
+    ${AssimpDir}/code/STLExporter.cpp
+#TERRAGEN
+    ${AssimpDir}/code/TerragenLoader.cpp
+    ${AssimpDir}/code/TerragenLoader.h
+#3D
+    ${AssimpDir}/code/UnrealLoader.cpp
+    ${AssimpDir}/code/UnrealLoader.h
+#X
+    ${AssimpDir}/code/XFileHelper.h
+    ${AssimpDir}/code/XFileImporter.cpp
+    ${AssimpDir}/code/XFileImporter.h
+    ${AssimpDir}/code/XFileParser.cpp
+    ${AssimpDir}/code/XFileParser.h
+    ${AssimpDir}/code/XFileExporter.h
+    ${AssimpDir}/code/XFileExporter.cpp
+#X3D
+    ${AssimpDir}/code/X3DExporter.cpp
+    ${AssimpDir}/code/X3DExporter.hpp
+    ${AssimpDir}/code/X3DImporter.cpp
+    ${AssimpDir}/code/X3DImporter.hpp
+    ${AssimpDir}/code/X3DImporter_Geometry2D.cpp
+    ${AssimpDir}/code/X3DImporter_Geometry3D.cpp
+    ${AssimpDir}/code/X3DImporter_Group.cpp
+    ${AssimpDir}/code/X3DImporter_Light.cpp
+    ${AssimpDir}/code/X3DImporter_Macro.hpp
+    ${AssimpDir}/code/X3DImporter_Metadata.cpp
+    ${AssimpDir}/code/X3DImporter_Networking.cpp
+    ${AssimpDir}/code/X3DImporter_Node.hpp
+    ${AssimpDir}/code/X3DImporter_Postprocess.cpp
+    ${AssimpDir}/code/X3DImporter_Rendering.cpp
+    ${AssimpDir}/code/X3DImporter_Shape.cpp
+    ${AssimpDir}/code/X3DImporter_Texturing.cpp
+    ${AssimpDir}/code/FIReader.hpp
+    ${AssimpDir}/code/FIReader.cpp
+    ${AssimpDir}/code/X3DVocabulary.cpp
+#GLTF
+    ${AssimpDir}/code/glTFAsset.h
+    ${AssimpDir}/code/glTFAsset.inl
+    ${AssimpDir}/code/glTFAssetWriter.h
+    ${AssimpDir}/code/glTFAssetWriter.inl
+    ${AssimpDir}/code/glTFImporter.cpp
+    ${AssimpDir}/code/glTFImporter.h
+    ${AssimpDir}/code/glTFExporter.h
+    ${AssimpDir}/code/glTFExporter.cpp
+    ${AssimpDir}/code/glTF2Asset.h
+    ${AssimpDir}/code/glTF2Asset.inl
+    ${AssimpDir}/code/glTF2AssetWriter.h
+    ${AssimpDir}/code/glTF2AssetWriter.inl
+    ${AssimpDir}/code/glTF2Importer.cpp
+    ${AssimpDir}/code/glTF2Importer.h
+    ${AssimpDir}/code/glTF2Exporter.h
+    ${AssimpDir}/code/glTF2Exporter.cpp
+#3MF
+    ${AssimpDir}/code/D3MFImporter.h
+    ${AssimpDir}/code/D3MFImporter.cpp
+    ${AssimpDir}/code/D3MFExporter.h
+    ${AssimpDir}/code/D3MFExporter.cpp
+    ${AssimpDir}/code/D3MFOpcPackage.h
+    ${AssimpDir}/code/D3MFOpcPackage.cpp
+    ${AssimpDir}/code/3MFXmlTags.h
+#MMD
+    ${AssimpDir}/code/MMDCpp14.h
+    ${AssimpDir}/code/MMDImporter.cpp
+    ${AssimpDir}/code/MMDImporter.h
+    ${AssimpDir}/code/MMDPmdParser.h
+    ${AssimpDir}/code/MMDPmxParser.h
+    ${AssimpDir}/code/MMDPmxParser.cpp
+    ${AssimpDir}/code/MMDVmdParser.h
+#Step
+    ${AssimpDir}/code/StepExporter.h
+    ${AssimpDir}/code/StepExporter.cpp
+#Exporter
+    ${AssimpDir}/code/Exporter.cpp
+    ${AssimpDir}/code/AssimpCExport.cpp
+    ${AssimpDir}/code/BlobIOSystem.h
+#Extra
+    ${AssimpDir}/code/MD4FileData.h
+#Clipper
+    ${AssimpDir}/contrib/clipper/clipper.hpp
+    ${AssimpDir}/contrib/clipper/clipper.cpp
+#Poly2Tri
+    ${AssimpDir}/contrib/poly2tri/poly2tri/common/shapes.cc
+    ${AssimpDir}/contrib/poly2tri/poly2tri/common/shapes.h
+    ${AssimpDir}/contrib/poly2tri/poly2tri/common/utils.h
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/advancing_front.h
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/advancing_front.cc
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/cdt.cc
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/cdt.h
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/sweep.cc
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/sweep.h
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/sweep_context.cc
+    ${AssimpDir}/contrib/poly2tri/poly2tri/sweep/sweep_context.h
+#unzip
+    ${AssimpDir}/contrib/unzip/crypt.h
+    ${AssimpDir}/contrib/unzip/ioapi.c
+    ${AssimpDir}/contrib/unzip/ioapi.h
+    ${AssimpDir}/contrib/unzip/unzip.c
+    ${AssimpDir}/contrib/unzip/unzip.h
+#zip
+    ${AssimpDir}/contrib/zip/src/miniz.h
+    ${AssimpDir}/contrib/zip/src/zip.c
+    ${AssimpDir}/contrib/zip/src/zip.h
+#openddl_parser
+    ${AssimpDir}/contrib/openddlparser/code/OpenDDLParser.cpp
+    ${AssimpDir}/contrib/openddlparser/code/DDLNode.cpp
+    ${AssimpDir}/contrib/openddlparser/code/OpenDDLCommon.cpp
+    ${AssimpDir}/contrib/openddlparser/code/OpenDDLExport.cpp
+    ${AssimpDir}/contrib/openddlparser/code/Value.cpp
+    ${AssimpDir}/contrib/openddlparser/code/OpenDDLStream.cpp
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/OpenDDLParser.h
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/OpenDDLParserUtils.h
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/OpenDDLCommon.h
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/OpenDDLExport.h
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/OpenDDLStream.h
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/DDLNode.h
+    ${AssimpDir}/contrib/openddlparser/include/openddlparser/Value.h
+#open3dgc
+    ${AssimpDir}/contrib/Open3DGC/o3dgcAdjacencyInfo.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcArithmeticCodec.cpp
+    ${AssimpDir}/contrib/Open3DGC/o3dgcArithmeticCodec.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcBinaryStream.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcCommon.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcDVEncodeParams.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcDynamicVectorDecoder.cpp
+    ${AssimpDir}/contrib/Open3DGC/o3dgcDynamicVectorDecoder.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcDynamicVectorEncoder.cpp
+    ${AssimpDir}/contrib/Open3DGC/o3dgcDynamicVectorEncoder.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcDynamicVector.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcFIFO.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcIndexedFaceSet.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcIndexedFaceSet.inl
+    ${AssimpDir}/contrib/Open3DGC/o3dgcSC3DMCDecoder.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcSC3DMCDecoder.inl
+    ${AssimpDir}/contrib/Open3DGC/o3dgcSC3DMCEncodeParams.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcSC3DMCEncoder.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcSC3DMCEncoder.inl
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTimer.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTools.cpp
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTriangleFans.cpp
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTriangleFans.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTriangleListDecoder.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTriangleListDecoder.inl
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTriangleListEncoder.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcTriangleListEncoder.inl
+    ${AssimpDir}/contrib/Open3DGC/o3dgcVector.h
+    ${AssimpDir}/contrib/Open3DGC/o3dgcVector.inl
+#IrrXML
+    ${AssimpDir}/code/irrXMLWrapper.h
+    ${AssimpDir}/contrib/irrXML/CXMLReaderImpl.h
+    ${AssimpDir}/contrib/irrXML/heapsort.h
+    ${AssimpDir}/contrib/irrXML/irrArray.h
+    ${AssimpDir}/contrib/irrXML/irrString.h
+    ${AssimpDir}/contrib/irrXML/irrTypes.h
+    ${AssimpDir}/contrib/irrXML/irrXML.cpp
+    ${AssimpDir}/contrib/irrXML/irrXML.h
+#Precompiled
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
+)

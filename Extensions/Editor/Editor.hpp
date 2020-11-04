@@ -27,7 +27,6 @@ class CommandManager;
 class UpdateEvent;
 class CommandCaptureContextEvent;
 class DocumentEditor;
-class BugReporter;
 class MainPropertyView;
 class SavingEvent;
 class MainWindow;
@@ -157,9 +156,6 @@ public:
   //Commands
   CommandManager* mCommands;
   CogCommandManager* mCogCommands;
-
-  //Bugs
-  BugReporter* mBugReporter;
 
   //Find
   FindTextDialog* mFindTextDialog;

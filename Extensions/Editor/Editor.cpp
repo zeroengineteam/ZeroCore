@@ -233,7 +233,6 @@ Editor::Editor(Composite* parent)
   mFindTextDialog = nullptr;
   mStressTestDialog = nullptr;
   mDesyncWindow = nullptr;
-  mBugReporter = nullptr;
   mCodeTranslatorListener = nullptr;
   mProjectDirectoryWatcher = nullptr;
   mSimpleDebuggerListener = nullptr;

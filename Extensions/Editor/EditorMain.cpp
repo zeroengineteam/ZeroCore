@@ -364,15 +364,6 @@ void EditorMain::ShowReplaceAll(CommandEvent* event)
   mFindTextDialog->DefaultReplaceAllSettings();
 }
 
-void EditorMain::ShowBugReporter(CommandEvent* event)
-{
-  // For now the window is disabled and we link directly to the github page.
-  // TODO: Fix the bug reporter to actually work with GitHub's API.
-  Os::SystemOpenNetworkFile(Urls::cUserReportIssue);
-  //this->ShowWindow("Bug Reporter");
-  //mBugReporter->Reset();
-}
-
 void EditorMain::EditColorScheme(CommandEvent* event)
 {
   this->ShowWindow("Properties");
@@ -946,7 +937,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     BindCommand("FindAll", ShowFindAll);
     BindCommand("ReplaceNext", ShowReplaceNext);
     BindCommand("ReplaceAll", ShowReplaceAll);
-    BindCommand("ReportBug", ShowBugReporter);
     BindCommand("Tools", ShowTools);
     BindCommand("Properties", ShowProperties);
     BindCommand("SelectEditorConfig", ShowConfig);
@@ -1071,16 +1061,6 @@ void CreateEditor(Cog* config, StringParam fileToOpen, StringParam newProjectNam
     findText->SetHideOnClose(true);
     editorMain->AddManagedWidget(findText, DockArea::Floating, false);
     editorMain->mFindTextDialog = findText;
-  }
-
-  //----------------------------------------------------------------------------
-  {
-    // Create the bug report dialog
-    BugReporter* dialog = new BugReporter(editorMain);
-    dialog->SetName("Bug Reporter");
-    dialog->SetHideOnClose(true);
-    editorMain->AddManagedWidget(dialog, DockArea::Floating, false);
-    editorMain->mBugReporter = dialog;
   }
 
   //----------------------------------------------------------------------------

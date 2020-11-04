@@ -18,7 +18,7 @@
 #endif
 
 //-----------------------------------------------------------------------------Warnings
-#if defined(PLATFORM_WINDOWS)
+#if defined(ZERO_PLATFORM_WINDOWS)
 #define _SECURE_SCL 0
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
@@ -289,7 +289,7 @@
 #define ZeroStringDeref(text) #text
 #define ZeroStringize(text) ZeroStringDeref(text)
 
-#if defined(PLATFORM_WINDOWS)
+#if defined(ZERO_PLATFORM_WINDOWS)
 #define ZeroThreadLocal __declspec(thread)
 #define ZeroImport __declspec(dllimport)
 #define ZeroExport __declspec(dllexport)
@@ -332,6 +332,6 @@
 #endif
 
 //-----------------------------------------------------------------------------Includes
-#ifndef PLATFORM_WINDOWS
+#ifndef ZERO_PLATFORM_WINDOWS
 #include <alloca.h>
 #endif

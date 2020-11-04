@@ -11,6 +11,8 @@
 namespace Zero
 {
 
+#define png_infopp_NULL nullptr
+
 const uint PngSignatureSize = 8;
 
 // Read data from any Stream
@@ -179,7 +181,7 @@ void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* h
 
   // Expand grayscale images to the full 8 bits from 1, 2, or 4 bits/pixel
   if (colorType == PNG_COLOR_TYPE_GRAY && readDepth < 8)
-    png_set_gray_1_2_4_to_8(pngPtr);
+    png_set_expand_gray_1_2_4_to_8(pngPtr);
 
   // Expand paletted or RGB images with transparency to full alpha channels
   // so the data will be available as RGBA quartets.

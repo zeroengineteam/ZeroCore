@@ -142,7 +142,6 @@ Menus menus =
 		Array Entries = 
 		[
 		  "Help",
-		  "ReportBug",
 		  "Commands",
 		  "Divider",
 		  "About",

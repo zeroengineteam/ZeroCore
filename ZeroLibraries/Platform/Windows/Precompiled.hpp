@@ -63,9 +63,6 @@
 #include <process.h>
 #include <avrt.h>
 
-// Using static GLEW
-#define GLEW_STATIC
-
 // Include glew before OpenGl
 #include <GL/glew.h>
 #include <GL/wglew.h>
@@ -74,7 +71,6 @@
 #include <GL/GL.h>
 
 // Curl
-#define CURL_STATICLIB
 #include "curl/curl.h"
 
 #ifdef min
@@ -97,25 +93,7 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Avrt.lib")
-
-// Non-windows libraries that we link in
-#pragma comment(lib, "freetype28.lib")
-#pragma comment(lib, "libcef.lib")
 #pragma comment(lib, "OpenGL32.Lib")
-
-#if ZeroRelease
-#pragma comment(lib, "zlib.lib")
-#pragma comment(lib, "libpng.lib")
-#pragma comment(lib, "libcef_dll_wrapper_release.lib")
-#pragma comment(lib, "glew32s.lib")
-#else
-#pragma comment(lib, "zlibd.lib")
-#pragma comment(lib, "libpngd.lib")
-#pragma comment(lib, "libcef_dll_wrapper_debug.lib")
-#pragma comment(lib, "glew32sd.lib")
-#endif
-
-#pragma comment(lib, "libcurl.lib")
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
