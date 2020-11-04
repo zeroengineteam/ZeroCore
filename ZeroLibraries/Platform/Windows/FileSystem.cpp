@@ -155,9 +155,9 @@ void CreateDirectoryAndParents(StringParam directory)
 {
   char directoryPath[MAX_PATH];
   ZeroStrCpy(directoryPath, MAX_PATH, directory.c_str());
-  uint size = directory.SizeInBytes();
+  size_t size = directory.SizeInBytes();
 
-  for(uint c = 0; c < size; ++c)
+  for(size_t c = 0; c < size; ++c)
   {
     //When there is a directory separator
     if(directoryPath[c] == cDirectorySeparatorRune.value)

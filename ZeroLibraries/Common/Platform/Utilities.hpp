@@ -14,9 +14,9 @@ namespace Zero
 /// System Memory Information
 struct ZeroShared MemoryInfo
 {
-  uint Reserve;
-  uint Commit;
-  uint Free;
+  size_t Reserve;
+  size_t Commit;
+  size_t Free;
 };
 
 namespace Os

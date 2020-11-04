@@ -955,7 +955,7 @@ LRESULT CALLBACK ShellWindowWndProc(ShellWindow* window, HWND hwnd, UINT msg, WP
     case WM_CHAR:
     {
       if (window->mOnTextTyped)
-        window->mOnTextTyped(Rune(Utf16ToUtf8(wParam)), window);
+        window->mOnTextTyped(Rune(Utf16ToUtf8(static_cast<int>(wParam))), window);
       return MessageHandled;
     }
 
@@ -965,8 +965,8 @@ LRESULT CALLBACK ShellWindowWndProc(ShellWindow* window, HWND hwnd, UINT msg, WP
     {
       if (window->mOnKeyUp)
       {
-        Keys::Enum key = VKToKey(wParam);
-        window->mOnKeyUp(key, wParam, window);
+        Keys::Enum key = VKToKey(static_cast<int>(wParam));
+        window->mOnKeyUp(key, static_cast<uint>(wParam), window);
       }
 
       return MessageHandled;
@@ -980,8 +980,8 @@ LRESULT CALLBACK ShellWindowWndProc(ShellWindow* window, HWND hwnd, UINT msg, WP
 
       if (window->mOnKeyDown)
       {
-        Keys::Enum key = VKToKey(wParam);
-        window->mOnKeyDown(key, wParam, repeated, window);
+        Keys::Enum key = VKToKey(static_cast<int>(wParam));
+        window->mOnKeyDown(key, static_cast<uint>(wParam), repeated, window);
       }
 
       return MessageHandled;
@@ -1339,7 +1339,7 @@ void Shell::SetClipboardText(StringParam text)
     return;
   EmptyClipboard();
 
-  uint numCharacters = wideText.SizeInBytes();
+  size_t numCharacters = wideText.SizeInBytes();
   // Allocate a global memory object for the text.
 
   HGLOBAL hglbCopy = GlobalAlloc(GMEM_MOVEABLE, (numCharacters + 1) * sizeof(wchar_t));

@@ -1304,7 +1304,7 @@ void OpenglRenderer::AddShaders(Array<ShaderEntry>& entries, uint forceCompileBa
   {
     uint processCount = Math::Min(forceCompileBatchCount, (uint)entries.Size());
     if (processCount == 0)
-      processCount = entries.Size();
+      processCount = static_cast<uint>(entries.Size());
 
     for (uint i = 0; i < processCount; ++i)
     {
@@ -1490,7 +1490,7 @@ void OpenglRenderer::ShowProgress(ShowProgressInfo* info)
     {
       glUniformMatrix4fv(transformLoc, 1, cTransposeMatrices, textTransform.array);
       glBindTexture(GL_TEXTURE_2D, fontTexture->mId);
-      mStreamedVertexBuffer.AddVertices(&progressText[0], progressText.Size(), PrimitiveType::Triangles);
+      mStreamedVertexBuffer.AddVertices(&progressText[0], static_cast<uint>(progressText.Size()), PrimitiveType::Triangles);
       mStreamedVertexBuffer.FlushBuffer(true);
     }
 
@@ -1638,7 +1638,7 @@ void OpenglRenderer::DoRenderTaskRenderPass(RenderTaskRenderPass* task)
   }
 
   // Initialize to invalid index so state is set for the first object.
-  int currentTaskIndex = -1;
+  size_t currentTaskIndex = static_cast<uint>(-1);
 
   // All ViewNodes under the base RenderGroup.
   IndexRange viewNodeRange = mViewBlock->mRenderGroupRanges[task->mRenderGroupIndex];
@@ -2056,7 +2056,7 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNod
     }
 
     GLint location = glGetUniformLocation(mActiveShader, "BoneTransforms");
-    glUniformMatrix4fv(location, remappedBoneTransforms.Size(), cTransposeMatrices, remappedBoneTransforms[0].array);
+    glUniformMatrix4fv(location, static_cast<uint>(remappedBoneTransforms.Size()), cTransposeMatrices, remappedBoneTransforms[0].array);
   }
 
   SetShaderParameterMatrix(cLocalToView, viewNode->mLocalToView);
@@ -2156,7 +2156,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   GLuint program = glCreateProgram();
 
   const GLchar* vertexSourceData = vertexSource.Data();
-  GLint vertexSourceSize = vertexSource.SizeInBytes();
+  GLint vertexSourceSize = static_cast<GLint>(vertexSource.SizeInBytes());
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glAttachShader(program, vertexShader);
   glShaderSource(vertexShader, 1, &vertexSourceData, &vertexSourceSize);
@@ -2167,7 +2167,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   if (!geometrySource.Empty())
   {
     const GLchar* geometrySourceData = geometrySource.Data();
-    GLint geometrySourceSize = geometrySource.SizeInBytes();
+    GLint geometrySourceSize = static_cast<GLint>(geometrySource.SizeInBytes());
     geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
     glAttachShader(program, geometryShader);
     glShaderSource(geometryShader, 1, &geometrySourceData, &geometrySourceSize);
@@ -2176,7 +2176,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource, StringParam geometry
   }
 
   const GLchar* pixelSourceData = pixelSource.Data();
-  GLint pixelSourceSize = pixelSource.SizeInBytes();
+  GLint pixelSourceSize = static_cast<GLint>(pixelSource.SizeInBytes());
   GLuint pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
   glAttachShader(program, pixelShader);
   glShaderSource(pixelShader, 1, &pixelSourceData, &pixelSourceSize);

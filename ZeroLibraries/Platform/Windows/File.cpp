@@ -218,7 +218,7 @@ void File::Close()
   if(self->mOsfHandle != OSF_INVALID_HANDLE_VALUE || self->mHandle != INVALID_HANDLE_VALUE)
   {
     if(self->mOsfHandle != OSF_INVALID_HANDLE_VALUE)
-      _close(self->mOsfHandle);
+      _close(static_cast<int>(self->mOsfHandle));
     else
       CloseHandle(self->mHandle);
     self->mOsfHandle = OSF_INVALID_HANDLE_VALUE;
@@ -263,7 +263,7 @@ size_t File::Write(byte* data, size_t sizeInBytes)
   ZeroGetPrivateData(FilePrivateData);
   ErrorIf(self->mHandle == INVALID_HANDLE_VALUE, "File handle is not valid.");
   DWORD bytesWritten = 0;
-  WriteFile(self->mHandle, data, sizeInBytes, &bytesWritten, NULL);
+  WriteFile(self->mHandle, data, (DWORD)sizeInBytes, &bytesWritten, NULL);
   return bytesWritten;
 }
 
@@ -273,7 +273,7 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
   // We don't assert here because its legal to close the handle from another thread,
   // and attempt a read operation (which will fail, expectedly)
   DWORD bytesRead = 0;
-  bool result = ReadFile(self->mHandle, data, sizeInBytes, &bytesRead, NULL);
+  bool result = ReadFile(self->mHandle, data, (DWORD)sizeInBytes, &bytesRead, NULL);
   if (result)
     status.SetSucceeded();
   else

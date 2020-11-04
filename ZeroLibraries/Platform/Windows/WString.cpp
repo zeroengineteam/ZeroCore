@@ -46,11 +46,13 @@ WString::WString(StringParam str)
   //first read the number of wide characters we need to allocate for our
   //wide character buffer going from UTF8 encoded chars -> UTF16 (windows wchar)
   //this step is necessary when using MultiByteToWideChar
-  mSize = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+  int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, NULL, 0);
+  mSize = size;
+
   wchar_t* wstr = new wchar_t[mSize];
   //using the acquired information needed allocate a destination buffer and covert
   //the utf8 encoded character string to a wide string
-  MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wstr, mSize);
+  MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, wstr, size);
   mData.SetData((byte*)wstr, mSize * sizeof(wchar_t), true);
 }
 
@@ -130,13 +132,13 @@ String Narrow(const wchar_t *wstr)
   //first read the number of wide characters we need to allocate for our
   //character buffer going from UTF16 (windows wchar) -> UTF8 encoded chars
   //this step is necessary when using WideCharToMultiByte
-  size_t size = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
+  int size = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);
   //wcslen does not include the null terminating character in its count
   size_t wstrSize = wcslen(wstr) + 1;
   char* str = new char[size];
   //using the acquired information needed allocate a destination buffer and covert
   //the wide string to a utf8 encoded character string
-  WideCharToMultiByte(CP_UTF8, 0, wstr, wstrSize, str, size, NULL, NULL);
+  WideCharToMultiByte(CP_UTF8, 0, wstr, static_cast<int>(wstrSize), str, size, NULL, NULL);
   String ret(str);
   delete str;
   return ret;
@@ -149,11 +151,11 @@ String Narrow(const WString& wstr)
   //first read the number of wide characters we need to allocate for our
   //character buffer going from UTF16 (windows wchar) -> UTF8 encoded chars
   //this step is necessary when using WideCharToMultiByte
-  size_t size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
+  int size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
   char* str = new char[size];
   //using the acquired information needed allocate a destination buffer and covert
   //the wide string to a utf8 encoded character string
-  WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), wstr.Size(), str, size, NULL, NULL);
+  WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), static_cast<int>(wstr.Size()), str, size, NULL, NULL);
   String ret(str);
   delete str;
   return ret;
@@ -166,7 +168,7 @@ WString Widen(const char *str)
   //first read the number of wide characters we need to allocate for our
   //wide character buffer going from UTF8 encoded chars -> UTF16 (windows wchar)
   //this step is necessary when using MultiByteToWideChar
-  size_t size = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+  int size = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
   wchar_t* wstr = new wchar_t[size];
   //using the acquired information needed allocate a destination buffer and covert
   //the utf8 encoded character string to a wide string
@@ -190,7 +192,7 @@ int Utf16ToUtf8(int utf16)
   //take the straight code point value and put it in a wchar
   wchar_t inputUTF16 = (wchar_t)utf16;
 
-  size_t size = WideCharToMultiByte(CP_UTF8, 0, &inputUTF16, 1, NULL, 0, NULL, NULL);
+  int size = WideCharToMultiByte(CP_UTF8, 0, &inputUTF16, 1, NULL, 0, NULL, NULL);
 
   //output buffer is exact required size, no null terminator processed
   char outputUTF8[4] = {0};

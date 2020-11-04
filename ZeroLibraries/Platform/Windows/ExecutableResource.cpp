@@ -48,7 +48,7 @@ void ExecutableResourceUpdater::Update(const char* name, const char* type, const
     Widen(name).c_str(),
     MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
     (void*)data,
-    size);
+    (DWORD)size);
   ErrorIf(!result, "UpdateResource should never fail unless a parameter was invalid/null");
 }
 

@@ -29,9 +29,9 @@ String CallStackSymbolInfos::ToString() const
   return builder.ToString();
 }
 
-void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo)
+void GetSymbolInfo(void* processHandle, SymbolInfo& symbolInfo)
 {
-  HANDLE process = (HANDLE)processHandle;
+  HANDLE process = processHandle;
 
   //fill in all the junk needed for a SYMBOL_INFO structure
   ULONG64 buffer[(sizeof(SYMBOL_INFO) +
@@ -81,7 +81,7 @@ void GetSymbolInfo(OsInt processHandle, SymbolInfo& symbolInfo)
 
 size_t GetStackAddresses(CallStackAddresses& callStack, size_t stacksToCapture, size_t framesToSkip)
 {
-  callStack.mCaptureFrameCount = CaptureStackBackTrace(framesToSkip, stacksToCapture, callStack.mAddresses, 0);
+  callStack.mCaptureFrameCount = CaptureStackBackTrace((DWORD)framesToSkip, (DWORD)stacksToCapture, callStack.mAddresses, 0);
   return callStack.mCaptureFrameCount;
 }
 
@@ -96,7 +96,7 @@ void GetStackInfo(CallStackAddresses& callStackAddresses, CallStackSymbolInfos& 
     SymbolInfo& symbolInfo = callStackSymbols.mSymbols[i];
     symbolInfo.mAddress = callStackAddresses.mAddresses[i];
     // Generate the symbol information for each stack entry
-    GetSymbolInfo((OsInt)process, symbolInfo);
+    GetSymbolInfo(process, symbolInfo);
   }
 }
 
@@ -118,7 +118,7 @@ void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPath
       SymbolInfo symbolInfo;
       symbolInfo.mAddress = stacks[i];
       // Generate the symbol information for each stack entry
-      GetSymbolInfo((OsInt)process, symbolInfo);
+      GetSymbolInfo(process, symbolInfo);
       
       AddSymbolInformation(symbolInfo);
     }
@@ -132,7 +132,7 @@ void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPath
 
     STACKFRAME64 stackFrame;
     ZeroMemory(&stackFrame, sizeof(stackFrame));
-#if PLATFORM_64
+#if _WIN64
     stackFrame.AddrPC.Offset = pcontext->Rip;
     stackFrame.AddrFrame.Offset = pcontext->Rbp;
     stackFrame.AddrStack.Offset = pcontext->Rsp;
@@ -167,7 +167,7 @@ void SimpleStackWalker::ShowCallstack(void* context, StringParam extraSymbolPath
         ++i;
         SymbolInfo symbolInfo;
         symbolInfo.mAddress = (void*)stackFrame.AddrPC.Offset;
-        GetSymbolInfo((OsInt)process, symbolInfo);
+        GetSymbolInfo(process, symbolInfo);
 
         AddSymbolInformation(symbolInfo);
       }
