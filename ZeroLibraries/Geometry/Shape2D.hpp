@@ -84,7 +84,7 @@ public:
   bool Empty();
 
   /// Returns the total amount of vertices in the entire shape.
-  uint GetVertexCount();
+  size_t GetVertexCount();
 
   /// Fills out the given array with all the vertices of the entire shape.
   void GetVertices(Array<Vec2>* vertices);

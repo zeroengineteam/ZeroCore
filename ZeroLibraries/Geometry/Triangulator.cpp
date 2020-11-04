@@ -424,7 +424,7 @@ bool Triangulate(const Array<Vec2>& vertices,
 bool Triangulate(const Array<Vec2>& vertices, Array<uint>* indices)
 {
   Array<uint> contourSizes(1);
-  contourSizes[0] = vertices.Size();
+  contourSizes[0] = (uint)vertices.Size();
   return Triangulate(vertices, contourSizes, indices);
 }
 

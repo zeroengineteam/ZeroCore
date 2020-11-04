@@ -85,9 +85,9 @@ struct EdgeGreaterThanSorter
 void Combine2dConvexMeshes(const Array<Vec2>& vertices, SubShapeArray& shapes, SubShapeArray& newShapes)
 {
   //count how many edges and shapes we have (so we can allocate all the memory we need up front)
-  uint shapeCount = shapes.Size();
+  size_t shapeCount = shapes.Size();
   SubShapeArray::range subShapes = shapes.All();
-  uint edgeCount = 0;
+  size_t edgeCount = 0;
   for(; !subShapes.Empty(); subShapes.PopFront())
   {
     SubShape& subShape = subShapes.Front();
@@ -108,7 +108,7 @@ void Combine2dConvexMeshes(const Array<Vec2>& vertices, SubShapeArray& shapes, S
   //use a map for now to find edge pairs (any internal edge will have a pair edge)
   HashSet<Edge*, EdgeHashingPolicy> edgeMap;
 
-  uint vertexCount = vertices.Size();
+  size_t vertexCount = vertices.Size();
   //The first step is to build each shape and determine which edges are internal.
   //During this step we'll also find the mirror edge for each internal edge.
   subShapes = shapes.All();
@@ -119,8 +119,8 @@ void Combine2dConvexMeshes(const Array<Vec2>& vertices, SubShapeArray& shapes, S
     convexShapes.PushBack(convexShape);
 
     //iterate through all the edges of this shape
-    uint indexCount = subShape.mIndices.Size();
-    for(uint i = 0; i < indexCount; ++i)
+    size_t indexCount = subShape.mIndices.Size();
+    for(size_t i = 0; i < indexCount; ++i)
     {
       //create the edge and add it to this shape
       Edge* edge = edgePool.AllocateType<Edge>();
@@ -133,8 +133,8 @@ void Combine2dConvexMeshes(const Array<Vec2>& vertices, SubShapeArray& shapes, S
       //Determine if this edge is an internal edge. If the next second
       //point on this edge is either the next or previous point in the original
       //vertex list then the point is on the outer contour.
-      uint nextVertex = (edge->mPoint0Index + 1) % vertexCount;
-      uint prevVertex = (edge->mPoint0Index + vertexCount - 1) % vertexCount;
+      size_t nextVertex = (edge->mPoint0Index + 1) % vertexCount;
+      size_t prevVertex = (edge->mPoint0Index + vertexCount - 1) % vertexCount;
       if(edge->mPoint1Index == nextVertex || edge->mPoint1Index == prevVertex)
         continue;
 

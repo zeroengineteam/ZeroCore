@@ -197,7 +197,7 @@ void Gjk::DrawCSO(void)
 {
   Zero::Array<CSOVertex> supports;
 
-  unsigned subdivisions = 24;
+  size_t subdivisions = 24;
   float alphaLimit = Math::cPi - sEpsilon;
   float betaLimit = Math::cPi * 2 - sEpsilon;
 
@@ -240,15 +240,15 @@ void Gjk::DrawCSO(void)
   CSOVertex top = ComputeSupport(Vec3(0, 1, 0));
   CSOVertex bottom = ComputeSupport(Vec3(0, -1, 0));
 
-  unsigned collumns = subdivisions * 2;
-  for (unsigned i = 0; i < collumns; ++i)
+  size_t collumns = subdivisions * 2;
+  for (size_t i = 0; i < collumns; ++i)
   {
-    unsigned i2 = (i + 1) % (collumns);
+    size_t i2 = (i + 1) % (collumns);
     CSOVertex p0 = supports[i];
     CSOVertex p1 = supports[i2];
 
-    unsigned j = supports.Size() - (collumns - i);
-    unsigned j2 = supports.Size() - (collumns - i2);
+    size_t j = supports.Size() - (collumns - i);
+    size_t j2 = supports.Size() - (collumns - i2);
     CSOVertex p2 = supports[j];
     CSOVertex p3 = supports[j2];
 

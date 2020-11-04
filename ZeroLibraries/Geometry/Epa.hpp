@@ -31,37 +31,37 @@ private:
   struct Edge
   {
     Edge(void) {}
-    Edge(unsigned i0, unsigned i1) : p0(i0), p1(i1) {}
+    Edge(size_t i0, size_t i1) : p0(i0), p1(i1) {}
     bool operator==(const Edge& other) const
     {
       if (p0 == other.p0 && p1 == other.p1) return true;
       if (p0 == other.p1 && p1 == other.p0) return true;
       return false;
     }
-    unsigned p0, p1;
+    size_t p0, p1;
   };
 
   struct Face
   {
     Face(void) {}
-    Face(unsigned i0, unsigned i1, unsigned i2) : p0(i0), p1(i1), p2(i2) {}
-    unsigned p0, p1, p2;
+    Face(size_t i0, size_t i1, size_t i2) : p0(i0), p1(i1), p2(i2) {}
+    size_t p0, p1, p2;
     Vec3 normal;
   };
 
   static const size_t InvalidIndex = Zero::Array<Edge>::InvalidIndex;
 
-  void AddEdge(unsigned p0, unsigned p1);
+  void AddEdge(size_t p0, size_t p1);
 
   Zero::Array<CSOVertex> mVertices;
   Zero::Array<Edge> mEdges;
   Zero::Array<Face> mFaces;
-  unsigned mIndexClosest;
+  size_t mIndexClosest;
   float mDistClosest;
 
-  Zero::Array<unsigned> mVisibleFaces;
+  Zero::Array<size_t> mVisibleFaces;
   CSOVertex mDebugPoint;
-  unsigned mStep;
+  size_t mStep;
 };
 
 }// namespace Intersection

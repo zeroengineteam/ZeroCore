@@ -27,15 +27,15 @@ void DebugDrawStack::Clear()
 void DebugDrawStack::Draw(int index)
 {
   // Guard against an empty list
-  int size = mSteps.Size();
+  size_t size = mSteps.Size();
   if(size == 0)
     return;
 
   // Fix the index to always be within the range of
   // the number of steps, including negative numbers.
-  index = (index % size + size) % size;
+  size_t actualIndex = (index % size + size) % size;
   // Draw the given step
-  mSteps[index].Draw();
+  mSteps[actualIndex].Draw();
 }
 
 }//namespace Zero

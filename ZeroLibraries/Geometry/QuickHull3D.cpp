@@ -374,7 +374,7 @@ void QuickHull3D::BuildDataSetGridApproximation(const Array<Vec3>& points, size_
     Vec3 point = points[i];
     Vec3 vecKey = Math::Floor(point / gridSize);
     IntVec3 key;
-    for(size_t i = 0; i < 3; ++i)
+    for(uint i = 0; i < 3; ++i)
       key[i] = (int)vecKey[i];
     
     bool& isFilled = mGrid[key];
@@ -489,7 +489,7 @@ void QuickHull3D::FindInitialSpan(QuickHullVertex*& v0, QuickHullVertex*& v1)
   for(VertexList::range vertices = mVertices.All(); !vertices.Empty(); vertices.PopFront())
   {
     QuickHullVertex* vertex = &vertices.Front();
-    for(size_t i = 0; i < 3; ++i)
+    for(uint i = 0; i < 3; ++i)
     {
       if(vertex->mPosition[i] < minVertices[i]->mPosition[i])
         minVertices[i] = vertex;

@@ -34,9 +34,9 @@ bool Sphere::Overlap(const Sphere& rhs)
 void Sphere::Compute(const Vec3Array& pts)
 {
   mCenter.ZeroOut();
-  uint size = pts.Size();
+  size_t size = pts.Size();
   ErrorIf(size == 0,"Computing the bounding sphere of a vector of zero points.");
-  for(uint i = 0; i < size; ++i)
+  for(size_t i = 0; i < size; ++i)
     mCenter += pts[i];
   mCenter /= static_cast<real>(size);
 

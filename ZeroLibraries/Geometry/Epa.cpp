@@ -31,7 +31,7 @@ void Epa::Init(const Simplex &simplex)
   mFaces.PushBack(Face(2, 3, 0));
 
   // Compute normals of initial faces
-  for (unsigned i = 0; i < mFaces.Size(); ++i)
+  for (size_t i = 0; i < mFaces.Size(); ++i)
   {
     Face &face = mFaces[i];
     face.normal = (mVertices[face.p1].cso - mVertices[face.p0].cso).Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
@@ -46,7 +46,7 @@ Vec3 Epa::GetClosestFaceNormal(void)
   mIndexClosest = (uint)-1;
   mDistClosest = -FLT_MAX;
 
-  for (unsigned i = 0; i < mFaces.Size(); ++i)
+  for (size_t i = 0; i < mFaces.Size(); ++i)
   {
     Face &face = mFaces[i];
 
@@ -85,16 +85,16 @@ bool Epa::Expand(CSOVertex newPoint)
     return false;
 
   // If point is already in the CSO, fail to expand
-  for (unsigned i = 0; i < mVertices.Size(); ++i)
+  for (size_t i = 0; i < mVertices.Size(); ++i)
   {
     if (Math::Equal(newPoint.cso, mVertices[i].cso, 0.001f))
       return false;
   }
 
   // Find every face that the new point is in front of
-  Zero::Array<unsigned> visibleFaces;
+  Zero::Array<size_t> visibleFaces;
   // float maxDot = 0.0f;
-  for (unsigned i = 0; i < mFaces.Size(); ++i)
+  for (size_t i = 0; i < mFaces.Size(); ++i)
   {
     Face &face = mFaces[i];
     float dot = face.normal.Dot(newPoint.cso - mVertices[face.p0].cso);
@@ -118,7 +118,7 @@ bool Epa::Expand(CSOVertex newPoint)
   // DebugPrint("%f, %d\n", maxDot, clearFaces);
 
   // Evaluate faces back to front for easy array clean up
-  for (unsigned i = visibleFaces.Size() - 1; i < visibleFaces.Size(); --i)
+  for (size_t i = visibleFaces.Size() - 1; i < visibleFaces.Size(); --i)
   {
     Face &face = mFaces[visibleFaces[i]];
 
@@ -137,8 +137,8 @@ bool Epa::Expand(CSOVertex newPoint)
 
   // Create new faces to the support point
   mVertices.PushBack(newPoint);
-  unsigned index = mVertices.Size() - 1;
-  for (unsigned i = 0; i < mEdges.Size(); ++i)
+  size_t index = mVertices.Size() - 1;
+  for (size_t i = 0; i < mEdges.Size(); ++i)
   {
     Edge &edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
@@ -162,7 +162,7 @@ bool Epa::DebugStep(void)
 {
   // Find every face that the new point is in front of
   mVisibleFaces.Clear();
-  for (unsigned i = 0; i < mFaces.Size(); ++i)
+  for (size_t i = 0; i < mFaces.Size(); ++i)
   {
     Face &face = mFaces[i];
     float dot = face.normal.Dot(mDebugPoint.cso - mVertices[face.p0].cso);
@@ -181,7 +181,7 @@ bool Epa::DebugStep(void)
   }
 
   // Evaluate faces back to front for easy array clean up
-  for (unsigned i = mVisibleFaces.Size() - 1; i < mVisibleFaces.Size(); --i)
+  for (size_t i = mVisibleFaces.Size() - 1; i < mVisibleFaces.Size(); --i)
   {
     Face &face = mFaces[mVisibleFaces[i]];
 
@@ -207,8 +207,8 @@ bool Epa::DebugStep(void)
 
   // Create new faces to the support point
   mVertices.PushBack(mDebugPoint);
-  unsigned index = mVertices.Size() - 1;
-  for (unsigned i = 0; i < mEdges.Size(); ++i)
+  size_t index = mVertices.Size() - 1;
+  for (size_t i = 0; i < mEdges.Size(); ++i)
   {
     Edge &edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
@@ -227,17 +227,17 @@ void Epa::DrawDebug(void)
 {
   Zero::gDebugDraw->Add(Zero::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
 
-  for (unsigned i = 0; i < mEdges.Size(); ++i)
+  for (size_t i = 0; i < mEdges.Size(); ++i)
   {
     Edge &edge = mEdges[i];
     Zero::gDebugDraw->Add(Zero::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso).Color(Color::Orange));
   }
 
-  for (unsigned i = 0; i < mFaces.Size(); ++i)
+  for (size_t i = 0; i < mFaces.Size(); ++i)
   {
     Face &face = mFaces[i];
     ByteColor color;
-    if (mVisibleFaces.FindIndex(i) != Zero::Array<unsigned>::InvalidIndex)
+    if (mVisibleFaces.FindIndex(i) != Zero::Array<size_t>::InvalidIndex)
       color = Color::Orange;
     else if (i == mIndexClosest)
       color = Color::Red;
@@ -247,10 +247,10 @@ void Epa::DrawDebug(void)
   }
 }
 
-void Epa::AddEdge(unsigned p0, unsigned p1)
+void Epa::AddEdge(size_t p0, size_t p1)
 {
   Edge newEdge = Edge(p0, p1);
-  unsigned index = mEdges.FindIndex(newEdge);
+  size_t index = mEdges.FindIndex(newEdge);
   if (index != InvalidIndex)
   {
     mEdges[index] = mEdges.Back();

@@ -15,7 +15,7 @@ namespace Zero
 f32 ComputeArea(const Array<Vec2>& contour)
 {
   f32 area = 0;
-  int j = (contour.Size() - 1);
+  size_t j = (contour.Size() - 1);
   for(size_t i = 0; i < contour.Size(); ++i) 
   {
     area += (contour[j].x + contour[i].x) *
@@ -350,10 +350,10 @@ bool Shape2D::Empty()
 }
 
 //Returns the total amount of vertices in the entire shape.
-uint Shape2D::GetVertexCount()
+size_t Shape2D::GetVertexCount()
 {
-  uint count = 0;
-  for(uint i = 0; i < mContours.Size(); ++i)
+  size_t count = 0;
+  for(size_t i = 0; i < mContours.Size(); ++i)
     count += mContours[i].Size();
   return count;
 }
@@ -361,7 +361,7 @@ uint Shape2D::GetVertexCount()
 //Fills out the given array with all the vertices of the entire shape.
 void Shape2D::GetVertices(Array<Vec2>* vertices)
 {
-  uint vertexCount = GetVertexCount();
+  size_t vertexCount = GetVertexCount();
   vertices->Reserve(vertexCount);
   for(uint i = 0; i < mContours.Size(); ++i)
   {
@@ -375,8 +375,8 @@ void Shape2D::GetVertices(Array<Vec2>* vertices)
 void Shape2D::GetContours(Array<uint>* contours)
 {
   contours->Resize(mContours.Size());
-  for(uint i = 0; i < mContours.Size(); ++i)
-    (*contours)[i] = mContours[i].Size();
+  for(size_t i = 0; i < mContours.Size(); ++i)
+    (*contours)[i] = (uint)mContours[i].Size();
 }
 
 //Triangulates the mesh and fills out the given array of indices.
@@ -704,20 +704,20 @@ Shape2D::range Shape2D::All()
 /// Transforms the shape by the given matrix.
 void TransformShape(Mat3Param matrix, Shape2D* shape)
 {
-  uint contourCount = shape->mContours.Size();
+  size_t contourCount = shape->mContours.Size();
 
   // Transform each contour
-  for(uint i = 0; i < contourCount; ++i)
+  for(size_t i = 0; i < contourCount; ++i)
     TransformPolygon(matrix, &shape->mContours[i]);
 }
 
 /// Transforms the shape by the given matrix.
 void TransformShape(Mat4Param matrix, Shape2D* shape)
 {
-  uint contourCount = shape->mContours.Size();
+  size_t contourCount = shape->mContours.Size();
 
   // Transform each contour
-  for(uint i = 0; i < contourCount; ++i)
+  for(size_t i = 0; i < contourCount; ++i)
     TransformPolygon(matrix, &shape->mContours[i]);
 }
 

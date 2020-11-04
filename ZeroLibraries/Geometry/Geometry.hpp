@@ -20,16 +20,16 @@ const uint cMaxSupportPoints = 8;
 //----------------------------------------------------------------- 2D Functions
 ///Calculate the centroid of the 2D polygon. Assumes the 2D points are ordered
 ///in such a way that they describe the polygon's perimeter.
-void CalculatePolygonCentriod(const Vec2* polyPoints, uint polyPointCount,
+void CalculatePolygonCentriod(const Vec2* polyPoints, size_t polyPointCount,
                               Vec2Ptr barycenter);
 
 ///Given an ordered set of 2D points that describe the perimeter of a polygon,
 ///return whether the points are clockwise (negative) or 
 ///counter-clockwise (positive).
-real DetermineWindingOrder(const Vec2* polyPoints, uint polyPointCount);
+real DetermineWindingOrder(const Vec2* polyPoints, size_t polyPointCount);
 
 ///Generate an axis-aligned bounding box for the given set of 2D points.
-void GenerateAabb(const Vec2* points, uint pointCount, Vec2Ptr min, 
+void GenerateAabb(const Vec2* points, size_t pointCount, Vec2Ptr min,
                   Vec2Ptr max);
 
 ///Returns 2 times the signed triangle area. The result is positive is abc is
@@ -107,7 +107,7 @@ real CalculateTriMeshVolume(const Array<Vec3>& triMeshPoints,
 ///If no scale is provided then it assumes a scale of (1, 1, 1).
 Vec3 CalculateTriMeshCenterOfMass(const Vec3* triMeshPoints, 
                                   const uint* triMeshTriangles, 
-                                  uint triangleCount, 
+                                  size_t triangleCount, 
                                   Vec3Param scale = NoScale);
 Vec3 CalculateTriMeshCenterOfMass(const Array<Vec3>& triMeshPoints,
                                   const Array<uint>& triMeshTriangles,
@@ -117,7 +117,7 @@ Vec3 CalculateTriMeshCenterOfMass(const Array<Vec3>& triMeshPoints,
 ///and volume can be scaled as scale.x * scale.y * scale.z * volume
 void CalculateTriMeshCenterOfMassAndVolume(const Vec3* triMeshPoints, 
                                            const uint* triMeshTriangles, 
-                                           uint triangleCount, 
+                                           size_t triangleCount, 
                                            Vec3Ref centerOfMass, real& volume);
 void CalculateTriMeshCenterOfMassAndVolume(const Array<Vec3>& triMeshPoints,
                                            const Array<uint>& triMeshTriangles,
@@ -130,7 +130,7 @@ void CalculateTriMeshCenterOfMassAndVolume(const Array<Vec3>& triMeshPoints,
 ///provided then it assumes a scale of (1, 1, 1).
 void CalculateTriMeshInertiaTensor(const Vec3* triMeshPoints,
                                    const uint* triMeshTriangles,
-                                   uint triangleCount, Vec3Param centerOfMass,
+                                   size_t triangleCount, Vec3Param centerOfMass,
                                    Mat3Ptr inertiaTensor, 
                                    Vec3Param scale = NoScale);
 void CalculateTriMeshInertiaTensor(const Array<Vec3>& triMeshPoints,

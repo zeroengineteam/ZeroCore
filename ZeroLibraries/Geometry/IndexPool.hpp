@@ -141,7 +141,7 @@ void IndexPool<T, index_t>::Grow()
 template <typename T, typename index_t>
 index_t IndexPool<T, index_t>::GetIndex(const T* node) const
 {
-  return (const Node*)node - mData;
+  return static_cast<index_t>((const Node*)node - mData);
 }
 
 template <typename T, typename index_t>

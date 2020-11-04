@@ -27,7 +27,7 @@ const real cCylinderEndcapThreshold = real(0.0001);
 //----------------------------------------------------------------- 2D Functions
 //Calculate the centroid of the 2D polygon. Assumes the 2D points are ordered
 //in such a way that they describe the polygon's perimeter.
-void CalculatePolygonCentriod(const Vec2* polyPoints, uint polyPointCount,
+void CalculatePolygonCentriod(const Vec2* polyPoints, size_t polyPointCount,
                               Vec2Ptr centroid)
 {
   ErrorIf(polyPoints == nullptr, "Geometry - Null pointer passed, this function "\
@@ -52,7 +52,7 @@ void CalculatePolygonCentriod(const Vec2* polyPoints, uint polyPointCount,
   real area = real(0.0);
   centroid->ZeroOut();
   real xyXY;
-  uint loopCount = polyPointCount - 1;
+  size_t loopCount = polyPointCount - 1;
 
   for(uint i = 0; i < loopCount; ++i)
   {
@@ -108,10 +108,10 @@ void GenerateAabb(const Vec2* points, uint pointCount, Vec2Ptr min, Vec2Ptr max)
 //Given an ordered set of 2D points that describe the perimeter of a polygon,
 //return whether the points are clockwise (negative) or
 //counter-clockwise (positive).
-real DetermineWindingOrder(const Vec2* polyPoints, uint polyPointCount)
+real DetermineWindingOrder(const Vec2* polyPoints, size_t polyPointCount)
 {
   real result = real(0.0);
-  for(uint i = polyPointCount - 1, j = 0; j < polyPointCount; i = j, ++j)
+  for(size_t i = polyPointCount - 1, j = 0; j < polyPointCount; i = j, ++j)
   {
     result += (polyPoints[i].x - polyPoints[j].x) *
               (polyPoints[i].y + polyPoints[j].y);
@@ -128,7 +128,7 @@ real Signed2DTriArea(Vec2Param a, Vec2Param b, Vec2Param c)
 
 //----------------------------------------------------------------- 3D Functions
 //Generate an axis-aligned bounding box for the given set of 3D points.
-void GenerateAabb(const Vec3* points, uint pointCount, Vec3Ptr min, Vec3Ptr max)
+void GenerateAabb(const Vec3* points, size_t pointCount, Vec3Ptr min, Vec3Ptr max)
 {
   ErrorIf(points == nullptr, "Geometry - Null pointer passed, this "\
                           "function needs a valid pointer.");
@@ -139,7 +139,7 @@ void GenerateAabb(const Vec3* points, uint pointCount, Vec3Ptr min, Vec3Ptr max)
 
   *min = Vec3(Math::PositiveMax(), Math::PositiveMax(), Math::PositiveMax());
   *max = -(*min);
-  for(uint i = 0; i < pointCount; ++i)
+  for(size_t i = 0; i < pointCount; ++i)
   {
     *min = Math::Min(points[i], *min);
     *max = Math::Max(points[i], *max);
@@ -528,7 +528,7 @@ void ComputeBestFitPlane(const Vec3* polyPoints, uint polyPointCount,
 //Calculate the volume of a triangular mesh.
 real CalculateTriMeshVolume(const Vec3* triMeshPoints,
                             const uint* triMeshTriangles,
-                            uint triangleCount, Vec3Param scale)
+                            size_t triangleCount, Vec3Param scale)
 {
   ErrorIf(triMeshPoints == nullptr, "Geometry - Null pointer passed, this "\
                                     "function needs a valid pointer.");
@@ -542,7 +542,7 @@ real CalculateTriMeshVolume(const Vec3* triMeshPoints,
   Mat3 triPoints;
 
   //For each triangle...
-  for(uint i = 0; i < triangleCount; ++i)
+  for(size_t i = 0; i < triangleCount; ++i)
   {
     //Grab the points of the triangle and throw them into the matrix
     uint pointIndex = triMeshTriangles[i * 3];
@@ -562,7 +562,7 @@ real CalculateTriMeshVolume(const Vec3* triMeshPoints,
 real CalculateTriMeshVolume(const Array<Vec3>& triMeshPoints,
                             const Array<uint>& triMeshTriangles, Vec3Param scale)
 {
-  uint triangleCount = triMeshTriangles.Size() / 3;
+  size_t triangleCount = triMeshTriangles.Size() / 3;
   return CalculateTriMeshVolume(triMeshPoints.Data(), triMeshTriangles.Data(), triangleCount, scale);
 }
 
@@ -581,13 +581,13 @@ Vec3 CalculateTriMeshCenterOfMass(const Array<Vec3>& triMeshPoints,
                                   const Array<uint>& triMeshTriangles,
                                   Vec3Param scale)
 {
-  uint triangleCount = triMeshTriangles.Size() / 3;
+  size_t triangleCount = triMeshTriangles.Size() / 3;
   return CalculateTriMeshCenterOfMass(triMeshPoints.Data(), triMeshTriangles.Data(), triangleCount, scale);
 }
 
 void CalculateTriMeshCenterOfMassAndVolume(const Vec3* triMeshPoints, 
                                            const uint* triMeshTriangles, 
-                                           uint triangleCount,
+                                           size_t triangleCount,
                                            Vec3Ref centerOfMass, real& volume)
 {
   ErrorIf(triMeshPoints == nullptr, "Geometry - Null pointer passed, this "\
@@ -605,7 +605,7 @@ void CalculateTriMeshCenterOfMassAndVolume(const Vec3* triMeshPoints,
   volume = real(0.0);
 
   //For each triangle...
-  for(uint i = 0; i < triangleCount; ++i)
+  for(size_t i = 0; i < triangleCount; ++i)
   {
     //Grab the points of the triangle and throw them into the matrix
     uint pointIndex = triMeshTriangles[i * 3];
@@ -641,7 +641,7 @@ void CalculateTriMeshCenterOfMassAndVolume(const Array<Vec3>& triMeshPoints,
                                            const Array<uint>& triMeshTriangles,
                                            Vec3Ref centerOfMass, real& volume)
 {
-  uint triangleCount = triMeshTriangles.Size() / 3;
+  size_t triangleCount = triMeshTriangles.Size() / 3;
   CalculateTriMeshCenterOfMassAndVolume(triMeshPoints.Data(), triMeshTriangles.Data(),
                                         triangleCount, centerOfMass, volume);
 }
@@ -650,7 +650,7 @@ void CalculateTriMeshCenterOfMassAndVolume(const Array<Vec3>& triMeshPoints,
 //allows for the mass to be easily factored in later.
 void CalculateTriMeshInertiaTensor(const Vec3* triMeshPoints,
                                    const uint* triMeshTriangles,
-                                   uint triangleCount, Vec3Param centerOfMass,
+                                   size_t triangleCount, Vec3Param centerOfMass,
                                    Mat3Ptr inertiaTensor, Vec3Param scale)
 {
   ErrorIf(triMeshPoints == nullptr, "Geometry - Null pointer passed, this "\
@@ -676,10 +676,10 @@ void CalculateTriMeshInertiaTensor(const Vec3* triMeshPoints,
   double meshVolume = double(0.0);
 
   //For each triangle...
-  for(uint i = 0; i < triangleCount; ++i)
+  for(size_t i = 0; i < triangleCount; ++i)
   {
     //Grab the points of the triangle and throw them into the array
-    uint pointIndex = triMeshTriangles[i * 3];
+    size_t pointIndex = triMeshTriangles[i * 3];
     triPoint[0] = (triMeshPoints[pointIndex] - centerOfMass) * scale; // Storage Visual
     pointIndex = triMeshTriangles[(i * 3) + 1];                       // | Ax  Ay  Az |
     triPoint[1] = (triMeshPoints[pointIndex] - centerOfMass) * scale; // | Bx  By  Bz |
@@ -695,10 +695,10 @@ void CalculateTriMeshInertiaTensor(const Vec3* triMeshPoints,
     meshVolume += tetraVolume;
 
     //For each axis...
-    for(uint j = 0; j < 3; ++j)
+    for(size_t j = 0; j < 3; ++j)
     {
-      uint u = (j + 1) % 3;
-      uint v = (j + 2) % 3;
+      size_t u = (j + 1) % 3;
+      size_t v = (j + 2) % 3;
 
       //Diagonal inertia tensor element calculation
       diagElement[j] += double((triPoint[0][j] * triPoint[1][j] + // Aj * Bj
@@ -758,7 +758,7 @@ void CalculateTriMeshInertiaTensor(const Array<Vec3>& triMeshPoints,
                                    const Array<uint>& triMeshTriangles, Vec3Param centerOfMass,
                                    Mat3Ptr inertiaTensor, Vec3Param scale)
 {
-  uint triangleCount = triMeshTriangles.Size() / 3;
+  size_t triangleCount = triMeshTriangles.Size() / 3;
   CalculateTriMeshInertiaTensor(triMeshPoints.Data(), triMeshTriangles.Data(), triangleCount,
                                 centerOfMass, inertiaTensor, scale);
 }

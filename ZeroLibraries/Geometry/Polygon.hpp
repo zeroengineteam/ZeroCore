@@ -27,11 +27,11 @@ public:
   /// Copy constructor.
   Polygon(const Polygon& rhs);
   Polygon(const Array<Vec2>& rhs);
-  Polygon(const Vec2* verts, uint size);
+  Polygon(const Vec2* verts, size_t size);
 
   /// Indexing operators.
-  Vec2& operator[](uint index);
-  const Vec2& operator[](uint index) const;
+  Vec2& operator[](size_t index);
+  const Vec2& operator[](size_t index) const;
 
   /// Adds the given vertex to the polygon.
   void AddVertex(Vec2Param vert);
@@ -82,16 +82,16 @@ public:
 
   //--------------------------------------------------------------------- Info
   /// Returns the amount of vertices in the polygon.
-  uint Size() const;
+  size_t Size() const;
 
   /// Returns whether or not the polygon has any vertices.
   bool Empty();
 
   /// Returns the next index (wraps around).
-  uint NextIndex(uint index) const;
+  size_t NextIndex(size_t index) const;
 
   /// Returns the previous index (wraps around).
-  uint PrevIndex(uint index);
+  size_t PrevIndex(size_t index);
 
   /// Returns a range of all the edges.
   range GetEdges();
@@ -148,7 +148,7 @@ public:
     range& All() { return *this; }
 
   private:
-    uint mCurrIndex;
+    size_t mCurrIndex;
     Polygon& mPolygon;
   };
 
