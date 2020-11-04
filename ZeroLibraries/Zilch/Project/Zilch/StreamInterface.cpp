@@ -139,9 +139,9 @@ namespace Zilch
   Integer Utf8Encoding::Write(Rune rune, IStreamClass& stream)
   {
     byte utf8Bytes[4] = { 0 };
-    size_t encodedByteCount = Zero::UTF8::UnpackUtf8RuneIntoBuffer(rune.mValue, utf8Bytes);
+    Integer encodedByteCount = static_cast<Integer>(Zero::UTF8::UnpackUtf8RuneIntoBuffer(rune.mValue, utf8Bytes));
 
-    for (size_t i = 0; i < encodedByteCount; ++i)
+    for (Integer i = 0; i < encodedByteCount; ++i)
     {
       // If we fail to write out a byte, return the amount we've already written (works because of 0 based indexing)
       if (stream.WriteByte(utf8Bytes[i]) == 0)
@@ -334,7 +334,7 @@ namespace Zilch
   //***************************************************************************
   Integer IStreamClass::Write(ArrayClass<Byte>& data)
   {
-    return this->Write(data, 0, data.NativeArray.Size());
+    return this->Write(data, 0, static_cast<Integer>(data.NativeArray.Size()));
   }
 
   //***************************************************************************

@@ -562,7 +562,7 @@ namespace Zilch
   //***************************************************************************
   int IndirectionType::GenericHash(const byte* value) const
   {
-    return ((Handle*)value)->Hash();
+    return static_cast<int>(((Handle*)value)->Hash());
   }
 
   //***************************************************************************
@@ -713,7 +713,7 @@ namespace Zilch
   //***************************************************************************
   int AnyType::GenericHash(const byte* value) const
   {
-    return ((Any*)value)->Hash();
+    return static_cast<int>(((Any*)value)->Hash());
   }
 
   //***************************************************************************
@@ -961,7 +961,7 @@ namespace Zilch
     if (this->CopyMode == TypeCopyMode::ReferenceType)
     {
       // Hash the handle and return that value
-      return ((Handle*)value)->Hash();
+      return static_cast<int>(((Handle*)value)->Hash());
     }
     else
     {
@@ -2056,7 +2056,7 @@ namespace Zilch
   //***************************************************************************
   int DelegateType::GenericHash(const byte* value) const
   {
-    return ((Delegate*)value)->Hash();
+    return static_cast<int>(((Delegate*)value)->Hash());
   }
 
   //***************************************************************************
