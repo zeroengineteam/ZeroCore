@@ -28,7 +28,7 @@ public:
   uint Size(HandleParam instance) override
   {
     ArrayType& container = *instance.Get<ArrayType*>(GetOptions::AssertOnNull);
-    return container.Size();
+    return (uint)container.Size();
   }
 
   Any GetValue(HandleParam instance, uint index) override

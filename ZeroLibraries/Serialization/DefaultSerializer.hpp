@@ -37,7 +37,7 @@ public:
     return false;
   }
 
-  void ArraySize(uint& arraySize) override
+  void ArraySize(size_t& arraySize) override
   {
     arraySize = 0;
   }
@@ -51,7 +51,7 @@ public:
   {
   }
 
-  bool ArrayField(cstr, cstr, byte *, ArrayType arrayType, uint, uint) override
+  bool ArrayField(cstr, cstr, byte *, ArrayType arrayType, size_t, size_t) override
   {
     return false;
   }

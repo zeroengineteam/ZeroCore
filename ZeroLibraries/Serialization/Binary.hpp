@@ -12,7 +12,7 @@
 namespace Zero
 {
 
-BoundType* const BinaryEndSignature = (BoundType*)0xFFFFDEAD;
+const u32 BinaryEndSignature = 0xFFFFDEAD;
 
 //----------------------------------------------------------------- Binary Saver
 template<typename binaryType>
@@ -51,7 +51,7 @@ public:
 
   void EndPolymorphic() override
   {
-    BoundType* end = BinaryEndSignature;
+    u32 end = BinaryEndSignature;
     BinaryType()->Data((byte*)&end, sizeof(end));
   }
 
@@ -82,13 +82,13 @@ public:
 
   //------------------------------------------------------------ Array Serialization
   bool ArrayField(cstr typeName, cstr fieldName, byte* data, 
-                  ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
+                  ArrayType arrayType, size_t numberOfElements, size_t sizeOftype) override
   {
     BinaryType()->Data((byte*)data, sizeOftype*numberOfElements);
     return true;
   }
 
-  void ArraySize(uint& arraySize) override
+  void ArraySize(size_t& arraySize) override
   {
     BinaryType()->Data((byte*)&arraySize, sizeof(arraySize));
   }
@@ -156,22 +156,23 @@ public:
 
   void EndPolymorphic() override
   {
-    BoundType* end = nullptr;
+    u32 end = BinaryEndSignature;
     BinaryType()->Data((byte*)&end, sizeof(end));
-    ErrorIf(end != BinaryEndSignature, "Binary buffer serialization error did "
+    ErrorIf(end != BinaryEndSignature,
+            "Binary buffer serialization error did "
             "not read the end element. A different number of bytes was "
             "serialized inside this polymorphic node.");
   }
 
   //------------------------------------------------------------ Array Serialization
   bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, 
-                 uint numberOfElements, uint sizeOftype) override
+                 size_t numberOfElements, size_t sizeOftype) override
   {
     BinaryType()->Data((byte*)data, sizeOftype*numberOfElements);
     return true;
   }
 
-  void ArraySize(uint& arraySize) override
+  void ArraySize(size_t& arraySize) override
   {
     BinaryType()->Data((byte*)&arraySize, sizeof(arraySize));
   }
@@ -199,7 +200,7 @@ public:
   bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
   bool OpenFile(Status& status, cstr filename);
   void Close();
-  void Data(byte* data, uint size);
+  void Data(byte* data, size_t size);
   bool TestForObjectEnd(BoundType** runtimeType);
 
 private:
@@ -213,7 +214,7 @@ class BinaryFileSaver : public BinarySaver<BinaryFileSaver>
 public:
   bool Open(Status& status, cstr filename);
   void Close();
-  void Data(byte* data, uint size);
+  void Data(byte* data, size_t size);
 
 private:
   File mFile;
@@ -227,14 +228,14 @@ public:
   ~BinaryBufferSaver();
 
   void Open();
-  uint GetSize();
+  size_t GetSize();
   void Deallocate();
 
-  void ExtractInto(byte* data, uint size);
+  void ExtractInto(byte* data, size_t size);
   void ExtractInto(DataBlock& block);
   DataBlock ExtractAsDataBlock() override;
 
-  void Data(byte* data, uint size);
+  void Data(byte* data, size_t size);
 private:
   ByteBuffer mBuffer;
 };
@@ -244,14 +245,14 @@ class BinaryBufferLoader: public BinaryLoader<BinaryBufferLoader>
 {
 public:
   bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
-  void SetBuffer(byte* data, uint size);
+  void SetBuffer(byte* data, size_t size);
   void SetBlock(DataBlock block);
 
-  void Data(byte* data, uint size);
+  void Data(byte* data, size_t size);
   bool TestForObjectEnd(BoundType** runtimeType);
 
 private:
-  uint mBufferSize;
+  size_t mBufferSize;
   byte* mCurrentPosition;
   byte* mBuffer;
 };

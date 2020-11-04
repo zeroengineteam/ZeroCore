@@ -302,7 +302,7 @@ void ByteBufferBlock::Deallocate()
   mOwnsData = false;
 }
 
-void ByteBufferBlock::Seek(size_t offset, uint /*origin*/)
+void ByteBufferBlock::Seek(size_t offset, size_t /*origin*/)
 {
   mCurrent += offset;
 }

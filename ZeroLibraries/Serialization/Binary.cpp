@@ -28,12 +28,12 @@ void BinaryBufferSaver::Open()
 
 }
 
-void BinaryBufferSaver::Data(byte* data, uint sizeInBytes)
+void BinaryBufferSaver::Data(byte* data, size_t sizeInBytes)
 {
   mBuffer.Append(data, sizeInBytes);
 }
 
-uint BinaryBufferSaver::GetSize()
+size_t BinaryBufferSaver::GetSize()
 {
   return mBuffer.GetSize();
 }
@@ -43,14 +43,14 @@ void BinaryBufferSaver::ExtractInto(DataBlock& block)
   mBuffer.ExtractInto(block.Data, block.Size);
 }
 
-void BinaryBufferSaver::ExtractInto(byte* data, uint size)
+void BinaryBufferSaver::ExtractInto(byte* data, size_t size)
 {
   mBuffer.ExtractInto(data, size);
 }
 
 DataBlock BinaryBufferSaver::ExtractAsDataBlock()
 {
-  uint size = mBuffer.GetSize();
+  size_t size = mBuffer.GetSize();
   DataBlock dataBlock;
   dataBlock.Data = (byte*)zAllocate(size);
   dataBlock.Size = size;
@@ -64,7 +64,7 @@ void BinaryBufferSaver::Deallocate()
 }
 
 //--------------------------------------------------------- Binary Buffer Loader
-void BinaryBufferLoader::SetBuffer(byte* data, uint size)
+void BinaryBufferLoader::SetBuffer(byte* data, size_t size)
 {
   mBufferSize = size;
   mCurrentPosition = data;
@@ -80,13 +80,15 @@ void BinaryBufferLoader::SetBlock(DataBlock block)
 
 bool BinaryBufferLoader::TestForObjectEnd(BoundType** data)
 {
-  size_t bytesToRead = sizeof(*data);
+  *data = nullptr;
+
+  size_t bytesToRead = sizeof(u32);
   byte* endOfBuffer = mBuffer + mBufferSize;
   byte* ifMoved = mCurrentPosition + bytesToRead;
   if(ifMoved < endOfBuffer)
   {
-    *data = *(BoundType**)mCurrentPosition;
-    if(*data == BinaryEndSignature)
+    //*data = *(BoundType**)mCurrentPosition;
+    if(*(u32*)mCurrentPosition == BinaryEndSignature)
     {
       return false;
     }
@@ -98,12 +100,12 @@ bool BinaryBufferLoader::TestForObjectEnd(BoundType** data)
   }
   else
   {
-    //end of buffer
+    // end of buffer
     return false;
   }
 }
 
-void BinaryBufferLoader::Data(byte* data, uint sizeInBytes)
+void BinaryBufferLoader::Data(byte* data, size_t sizeInBytes)
 {
   const bool bufferOverrun = mCurrentPosition+sizeInBytes > mBuffer+mBufferSize;
   ErrorIf(bufferOverrun, "Access buffer out of range.");
@@ -142,15 +144,18 @@ void BinaryFileLoader::Close()
 
 bool BinaryFileLoader::TestForObjectEnd(BoundType** data)
 {
-  size_t bytesToRead = sizeof(*data);
+  *data = nullptr;
+
+  size_t bytesToRead = sizeof(u32);
   FilePosition fp = mFile.Tell();
   if(fp + bytesToRead < mFile.Size())
   {
-    Data((byte*)data, bytesToRead);
-    if(*data == BinaryEndSignature)
+    u32 end = BinaryEndSignature;
+    Data((byte*)&end, bytesToRead);
+    if(end == BinaryEndSignature)
     {
-      //End of object
-      //Move back to prevent reading the end tag
+      // End of object
+      // Move back to prevent reading the end tag
       mFile.Seek(-(int)bytesToRead, SeekOrigin::Current);
       return false;
     }
@@ -158,12 +163,12 @@ bool BinaryFileLoader::TestForObjectEnd(BoundType** data)
   }
   else
   {
-    //End of file
+    // End of file
     return false;
   }
 }
 
-void BinaryFileLoader::Data(byte* data, uint sizeInBytes)
+void BinaryFileLoader::Data(byte* data, size_t sizeInBytes)
 {
   Status status;
   mFile.Read(status, data, sizeInBytes);
@@ -195,7 +200,7 @@ void BinaryFileSaver::Close()
   mFile.Close();
 }
 
-void BinaryFileSaver::Data(byte* data, uint sizeInBytes)
+void BinaryFileSaver::Data(byte* data, size_t sizeInBytes)
 {
   mFile.Write(data, sizeInBytes);
 }

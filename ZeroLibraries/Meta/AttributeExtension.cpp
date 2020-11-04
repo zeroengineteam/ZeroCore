@@ -383,11 +383,11 @@ void AttributeExtension::ValidateParameters(Status& status, HandleParam componen
 {
   BoundType* componentType = component.StoredType;
 
-  uint parameterCount = attribute.Parameters.Size();
+  size_t parameterCount = attribute.Parameters.Size();
 
   // Attribute parameters must either all have names, or have no names
   // We need to check how many are named so we know whether or not they're all named
-  uint namedParametersCount = 0;
+  size_t namedParametersCount = 0;
   forRange(AttributeParameter& parameter, attribute.Parameters.All())
   {
     if (!parameter.Name.Empty())
@@ -401,7 +401,7 @@ void AttributeExtension::ValidateParameters(Status& status, HandleParam componen
     return;
   }
 
-  uint currentParameter = 0;
+  size_t currentParameter = 0;
   forRange(Property* property, componentType->GetProperties())
   {
     String name = PropertyToAttributeName(property->Name);

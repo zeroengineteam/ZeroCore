@@ -25,12 +25,12 @@ public:
             FileMode::Enum fileMode = FileMode::Write);
   bool OpenBuffer(DataVersion::Enum version = DataVersion::Current,
                   FileMode::Enum fileMode = FileMode::Write);
-  uint GetBufferSize();
+  size_t GetBufferSize();
   String GetString();
 
   SerializerClass::Enum GetClass() override;
 
-  void ExtractInto(byte* data, uint size);
+  void ExtractInto(byte* data, size_t size);
   DataBlock ExtractAsDataBlock();
   void Close();
 
@@ -54,9 +54,9 @@ public:
 
   //Array Serialization
   bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType,
-                           uint numberOfElements, uint sizeOftype) override;
+                           size_t numberOfElements, size_t sizeOftype) override;
 
-  void ArraySize(uint& arraySize){};
+  void ArraySize(size_t& arraySize){};
 
   //Enum Serialization
   bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) override;
@@ -68,7 +68,7 @@ public:
 //private:
   StringBuilder mStream;
   String mFilename;
-  uint mDepth;
+  size_t mDepth;
   FileMode::Enum mWriteMode;
 
   /// The version being saved

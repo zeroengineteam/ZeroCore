@@ -194,7 +194,7 @@ void MetaSelection::Clear(SendsEvents::Enum sendsEvents)
 //******************************************************************************
 uint MetaSelection::Count()
 {
-  return mSelectedObjects.Size();
+  return (uint)mSelectedObjects.Size();
 }
 
 //******************************************************************************

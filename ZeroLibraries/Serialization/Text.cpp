@@ -72,7 +72,7 @@ bool TextSaver::OpenBuffer(DataVersion::Enum version, FileMode::Enum fileMode)
 }
 
 //******************************************************************************
-uint TextSaver::GetBufferSize()
+size_t TextSaver::GetBufferSize()
 {
   return mStream.GetSize();
 }
@@ -90,7 +90,7 @@ SerializerClass::Enum TextSaver::GetClass()
 }
 
 //******************************************************************************
-void TextSaver::ExtractInto(byte* data, uint size)
+void TextSaver::ExtractInto(byte* data, size_t size)
 {
   mStream.ExtractInto(data, size);
 }
@@ -98,7 +98,7 @@ void TextSaver::ExtractInto(byte* data, uint size)
 //******************************************************************************
 DataBlock TextSaver::ExtractAsDataBlock()
 {
-  uint size = mStream.GetSize();
+  size_t size = mStream.GetSize();
   DataBlock block = AllocateBlock(size);
   mStream.ExtractInto(block.Data, block.Size);
   return block;
@@ -237,7 +237,7 @@ bool TextSaver::InnerStart(cstr typeName, cstr fieldName, StructType structType,
 //******************************************************************************
 void TextSaver::Tabs()
 {
-  for(uint i=0;i<mDepth;++i)
+  for(size_t i=0;i<mDepth;++i)
     mStream << "\t";
 }
 
@@ -512,11 +512,11 @@ bool TextSaver::GetPolymorphic(PolymorphicNode& node)
 //---------------------------------------------------------- Array Serialization 
 //******************************************************************************
 template<typename type>
-bool WriteArrayText(StringBuilder& os, type* data, uint numberOfElements)
+bool WriteArrayText(StringBuilder& os, type* data, size_t numberOfElements)
 {
   bool result = true;
 
-  for(uint i=0;i<numberOfElements;++i)
+  for(size_t i=0;i<numberOfElements;++i)
   {
     type& value = data[i];
     
@@ -534,7 +534,7 @@ bool WriteArrayText(StringBuilder& os, type* data, uint numberOfElements)
 //******************************************************************************
 bool TextSaver::ArrayField(cstr typeName, cstr fieldName, byte* data, 
                            ArrayType arrayType, 
-                           uint numberOfElements, uint sizeOftype)
+                           size_t numberOfElements, size_t sizeOftype)
 {
   bool result = true;
 
