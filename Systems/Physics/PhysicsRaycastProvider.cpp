@@ -58,7 +58,7 @@ void PhysicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResult
   filter.SetState(BaseCastFilterFlags::IgnoreStatic, !mStaticColliders);
 
   // Form a physics cast result with the total result's capacity
-  CastResults physicsResults(results.mCapacity, filter);
+  CastResults physicsResults((uint)results.mCapacity, filter);
 
   // Cast the ray into physics
   physicsSpace->CastRay(ray, physicsResults);
@@ -91,7 +91,7 @@ void PhysicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, R
     filter.Set(BaseCastFilterFlags::IgnoreKinematic);
 
   // Form a physics cast result with the total result's capacity
-  CastResults physicsResults(results.mCapacity, filter);
+  CastResults physicsResults((uint)results.mCapacity, filter);
   // Cast to get the results from physics
   physicsSpace->CastFrustum(frustum, physicsResults);
   // And then add all of the results that we got

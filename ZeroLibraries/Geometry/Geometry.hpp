@@ -99,7 +99,7 @@ void ComputeBestFitPlane(const Vec3* polyPoints, uint polyPointCount,
 ///assumes a scale of (1, 1, 1).
 real CalculateTriMeshVolume(const Vec3* triMeshPoints, 
                             const uint* triMeshTriangles, 
-                            uint triangleCount, Vec3Param scale = NoScale);
+                            size_t triangleCount, Vec3Param scale = NoScale);
 real CalculateTriMeshVolume(const Array<Vec3>& triMeshPoints,
                             const Array<uint>& triMeshTriangles, Vec3Param scale = NoScale);
 

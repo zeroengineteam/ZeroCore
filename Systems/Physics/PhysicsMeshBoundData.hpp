@@ -167,7 +167,7 @@ public:
       DoNotifyException("Invalid Range Operation", "Cannot access an item in an empty range.");
       return FrontResult();
     }
-    return mArray->Get(mIndex);
+    return mArray->Get((uint)mIndex);
   }
 
   void PopFront()

@@ -9,7 +9,7 @@
 namespace Zero
 {
 
-void PointNode::AddNeighbor(uint adjacentPoint)
+void PointNode::AddNeighbor(size_t adjacentPoint)
 {
   AdjacencyInfo info;
   info.mJumps = 1;
@@ -23,29 +23,29 @@ void PointGraph::AddPoint()
   mNodes.PushBack(PointNode());
 }
 
-void PointGraph::SetSize(uint pointCount)
+void PointGraph::SetSize(size_t pointCount)
 {
   mNodes.Resize(pointCount);
   PointNode::AdjacencyInfo info;
-  info.mJumps = pointCount + 1;
-  for(uint i = 0; i < mNodes.Size(); ++i)
+  info.mJumps = static_cast<uint>(pointCount + 1);
+  for(size_t i = 0; i < mNodes.Size(); ++i)
   {
     mNodes[i].mAdjacentPoints.Resize(pointCount,info);
   }
 }
 
-void PointGraph::AddEdge(uint p1, uint p2)
+void PointGraph::AddEdge(size_t p1, size_t p2)
 {
   mNodes[p1].AddNeighbor(p2);
   mNodes[p2].AddNeighbor(p1);
 }
 
-uint& PointGraph::operator()(uint x, uint y)
+uint& PointGraph::operator()(size_t x, size_t y)
 {
   return mNodes[x].mAdjacentPoints[y].mJumps;
 }
 
-uint& PointGraph::Get(uint x, uint y)
+uint& PointGraph::Get(size_t x, size_t y)
 {
   return (*this)(x,y);
 }
@@ -53,14 +53,14 @@ uint& PointGraph::Get(uint x, uint y)
 void PointGraph::Build()
 {
   //warshall's algorithm
-  for(uint i = 0; i < mNodes.Size(); ++i)
+  for(size_t i = 0; i < mNodes.Size(); ++i)
     Get(i,i) = 0;
 
-  for(uint i = 0; i < mNodes.Size(); ++i)
+  for(size_t i = 0; i < mNodes.Size(); ++i)
   {
-    for(uint j = 0; j < mNodes.Size(); ++j)
+    for(size_t j = 0; j < mNodes.Size(); ++j)
     {
-      for(uint k = 0; k < mNodes.Size(); ++k)
+      for(size_t k = 0; k < mNodes.Size(); ++k)
       {
         uint& a = Get(j,k);
         uint b = Get(i,j);
@@ -131,7 +131,7 @@ void SpringSystem::OnAllObjectsCreated(CogInitializer& initializer)
   }
 
   //remove any invalid anchors
-  for(int i = mAnchors.Size() - 1; i >= 0; --i)
+  for(size_t i = mAnchors.Size() - 1; i >= 0; --i)
   {
     AnchorPoint* anchor = mAnchors[i];
     Cog* anchorCog = anchor->mAnchorObject;
@@ -1225,9 +1225,9 @@ void DecorativeRope::CreateLinks()
     SetPointMassAnchor(0, cogA);
 
   if(systemB != nullptr)
-    AddConnection(systemB, mPointMasses.Size() - 1, mPointMassIndexB);
+    AddConnection(systemB, static_cast<uint>(mPointMasses.Size() - 1), mPointMassIndexB);
   else if(mAnchorB)
-    SetPointMassAnchor(mPointMasses.Size() - 1, cogB);
+    SetPointMassAnchor(static_cast<uint>(mPointMasses.Size() - 1), cogB);
 }
 
 uint DecorativeRope::GetNumberOfLinks()

@@ -27,8 +27,8 @@ struct GaussSeidelSolver
   template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
   void Solve(MatrixType& A, VectorType& b, VectorType& x0, PolicyType& policy, ErrorCallbackType& errCallback)
   {
-    uint dimension = policy.GetDimension(b);
-    uint iteration;
+      size_t dimension = policy.GetDimension(b);
+    size_t iteration;
     real convergence = real(0);
     real toleranceThresholdSq = mErrorTolerance * mErrorTolerance;
 
@@ -36,14 +36,14 @@ struct GaussSeidelSolver
     {
       convergence = real(0);
 
-      for(uint i = 0; i < dimension; ++i)
+      for(size_t i = 0; i < dimension; ++i)
       {
         real delta = real(0);
 
-        for(uint j = 0; j < i; ++j)
+        for(size_t j = 0; j < i; ++j)
           delta += policy(A, i, j) * policy(x0, j);
         
-        for(uint j = i + 1; j < dimension; ++j)
+        for(size_t j = i + 1; j < dimension; ++j)
           delta += policy(A, i, j) * policy(x0, j);
 
         real& newElement = policy(x0, i);
@@ -75,7 +75,7 @@ struct GaussSeidelSolver
     Solve(A, b, x0, policy, emptyErr);
   }
 
-  uint mMaxIterations;
+  size_t mMaxIterations;
   real mErrorTolerance;
 };
 

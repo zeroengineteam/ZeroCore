@@ -50,7 +50,7 @@ ZilchDefineExternalBaseType(JointTypes::Enum, TypeCopyMode::ValueType, builder, 
 {
   ZilchFullBindEnum(builder, type, SpecialType::Enumeration); 
   // Add all of the joint types
-  for(size_t i = 0; i < JointTypes::Size; ++i)
+  for(int i = 0; i < JointTypes::Size; ++i)
   {
     ZilchFullBindEnumValue(builder, type, i, JointTypes::Names[i]);
   }

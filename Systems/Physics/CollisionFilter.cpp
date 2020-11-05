@@ -183,14 +183,14 @@ CollisionFilter* CollisionFilter::Clone() const
     // Deep copy the block
     *newBlock = *mBlocks[i];
     // Add the block to the cloned resource
-    clone->Add(newBlockHandle, i);
+    clone->Add(newBlockHandle, (int)i);
   }
   return clone;
 }
 
 uint CollisionFilter::GetSize() const
 {
-  return mBlocks.Size();
+  return (uint)mBlocks.Size();
 }
 
 HandleOf<CollisionFilterBlock> CollisionFilter::GetBlockAt(uint index)
@@ -230,7 +230,7 @@ bool CollisionFilter::Remove(const HandleOf<CollisionFilterBlock>& blockHandle)
 {
   CollisionFilterBlock* block = blockHandle;
   // Try to find the index of this block
-  uint index = mBlocks.FindIndex(block);
+  size_t index = mBlocks.FindIndex(block);
   if(index >= mBlocks.Size())
     return false;
   

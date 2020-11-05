@@ -21,8 +21,8 @@ struct AnchorAtom
 {
   AnchorAtom();
 
-  Vec3Ref operator[](uint index);
-  Vec3Param operator[](uint index) const;
+  Vec3Ref operator[](size_t index);
+  Vec3Param operator[](size_t index) const;
 
   Vec3 mBodyR[2];
 };
@@ -36,8 +36,8 @@ struct WorldAnchorAtom
 
   void SetUp(const AnchorAtom& anchor, Collider* obj1, Collider* obj2);
 
-  inline Vec3& operator[](uint index) {return mWorldR[index]; };
-  inline const Vec3& operator[](uint index) const  {return mWorldR[index]; };
+  inline Vec3& operator[](size_t index) {return mWorldR[index]; };
+  inline const Vec3& operator[](size_t index) const  {return mWorldR[index]; };
 
   Vec3 GetPointDifference() const;
 
@@ -50,8 +50,8 @@ struct WorldAnchorAtom
 struct AxisAtom
 {
   AxisAtom() { mBodyAxes[0] = mBodyAxes[1] = Vec3::cYAxis; };
-  inline Vec3& operator[](uint index) {return mBodyAxes[index]; };
-  inline const Vec3& operator[](uint index) const  {return mBodyAxes[index]; };
+  inline Vec3& operator[](size_t index) {return mBodyAxes[index]; };
+  inline const Vec3& operator[](size_t index) const  {return mBodyAxes[index]; };
 
   Vec3 mBodyAxes[2];
 };
@@ -62,8 +62,8 @@ struct WorldAxisAtom
   WorldAxisAtom() {};
   WorldAxisAtom(const AxisAtom& axes, Collider* obj1, Collider* obj2);
 
-  inline Vec3& operator[](uint index) {return mWorldAxes[index]; };
-  inline const Vec3& operator[](uint index) const  {return mWorldAxes[index]; };
+  inline Vec3& operator[](size_t index) {return mWorldAxes[index]; };
+  inline const Vec3& operator[](size_t index) const  {return mWorldAxes[index]; };
 
   Vec3 mWorldAxes[2];
 };
@@ -74,8 +74,8 @@ struct AngleAtom
 {
   AngleAtom() { mLocalAngles[0] = Quat::cIdentity; mLocalAngles[1] = Quat::cIdentity; };
 
-  inline Quat& operator[](uint index) {return mLocalAngles[index]; };
-  inline const Quat& operator[](uint index) const  {return mLocalAngles[index]; };
+  inline Quat& operator[](size_t index) {return mLocalAngles[index]; };
+  inline const Quat& operator[](size_t index) const  {return mLocalAngles[index]; };
 
   Quat GetReferenceAngle() const;
 
@@ -88,8 +88,8 @@ struct WorldAngleAtom
   WorldAngleAtom();
   WorldAngleAtom(const AngleAtom& refAngle, Collider* obj1, Collider* obj2);
 
-  inline Quat& operator[](uint index) {return mWorldAngles[index]; };
-  inline const Quat& operator[](uint index) const  {return mWorldAngles[index]; };
+  inline Quat& operator[](size_t index) {return mWorldAngles[index]; };
+  inline const Quat& operator[](size_t index) const  {return mWorldAngles[index]; };
 
   Quat mWorldAngles[2];
   Quat mWorldReferenceAngle;
