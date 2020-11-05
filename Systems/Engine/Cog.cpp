@@ -522,8 +522,8 @@ void Cog::Initialize(CogInitializer& initializer)
 
   // Use indexes so components can be added during
   // Initialization.
-  uint componentCount = mComponents.Size();
-  for (uint i = 0; i<componentCount; ++i)
+  size_t componentCount = mComponents.Size();
+  for (size_t i = 0; i < componentCount; ++i)
   {
     Component* component = mComponents[i];
     component->mOwner = this;
@@ -955,8 +955,8 @@ void Cog::DeleteComponents()
   //Delete each component using the component's virtual destructor
   //takes care of all resources and memory.
   ComponentRange range = mComponents.All();
-  uint numberOfComponents = mComponents.Size();
-  for (uint i = 0; i < numberOfComponents; ++i)
+  size_t numberOfComponents = mComponents.Size();
+  for (size_t i = 0; i < numberOfComponents; ++i)
     mComponents[numberOfComponents - 1 - i]->Delete();
 
   //Clear all components
@@ -1536,7 +1536,7 @@ uint Cog::GetHierarchyIndex()
 
   if (HierarchyList* list = GetParentHierarchyList())
   {
-    size_t index = 0;
+    uint index = 0;
     forRange(Cog& cog, list->All())
     {
       // Don't account for Cogs marked for destruction

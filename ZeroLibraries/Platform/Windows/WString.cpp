@@ -200,7 +200,7 @@ int Utf16ToUtf8(int utf16)
   
   //after converting to UTF8 pack the code points back into an int
   int key = 0;
-  for (size_t i = 0; i < size; ++i)
+  for (int i = 0; i < size; ++i)
   {
     key <<= 8;
     key += (uchar)outputUTF8[i];

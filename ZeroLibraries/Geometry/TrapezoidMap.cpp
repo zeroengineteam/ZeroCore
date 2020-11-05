@@ -115,7 +115,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
     if(size > 0)
     {
       s8 winding = Geometry::DetermineWindingOrder(&mVertices[offset], size) >= 0.f ? 1 : -1;
-      for(size_t j = 0; j < size; ++j)
+      for(int j = 0; j < size; ++j)
       {
         mContourId[j + offset] = i;
         mEndIndex[j + offset] = (j + 1) % size + offset;  
@@ -168,7 +168,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
     }
   }
 
-  for(size_t i = 0; i < vertexCount; ++i)
+  for(int i = 0; i < vertexCount; ++i)
   {
     // Edge goes from a to b
     VertexId indexA = mEndIndex[mFarthestEnd[i]];
@@ -214,7 +214,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices,
 
   // Initialize regions below lookup
   mRegionsBelow.Resize(vertexCount);
-  for(size_t i = 0; i < vertexCount; ++i)
+  for(int i = 0; i < vertexCount; ++i)
   {
     BelowCache* cache = &mRegionsBelow[i];
     cache->Index[0] = -1;

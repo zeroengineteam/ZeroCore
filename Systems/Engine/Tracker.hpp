@@ -43,7 +43,7 @@ public:
 
   virtual cstr GetName() { return "Tracker"; }
 
-  uint GetObjectCount(){return mObjectMap.Size();}
+  uint GetObjectCount(){return (uint)mObjectMap.Size();}
 
 private:
 

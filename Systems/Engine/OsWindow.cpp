@@ -590,7 +590,7 @@ void OsWindow::ShellWindowOnInputDeviceChanged(PlatformInputDevice& device, uint
 
   joystick->RawSetButtons(buttons);
 
-  for (size_t i = 0; i < axes.Size(); ++i)
+  for (uint i = 0; i < (uint)axes.Size(); ++i)
   {
     if (i >= device.mAxes.Size())
     {

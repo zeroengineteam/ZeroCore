@@ -388,7 +388,7 @@ bool ResourceTable::Contains(StringParam key)
 
 uint ResourceTable::Size()
 {
-  return mEntryList.Size();
+  return (uint)mEntryList.Size();
 }
 
 int ResourceTable::GetCount()
@@ -461,7 +461,7 @@ uint ResourceTable::SampleIndex(float random1, float random2)
   random1 = Math::Clamp(random1, 0.0f, .999f);
   random2 = Math::Clamp(random2, 0.0f, .999f);
 
-  return mWeightedTable.SampleIndex(random1, random2);
+  return (uint)mWeightedTable.SampleIndex(random1, random2);
 }
 
 ResourceTableEntry* ResourceTable::Sample(float random1, float random2)
@@ -488,7 +488,7 @@ void ResourceTable::ForceRebuild()
 void ResourceTable::AddNewEntry(StringParam value)
 {
   // Start with a name based upon the current size
-  uint index = mEntryList.Size() + 1;
+  uint index = (uint)mEntryList.Size() + 1;
   String entryName = String::Format("Name%d", index);
   // However, we need unique item names so make sure that we don't
   // have one with the same name already. If so just keep incrementing

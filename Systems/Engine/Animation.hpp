@@ -121,7 +121,7 @@ public:
   void UpdateFrame(PlayData& playData, TrackParams& params, AnimationFrame& frame);
   ObjectTrack* GetObjectTrack(StringParam fullPath);
   float mDuration;
-  uint mNumberOfTracks;
+  size_t mNumberOfTracks;
   //Clear for reload
   void Unload() override;
 };

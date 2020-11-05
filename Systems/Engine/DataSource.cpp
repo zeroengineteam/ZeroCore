@@ -68,20 +68,20 @@ bool DataSource::Move(DataEntry* destinationEntry, Array<DataIndex>& indicesToMo
 }
 
 //-------------------------------------------------------------------ArrayDataSource
-u32 ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
+size_t ArrayDataSource::DataEntryToArrayIndex(DataEntry* entry)
 {
-  u32 index = (u32)entry;
+  size_t index = (size_t)entry;
   if (index == RootIndex)
-    return (u32)-1;
+    return (size_t)-1;
 
   return index - 1;
 }
 
-u32 ArrayDataSource::DataIndexToArrayIndex(DataIndex dataIndex)
+size_t ArrayDataSource::DataIndexToArrayIndex(DataIndex dataIndex)
 {
-  u32 index = (u32)dataIndex.Id;
+  size_t index = (size_t)dataIndex.Id;
   if (index == RootIndex)
-    return (u32)-1;
+    return (size_t)-1;
   return index - 1;
 }
 
@@ -103,7 +103,7 @@ DataIndex ArrayDataSource::ToIndex(DataEntry* dataEntry)
 DataEntry* ArrayDataSource::Parent(DataEntry* dataEntry)
 {
   //everyone but the root has the parent of the root
-  u64 index = (u64)dataEntry;
+  size_t index = (size_t)dataEntry;
   if(index == RootIndex)
     return nullptr;
   return (DataEntry*)RootIndex;
@@ -112,9 +112,9 @@ DataEntry* ArrayDataSource::Parent(DataEntry* dataEntry)
 uint ArrayDataSource::ChildCount(DataEntry* dataEntry)
 {
   //only the root has children, no one else does
-  u64 index = (u64)dataEntry;
+  size_t index = (size_t)dataEntry;
   if(index == RootIndex)
-    return GetArraySize( );
+    return (uint)GetArraySize( );
   return 0;
 }
 
@@ -136,18 +136,18 @@ bool ArrayDataSource::IsExpandable(DataEntry* dataEntry)
 
 void ArrayDataSource::GetData(DataEntry* dataEntry, Any& any, StringParam column)
 {
-  u32 index = (u32)dataEntry;
+  size_t index = (size_t)dataEntry;
   if(index == RootIndex)
     return;
 
   //we had to add one to avoid returning NULL, so shift back to the actual array index
-  u32 arrayIndex = index - 1;
+  size_t arrayIndex = index - 1;
   GetData(arrayIndex, any, column);
 }
 
 bool ArrayDataSource::SetData(DataEntry* dataEntry, const Any& any, StringParam column)
 {
-  u32 index = (u32)dataEntry;
+  u32 index = (u32)(size_t)dataEntry;
   if(index == RootIndex)
     return false;
 
@@ -268,7 +268,7 @@ void EnumSource::FillOutDescriptions( )
 uint EnumSource::GetCount( )
 {
   // Return the computed size
-  return mNames.Size( );
+  return (uint)mNames.Size( );
 }
 
 // Get the name at a particular index

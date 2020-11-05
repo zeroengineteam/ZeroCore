@@ -222,7 +222,7 @@ TweakablesComposition::TweakablesComposition() :
 uint TweakablesComposition::GetComponentCount(HandleParam owner)
 {
   TweakableNode* node = owner.Get<TweakableNode*>(GetOptions::AssertOnNull);
-  return node->Children.Size();
+  return (uint)node->Children.Size();
 }
 
 Handle TweakablesComposition::GetComponentAt(HandleParam owner, uint index)

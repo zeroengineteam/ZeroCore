@@ -345,7 +345,7 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
     }
 
     // Traverse the path from the root down
-    for(int i = reversePath.Size() - 1; i >= 0; --i)
+    for(int i = (int)reversePath.Size() - 1; i >= 0; --i)
     {
       Cog* pathCog = reversePath[i];
 

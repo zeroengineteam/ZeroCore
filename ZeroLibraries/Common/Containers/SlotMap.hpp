@@ -248,7 +248,7 @@ public:
     size_t index = (size_t*)mNextFree - base;
     mNextFree = *(data_type*)mNextFree;
 
-    insertKey.Slot = index;
+    insertKey.Slot = (uint)index;
     mData[index] = object;
 
     //increase the size

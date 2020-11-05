@@ -276,8 +276,8 @@ bool OperationQueue::Undo(Operation* allbeforeThis)
     return operationFound;
   }
 
-  int size = toErase.Size();
-  for(int i = 0; i < size; ++i)
+  size_t size = toErase.Size();
+  for(size_t i = 0; i < size; ++i)
   {
     toErase[i]->Undo();
     mCommands.Erase(toErase[i]);
@@ -340,8 +340,8 @@ bool OperationQueue::Redo(Operation* upToAndThis)
     return operationFound;
   }
 
-  int size = toErase.Size();
-  for(int i = 0; i < size; ++i)
+  size_t size = toErase.Size();
+  for(size_t i = 0; i < size; ++i)
   {
     toErase[i]->Redo();
     mRedoCommands.Erase(toErase[i]);

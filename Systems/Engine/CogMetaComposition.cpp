@@ -48,7 +48,7 @@ CogMetaComposition::CogMetaComposition() : MetaComposition(ZilchTypeId(Component
 uint CogMetaComposition::GetComponentCount(HandleParam owner)
 {
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
-  return cog->mComponents.Size();
+  return (uint)cog->mComponents.Size();
 }
 
 //**************************************************************************************************

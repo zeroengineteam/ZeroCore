@@ -316,10 +316,10 @@ Cog* CreateFromArchetypeOperation::DoCreation()
   mUndoHandle.UpdateObject(object);
 
   // Update all components in the undo map
-  uint componentCount = object->GetComponentCount();
+  size_t componentCount = object->GetComponentCount();
   mComponentHandles.Resize(componentCount, cInvalidUndoObjectId);
 
-  for(uint i = 0; i < componentCount; ++i)
+  for(size_t i = 0; i < componentCount; ++i)
   {
     Component* component = object->GetComponentByIndex(i);
     mComponentHandles[i] = Z::gUndoMap->UpdateUndoId(mComponentHandles[i], component);

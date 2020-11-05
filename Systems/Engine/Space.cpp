@@ -477,9 +477,9 @@ void Space::SerializeObjectsToSpace(CogInitializer& initializer,
 {
   bool hadCogs = loader.Start("Cogs", "cogs", StructureType::Object);
 
-  uint numberOfObjects = 0;
+  size_t numberOfObjects = 0;
   loader.ArraySize(numberOfObjects);
-  for(uint i = 0; i < numberOfObjects; ++i)
+  for(size_t i = 0; i < numberOfObjects; ++i)
   {
     Cog* cog = Z::gFactory->BuildFromStream(&context, loader);
     if(cog == nullptr)

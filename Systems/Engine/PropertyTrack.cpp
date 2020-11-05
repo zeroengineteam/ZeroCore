@@ -118,7 +118,7 @@ BlendTrack* GetBlendTrack(StringParam name, BlendTracks& tracks, HandleParam ins
   if(blendTrack == nullptr)
   {
     blendTrack = new BlendTrack();
-    blendTrack->Index = tracks.Size();
+    blendTrack->Index = (uint)tracks.Size();
     blendTrack->Object = instance;
     blendTrack->Property = prop;
     tracks.Insert(name, blendTrack);

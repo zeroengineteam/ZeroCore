@@ -106,10 +106,10 @@ bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
     return nameComparison < 0;
   }
 
-  uint iterLimit = Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
+  size_t iterLimit = Math::Min(lhs->mParameterList.Size(), rhs->mParameterList.Size());
 
   // if the names are the same, sort by parameter type
-  for (uint i = 0; i < iterLimit; ++i)
+  for (size_t i = 0; i < iterLimit; ++i)
   {
     String lhsTypeName = lhs->mParameterList[i]->mType.ToLower();
     String rhsTypeName = rhs->mParameterList[i]->mType.ToLower();

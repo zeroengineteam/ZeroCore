@@ -345,7 +345,7 @@ RaycasterMetaComposition::RaycasterMetaComposition() :
 uint RaycasterMetaComposition::GetComponentCount(HandleParam owner)
 {
   Raycaster* raycaster = owner.Get<Raycaster*>();
-  return raycaster->mProviders.Size();
+  return (uint)raycaster->mProviders.Size();
 }
 
 Handle RaycasterMetaComposition::GetComponentAt(HandleParam owner, uint index)

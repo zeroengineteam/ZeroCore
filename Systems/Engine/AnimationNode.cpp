@@ -20,10 +20,10 @@ void PrintTabs(uint tabs)
 void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t, 
                AnimationFrame& result)
 {
-  uint numberOfTracks = a.Tracks.Size();
+  size_t numberOfTracks = a.Tracks.Size();
   result.Tracks.Resize(numberOfTracks);
 
-  for(uint i=0;i<numberOfTracks;++i)
+  for(size_t i=0;i<numberOfTracks;++i)
   {
     bool aActive = a.Tracks[i].Active;
     bool bActive = b.Tracks[i].Active;
@@ -723,9 +723,9 @@ AnimationNode* SelectiveNode::Update(AnimationGraph* animGraph, float dt,
   AnimationFrame& frameA = mA->mFrameData;
   AnimationFrame& frameB = mB->mFrameData;
 
-  uint trackCount = frameA.Tracks.Size();
+  size_t trackCount = frameA.Tracks.Size();
   mFrameData.Tracks.Resize(trackCount);
-  for(uint i = 0; i < trackCount; ++i)
+  for(size_t i = 0; i < trackCount; ++i)
   {
     Any& dest = mFrameData.Tracks[i].Value;
     mFrameData.Tracks[i].Active = true;

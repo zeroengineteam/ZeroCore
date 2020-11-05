@@ -247,7 +247,7 @@ int Joystick::GetAxisIndex(StringParam name)
   {
     if (mRawMapping->mAxes[i].Name == name)
     {
-      return i;
+      return (int)i;
     }
   }
 
@@ -554,7 +554,7 @@ Joysticks::~Joysticks()
 
 uint Joysticks::GetJoystickCount()
 {
-  return mDeviceToJoystick.Size();
+  return (uint)mDeviceToJoystick.Size();
 }
 
 Joystick* Joysticks::GetJoystickByDevice(OsHandle handle)

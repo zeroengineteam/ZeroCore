@@ -147,7 +147,7 @@ u32 UnpackUtf8RuneIntoBuffer(Rune uft8Rune, byte(&utf8Bytes)[4])
 Rune ReadUtf8Rune(byte* firstByte)
 {
   size_t totalBytesToRead = EncodedCodepointLength(firstByte[0]);
-  int currentByteToRead = 0;
+  size_t currentByteToRead = 0;
   int rune = 0;
 
   do {

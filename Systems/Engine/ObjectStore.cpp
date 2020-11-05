@@ -81,8 +81,8 @@ bool ObjectStore::IsEntryStored(StringParam name)
 {
   if(!mEntries.Empty( ))
   {
-    int count = mEntries.Size( );
-    for(int i = 0; i < count; ++i)
+    size_t count = mEntries.Size();
+    for(size_t i = 0; i < count; ++i)
     {
       if(mEntries[i] == name)
         return true;

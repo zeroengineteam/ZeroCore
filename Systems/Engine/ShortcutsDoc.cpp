@@ -142,7 +142,7 @@ DataEntry* ShortcutSource::GetChild(DataEntry* dataEntry, uint index, DataEntry*
 uint ShortcutSource::ChildCount(DataEntry* dataEntry)
 {
   // Only the root has children, no one else does.
-  IF_ROOT(mSet.Size( ));
+  IF_ROOT((uint)mSet.Size( ));
 
   return 0;
 }

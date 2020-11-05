@@ -305,7 +305,7 @@ void ZilchDocumentResource::FindPositionToGenerateFunction(ICodeEditor* editor, 
 
   // Move past the brace
   ++endIndex;
-  positionOut = endIndex.mIteratorRange.Data() - allText.Data();
+  positionOut = static_cast<int>(endIndex.mIteratorRange.Data() - allText.Data());
 }
 
 //**************************************************************************************************
@@ -373,7 +373,7 @@ void ZilchDocumentResource::GetAutoCompleteInfo(ICodeEditor* editor, AutoComplet
   project.GetAutoCompleteInfo(dependencies, editor->GetCaretPosition(), cursorOrigin, info);
 
   // Don't show types marked as hidden
-  for (uint i = info.CompletionEntries.Size() - 1; i < info.CompletionEntries.Size(); --i)
+  for (size_t i = info.CompletionEntries.Size() - 1; i < info.CompletionEntries.Size(); --i)
   {
     BoundType* type = MetaDatabase::FindType(info.CompletionEntries[i].Type);
     if (type->HasAttributeInherited(ObjectAttributes::cHidden))

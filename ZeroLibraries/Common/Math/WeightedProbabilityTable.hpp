@@ -34,7 +34,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
 
   //private: (not private because of unit tests)
     WeightType mWeightedProbability;
-    uint mAlias;
+    size_t mAlias;
   };
   typedef Zero::Array<Item> Items;
 
@@ -43,7 +43,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     mTotalProbability = WeightType(0.0);
   }
 
-  uint Size() const
+  size_t Size() const
   {
     return mItems.Size();
   }
@@ -73,7 +73,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
 
   /// Removes the item at the given index.
   /// Doesn't build the new table on it's own.
-  void RemoveItemAt(uint index)
+  void RemoveItemAt(size_t index)
   {
     ErrorIf(index >= Size(),"Invalid index.");
 
@@ -95,10 +95,10 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     //make sure that the total probability is correct (used to re-normalize)
     RecomputeTotalProbability();
 
-    uint count = mItems.Size();
+    size_t count = mItems.Size();
 
     //we need to figure out which items when normalized are > 1 and which are < 1
-    typedef Zero::Array<uint> IndexArray;
+    typedef Zero::Array<size_t> IndexArray;
     IndexArray smallItems,largeItems;
     smallItems.Reserve(count);
     largeItems.Reserve(count);
@@ -108,7 +108,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     //total probability is 1. Then we change the total probability to be n by
     //multiplying by the size of the array. This will produce the table size
     //we need for this algorithm.
-    for(uint i = 0; i < count; ++i)
+    for(size_t i = 0; i < count; ++i)
     {
       mItems[i].mWeightedProbability = count * mItems[i].mProbability / mTotalProbability;
       if(mItems[i].mWeightedProbability < 1)
@@ -122,8 +122,8 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     while(!smallItems.Empty() && !largeItems.Empty())
     {
       //grab and remove 1 item from both the large and small stacks
-      uint smallIndex = smallItems.Back();
-      uint largeIndex = largeItems.Back();
+      size_t smallIndex = smallItems.Back();
+      size_t largeIndex = largeItems.Back();
       smallItems.PopBack();
       largeItems.PopBack();
 
@@ -147,7 +147,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     //to exactly 1 to deal with numerical issues.
     while(!largeItems.Empty())
     {
-      uint index = largeItems.Back();
+      size_t index = largeItems.Back();
       mItems[index].mWeightedProbability = WeightType(1.0);
       largeItems.PopBack();
     }
@@ -157,7 +157,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
     //of 1.01 because of rounding errors)
     while(!smallItems.Empty())
     {
-      uint index = smallItems.Back();
+      size_t index = smallItems.Back();
       mItems[index].mWeightedProbability = WeightType(1.0);
       smallItems.PopBack();
     }
@@ -165,7 +165,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
 
   /// Given a randomly rolled fair die and a randomly flipped weighted coin,
   /// returns the index of the item that was rolled on a weighted die.
-  uint SampleIndex(uint dieIndex, const WeightType& coinFlip)
+  size_t SampleIndex(size_t dieIndex, const WeightType& coinFlip)
   {
     //what we've changed a loaded die roll to is a fair die roll combined
     //with a loaded coin flip (which is easy to do in a computer)
@@ -181,20 +181,20 @@ struct ZeroSharedTemplate WeightedProbabilityTable
 
   /// Given two randomly rolled floats that are in the range [0,1), returns the
   /// index of the items that was rolled on a weighted die.
-  uint SampleIndex(float random1, float random2)
+  size_t SampleIndex(float random1, float random2)
   {
     ErrorIf(random1 >= 1.0f || random2 >= 1.0f,
       "random value passed in was not in the range of [0,1).");
-    uint dieIndex = static_cast<uint>(random1 * Size());
+    size_t dieIndex = static_cast<size_t>(random1 * Size());
     return SampleIndex(dieIndex,random2);
   }
 
   /// Given a random class, returns the index that was randomly sampled.
   /// Mainly useful in the unit tests, but can be used if you ever need
   /// the index as well for some reason.
-  uint SampleIndex(Random& random)
+  size_t SampleIndex(Random& random)
   {
-    uint dieIndex = (uint)random.IntRangeInEx(0,mItems.Size());
+    size_t dieIndex = (size_t)random.IntRangeInEx(0,mItems.Size());
     WeightType coinFlip = random.FloatRange(0,1);
 
     return SampleIndex(dieIndex,coinFlip);
@@ -203,7 +203,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
   /// Given a random class, return the value that was randomly sampled.
   ValueType& Sample(Random& random)
   {
-    uint index = SampleIndex(random);
+    size_t index = SampleIndex(random);
 
     return mItems[index].mValue;
   }
@@ -212,7 +212,7 @@ struct ZeroSharedTemplate WeightedProbabilityTable
   /// the value that was randomly sampled
   ValueType& Sample(float random1, float random2)
   {
-    uint index = SampleIndex(random1,random2);
+    size_t index = SampleIndex(random1,random2);
 
     return mItems[index].mValue;
   }

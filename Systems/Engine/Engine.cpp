@@ -253,9 +253,9 @@ void Engine::DestroySystems()
 {
   // Delete all the systems in reverse order that they were added
   // in (to minimize any dependency problems between systems)
-  for(unsigned i = 0; i < mSystems.Size(); ++i)
+  for(size_t i = 0; i < mSystems.Size(); ++i)
   {
-    int reverseIndex = mSystems.Size() - i - 1;
+    int reverseIndex = static_cast<int>(mSystems.Size() - i - 1);
     delete mSystems[reverseIndex];
   }
 }
@@ -417,7 +417,7 @@ EngineMetaComposition::EngineMetaComposition() : MetaComposition(ZilchTypeId(Sys
 uint EngineMetaComposition::GetComponentCount(HandleParam owner)
 {
   Engine* engine = owner.Get<Engine*>(GetOptions::AssertOnNull);
-  return engine->mSystems.Size();
+  return (uint)engine->mSystems.Size();
 }
 
 //****************************************************************************

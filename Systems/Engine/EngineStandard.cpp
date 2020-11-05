@@ -83,7 +83,7 @@ ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
 
   // For now, just iterate over all keys in the name map and if there was no saved name then
   // assume that the key doesn't exist (linear but whatever)
-  for(size_t i = 0; i < Keys::Size; ++i)
+  for(int i = 0; i < Keys::Size; ++i)
   {
     if(KeyNames[i] == nullptr)
       continue;

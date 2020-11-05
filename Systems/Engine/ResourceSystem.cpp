@@ -258,11 +258,11 @@ void ResourceSystem::LoadIntoLibrary(Status& status, ResourceLibrary* resourceLi
   Z::gEngine->LoadingStart();
 
   StringBuilder errorString;
-  uint count = resourcePackage->Resources.Size();
+  size_t count = resourcePackage->Resources.Size();
 
   ProgressType::Enum progressType = count > 1 ? ProgressType::Normal : ProgressType::None;
 
-  for(uint i = 0; i < count; ++i)
+  for(size_t i = 0; i < count; ++i)
   {
     ResourceEntry& entry = resourcePackage->Resources[i];
     entry.mLibrary = resourceLibrary;

@@ -210,7 +210,7 @@ uint SampleCurve::InsertControlPoint(ControlPoint cp)
 
   mPiecewiseFunction.AddControlPoint(cp.GetPosition(), cp.TangentIn, cp.TangentOut);
 
-  return mControlPoints.FindIndex(cp);
+  return (uint)mControlPoints.FindIndex(cp);
 }
 
 //---------------------------------------------------------------- Control Point

@@ -614,9 +614,9 @@ void HeightMap::ApplyNoiseToPatch(HeightPatch* patch, float baseHeight, float fr
   const float FrequencyScale = 0.005f;
 
   // Loop through all cells
-  for (size_t y = 0; y < HeightPatch::Size; ++y)
+  for (int y = 0; y < (int)HeightPatch::Size; ++y)
   {
-    for (size_t x = 0; x < HeightPatch::Size; ++x)
+    for (int x = 0; x < (int)HeightPatch::Size; ++x)
     {
       // Compute the cell and absolute index
       CellIndex cellIndex(x, y);
@@ -2184,7 +2184,7 @@ void HeightMap::SaveToObj(StringParam fileName, HeightMap* heightMap)
     }
 
     // Offset the indices for the next patch
-    indexOffset += vertices.Size();
+    indexOffset += (uint)vertices.Size();
 
     // Move on to the next patch
     ++patchIndex;
