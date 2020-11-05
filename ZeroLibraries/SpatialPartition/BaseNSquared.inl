@@ -65,7 +65,7 @@ uint BaseNSquared<ClientDataType>::GetNewProxyIndex()
   if(mFreeIndices.Empty())
   {
     mData.PushBack();
-    return mData.Size() - 1;
+    return (uint)mData.Size() - 1;
   }
 
   //otherwise, just return an index in free indices

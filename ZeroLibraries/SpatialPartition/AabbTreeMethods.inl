@@ -71,21 +71,21 @@ Aabb CalculateAabbNodes(Array<NodeType*>& leafNodes)
   Aabb total;
   total.Zero();
 
-  for(uint i = 0; i < leafNodes.Size(); ++i)
+  for(size_t i = 0; i < leafNodes.Size(); ++i)
     total.Combine(leafNodes[i]->mAabb);
 
   return total;
 }
 
 template <typename NodeType>
-uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
+size_t MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
 {
   //The axis we are using.
-  uint axis = 0;
+  size_t axis = 0;
   //The index we are splitting at.
-  uint index = 0;
+  size_t index = 0;
   //The amount of objects.
-  uint size = leafNodes.Size();
+  size_t size = leafNodes.Size();
   //Default the cost to the max float.
   real cost = Math::PositiveMax();
 
@@ -101,7 +101,7 @@ uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
   Sort(leafNodes.All(), NodeSortX<NodeType>);
 
   //For each axis
-  for(uint currAxis = 0; currAxis < 3; ++currAxis)
+  for(size_t currAxis = 0; currAxis < 3; ++currAxis)
   {
     //Holds the current volume of each side.
     Aabb leftAabb, rightAabb;
@@ -115,7 +115,7 @@ uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
       Sort(leafNodes.All(), NodeSortZ<NodeType>);
 
     //Loop through each object
-    for(uint i = 0; i < leafNodes.Size(); ++i)
+    for(size_t i = 0; i < leafNodes.Size(); ++i)
     {
       //Add to the total of the leftAabb
       leftAabb = leftAabb.Combined(leafNodes[i]->mAabb);
@@ -131,7 +131,7 @@ uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
 
     //Walk through each aabb and calculate the cost.
     //We don't do the last one because the volume will be the same.
-    for(uint i = 1; i < size - 1; ++i)
+    for(size_t i = 1; i < size - 1; ++i)
     {
       //Get the current cost
       real currentCost = ((leftVolume[i] / totalVolume) * i) + 
@@ -160,14 +160,14 @@ uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes)
 
 
 template <typename NodeType>
-uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
+size_t MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
 {
   //The axis we are using.
-  uint axis = 0;
+  size_t axis = 0;
   //The index we are splitting at.
-  uint index = 0;
+  size_t index = 0;
   //The amount of objects.
-  uint size = leafNodes.Size();
+  size_t size = leafNodes.Size();
   //Default the cost to the max float.
   real cost = Math::PositiveMax();
 
@@ -182,7 +182,7 @@ uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
   Sort(leafNodes.All(), NodeSortX<NodeType>);
 
   //For each axis
-  for(uint currAxis = 0; currAxis < 3; ++currAxis)
+  for(size_t currAxis = 0; currAxis < 3; ++currAxis)
   {
     //Holds the current volume of each side.
     Aabb leftAabb, rightAabb;
@@ -196,7 +196,7 @@ uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
       Sort(leafNodes.All(), NodeSortZ<NodeType>);
 
     //Loop through each object
-    for(uint i = 0; i < leafNodes.Size(); ++i)
+    for(size_t i = 0; i < leafNodes.Size(); ++i)
     {
       //Add to the total of the leftAabb
       leftAabb = leftAabb.Combined(leafNodes[i]->mAabb);
@@ -212,7 +212,7 @@ uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
 
     //Walk through each aabb and calculate the cost.
     //We don't do the last one because the volume will be the same.
-    for(uint i = 1; i < size - 1; ++i)
+    for(size_t i = 1; i < size - 1; ++i)
     {
       //Get the current cost
       real currentCost = ((leftArea[i] / totalSurfaceArea) * i) + 
@@ -240,7 +240,7 @@ uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes)
 }
 
 template <typename NodeType>
-uint MidPointNodes(Array<NodeType*>& leafNodes)
+size_t MidPointNodes(Array<NodeType*>& leafNodes)
 {
   //Calculate the total Aabb
   Aabb total = CalculateAabbNodes(leafNodes);
@@ -249,7 +249,7 @@ uint MidPointNodes(Array<NodeType*>& leafNodes)
   int axis = 0;
   real dist = 0;
 
-  for(uint i = 0; i < 3; ++i)
+  for(size_t i = 0; i < 3; ++i)
   {
     real currDist = total.mMax[i] - total.mMin[i];
     if(currDist > dist)
@@ -306,7 +306,7 @@ Aabb CalculateAabb(Array<ObjectType>& proxies)
   Aabb total;
   total.Zero();
 
-  for(uint i = 0; i < proxies.Size(); ++i)
+  for(size_t i = 0; i < proxies.Size(); ++i)
     total = total.Combined(proxies[i].mAabb);
 
   return total;
@@ -331,14 +331,14 @@ bool ProxySortZ(const ObjectType& left, const ObjectType& right)
 }
 
 template <typename ObjectType>
-uint MinimizeVolumeSum(Array<ObjectType>& proxies)
+size_t MinimizeVolumeSum(Array<ObjectType>& proxies)
 {
   //The axis we are using.
-  uint axis = 0;
+  size_t axis = 0;
   //The index we are splitting at.
-  uint index = 0;
+  size_t index = 0;
   //The amount of objects.
-  uint size = proxies.Size();
+  size_t size = proxies.Size();
   //Default the cost to the max float.
   real cost = Math::PositiveMax();
 
@@ -354,7 +354,7 @@ uint MinimizeVolumeSum(Array<ObjectType>& proxies)
   Sort(proxies.All(), ProxySortX<ObjectType>);
 
   //For each axis
-  for(uint currAxis = 0; currAxis < 3; ++currAxis)
+  for(size_t currAxis = 0; currAxis < 3; ++currAxis)
   {
     //Holds the current volume of each side.
     Aabb leftAabb, rightAabb;
@@ -368,7 +368,7 @@ uint MinimizeVolumeSum(Array<ObjectType>& proxies)
       Sort(proxies.All(), ProxySortZ<ObjectType>);
 
     //Loop through each object
-    for(uint i = 0; i < proxies.Size(); ++i)
+    for(size_t i = 0; i < proxies.Size(); ++i)
     {
       //Add to the total of the leftAabb
       leftAabb = leftAabb.Combined(proxies[i].mAabb);
@@ -384,7 +384,7 @@ uint MinimizeVolumeSum(Array<ObjectType>& proxies)
 
     //Walk through each aabb and calculate the cost.
     //We don't do the last one because the volume will be the same.
-    for(uint i = 1; i < size - 1; ++i)
+    for(uisize_tnt i = 1; i < size - 1; ++i)
     {
       //Get the current cost
       real currentCost = ((leftVolume[i] / totalVolume) * i) + 
@@ -412,14 +412,14 @@ uint MinimizeVolumeSum(Array<ObjectType>& proxies)
 }
 
 template <typename ObjectType>
-uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
+size_t MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
 {
   //The axis we are using.
-  uint axis = 0;
+  size_t axis = 0;
   //The index we are splitting at.
-  uint index = 0;
+  size_t index = 0;
   //The amount of objects.
-  uint size = proxies.Size();
+  size_t size = proxies.Size();
   //Default the cost to the max float.
   real cost = Math::PositiveMax();
 
@@ -434,7 +434,7 @@ uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
   Sort(proxies.All(), ProxySortX<ObjectType>);
 
   //For each axis
-  for(uint currAxis = 0; currAxis < 3; ++currAxis)
+  for(size_t currAxis = 0; currAxis < 3; ++currAxis)
   {
     //Holds the current volume of each side.
     Aabb leftAabb, rightAabb;
@@ -448,7 +448,7 @@ uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
       Sort(proxies.All(), ProxySortZ<ObjectType>);
 
     //Loop through each object
-    for(uint i = 0; i < proxies.Size(); ++i)
+    for(size_t i = 0; i < proxies.Size(); ++i)
     {
       //Add to the total of the leftAabb
       leftAabb = leftAabb.Combined(proxies[i].mAabb);
@@ -464,7 +464,7 @@ uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
 
     //Walk through each aabb and calculate the cost.
     //We don't do the last one because the volume will be the same.
-    for(uint i = 1; i < size - 1; ++i)
+    for(size_t i = 1; i < size - 1; ++i)
     {
       //Get the current cost
       real currentCos = ((leftArea[i] / totalSurfaceArea) * i) + 
@@ -492,7 +492,7 @@ uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies)
 }
 
 template <typename ObjectType>
-uint MidPoint(Array<ObjectType>& proxies)
+size_t MidPoint(Array<ObjectType>& proxies)
 {
   //Calculate the total Aabb
   Aabb total = CalculateAabb(proxies);
@@ -501,7 +501,7 @@ uint MidPoint(Array<ObjectType>& proxies)
   int axis = 0;
   real dist = 0;
 
-  for(uint i = 0; i < 3; ++i)
+  for(size_t i = 0; i < 3; ++i)
   {
     real currDist = total.mMax[i] - total.mMin[i];
     if(currDist > dist)

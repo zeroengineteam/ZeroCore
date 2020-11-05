@@ -34,7 +34,7 @@ Statistics::Statistics()
 
   // Create each record
   mRecords.Resize(BPStats::Size);
-  for(uint i = 0; i < mRecords.Size(); ++i)
+  for(size_t i = 0; i < mRecords.Size(); ++i)
   {
     // Get the name of the record
     cstr name = BPStats::Names[i];
@@ -50,7 +50,7 @@ Statistics::Statistics()
 void Statistics::Reset()
 {
   // Clear each record
-  for(uint i = 0; i < BPStats::Size; ++i)
+  for(size_t i = 0; i < BPStats::Size; ++i)
     mRecords[i]->Clear();
 }
 
@@ -65,12 +65,12 @@ BroadPhaseHandle::BroadPhaseHandle(IBroadPhase* broadPhase)
   mBroadPhase = broadPhase;
 }
 
-BroadPhaseProxy& BroadPhaseHandle::GetProxy(uint index)
+BroadPhaseProxy& BroadPhaseHandle::GetProxy(size_t index)
 {
   return mProxies[index];
 }
 
-void BroadPhaseHandle::InvalidateProxy(uint index)
+void BroadPhaseHandle::InvalidateProxy(size_t index)
 {
   mProxies[index] = BroadPhaseProxy(uint(-1));
 }
@@ -80,7 +80,7 @@ void BroadPhaseHandle::ExpandProxies()
   mProxies.PushBack(BroadPhaseProxy(uint(-1)));
 }
 
-uint BroadPhaseHandle::GetProxyCount()
+size_t BroadPhaseHandle::GetProxyCount()
 {
   return mProxies.Size();
 }
@@ -118,7 +118,7 @@ void BroadPhaseTracker::SaveToStream(Serializer& stream)
 
   // Serialize Dynamic Broad Phases
   BroadPhaseVec& broadPhases = mBroadPhases[BroadPhase::Dynamic];
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     IBroadPhase* broadPhase = broadPhases[i]->mBroadPhase;
     BoundType* type = ZilchVirtualTypeId(broadPhase);
@@ -129,7 +129,7 @@ void BroadPhaseTracker::SaveToStream(Serializer& stream)
 
   // Serialize Static Broad Phases
   broadPhases = mBroadPhases[BroadPhase::Static];
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     IBroadPhase* broadPhase = broadPhases[i]->mBroadPhase;
     BoundType* type = ZilchVirtualTypeId(broadPhase);
@@ -190,7 +190,7 @@ void BroadPhaseTracker::AddBroadPhase(uint type, IBroadPhase* broadphase)
   mBroadPhases[type].PushBack(handle);
 }
 
-Statistics* BroadPhaseTracker::GetStatistics(uint type, uint index)
+Statistics* BroadPhaseTracker::GetStatistics(uint type, size_t index)
 {
   return &mBroadPhases[type][index]->mStats;
 }
@@ -202,7 +202,7 @@ Statistics* BroadPhaseTracker::GetStatistics(uint type, uint index)
 void BroadPhaseTracker::RecordFrameResults(const Array<NodePointerPair>& results)
 {
   // Walk through each pair and record the collision
-  for(uint i = 0; i < results.Size(); ++i)
+  for(size_t i = 0; i < results.Size(); ++i)
     RecordCollision(results[i]);
 
   ClearFrameData();
@@ -222,7 +222,7 @@ void BroadPhaseTracker::CreateProxy(uint type, BroadPhaseProxy& proxy,
                                     BroadPhaseData& data)
 {
   // Get a new proxy
-  uint proxyIndex = GetNewProxyIndex(type);
+  u32 proxyIndex = GetNewProxyIndex(type);
 
   // Set the proxy on the object
   proxy = BroadPhaseProxy(proxyIndex);
@@ -230,7 +230,7 @@ void BroadPhaseTracker::CreateProxy(uint type, BroadPhaseProxy& proxy,
   BroadPhaseVec& broadPhases = mBroadPhases[type];
 
   // Create a proxy for each 
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -261,7 +261,7 @@ void BroadPhaseTracker::CreateProxies(uint type, BroadPhaseObjectArray& objects)
 void BroadPhaseTracker::RemoveProxy(uint type, BroadPhaseProxy& proxy)
 {
   // Get the index from the proxy
-  uint index = proxy.ToU32();
+  u32 index = proxy.ToU32();
 
   // Add the index to the free list
   mProxyFreeIndices[type].PushBack(index);
@@ -269,7 +269,7 @@ void BroadPhaseTracker::RemoveProxy(uint type, BroadPhaseProxy& proxy)
   BroadPhaseVec& broadPhases = mBroadPhases[type];
 
   // Create a proxy for each 
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -310,7 +310,7 @@ void BroadPhaseTracker::UpdateProxy(uint type, BroadPhaseProxy& proxy,
   BroadPhaseVec& broadPhases = mBroadPhases[type];
 
   // Update each proxy in each broad phase
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -346,7 +346,7 @@ void BroadPhaseTracker::SelfQuery(ClientPairArray& results)
   BroadPhaseVec& broadPhases = mBroadPhases[BroadPhase::Dynamic];
 
   // Update each proxy in each broad phase
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -371,7 +371,7 @@ void BroadPhaseTracker::Query(BroadPhaseData& data, ClientPairArray& results, ui
   BroadPhaseVec& broadPhases = mBroadPhases[broadphaseType];
 
   // Update each proxy in each broad phase
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -401,7 +401,7 @@ void BroadPhaseTracker::Query(BroadPhaseData& data, ClientPairArray& results)
 void BroadPhaseTracker::BatchQuery(BroadPhaseDataArray& data, 
                                    ClientPairArray& results)
 {
-  for(uint i = 0; i < data.Size(); ++i)
+  for(size_t i = 0; i < data.Size(); ++i)
     Query(data[i], results);
 }
 
@@ -421,7 +421,7 @@ void BroadPhaseTracker::Construct()
     BroadPhaseVec& broadPhases = mBroadPhases[bpType];
 
     // Construct each broad phase
-    for(uint i = 0; i < broadPhases.Size(); ++i)
+    for(size_t i = 0; i < broadPhases.Size(); ++i)
     {
       BroadPhaseHandle& handle = *broadPhases[i];
       IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -442,7 +442,7 @@ void BroadPhaseTracker::RegisterCollisions()
   BroadPhaseVec& broadPhases = mBroadPhases[BroadPhase::Dynamic];
 
   // Register collisions on each broad phase
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -464,7 +464,7 @@ void BroadPhaseTracker::Cleanup()
     BroadPhaseVec& broadPhases = mBroadPhases[bpType];
 
     // Cleanup each broad phase
-    for(uint i = 0; i < broadPhases.Size(); ++i)
+    for(size_t i = 0; i < broadPhases.Size(); ++i)
     {
       BroadPhaseHandle& handle = *broadPhases[i];
       IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -484,7 +484,7 @@ void BroadPhaseTracker::CastIntoBroadphase(uint broadPhaseType,
   BroadPhaseVec& broadPhases = mBroadPhases[broadPhaseType];
 
   // Cleanup each broad phase
-  for(uint i = 0; i < broadPhases.Size(); ++i)
+  for(size_t i = 0; i < broadPhases.Size(); ++i)
   {
     BroadPhaseHandle& handle = *broadPhases[i];
     IBroadPhase* broadPhase = handle.mBroadPhase;
@@ -520,7 +520,7 @@ void BroadPhaseTracker::CastIntoBroadphase(uint broadPhaseType,
   }
 }
 
-uint BroadPhaseTracker::GetNewProxyIndex(uint type)
+u32 BroadPhaseTracker::GetNewProxyIndex(uint type)
 {
   IndexArray& freeList = mProxyFreeIndices[type];
 
@@ -530,27 +530,27 @@ uint BroadPhaseTracker::GetNewProxyIndex(uint type)
   {
     // We need to add room in each broad phase
     BroadPhaseVec& broadPhases = mBroadPhases[type];
-    for(uint i = 0; i < broadPhases.Size(); ++i)
+    for(size_t i = 0; i < broadPhases.Size(); ++i)
       broadPhases[i]->ExpandProxies();
 
     // Return the index of the back proxy that we just made room for
-    return broadPhases[0]->GetProxyCount() - 1;
+    return (u32)broadPhases[0]->GetProxyCount() - 1;
   }
 
   // Otherwise, just a index in free indices
-  uint index = freeList.Back();
+  u32 index = freeList.Back();
   freeList.PopBack();
   return index;
 }
 
-void BroadPhaseTracker::RegisterCollisions(uint type, uint broadPhaseId, 
+void BroadPhaseTracker::RegisterCollisions(uint type, BroadPhaseId broadPhaseId,
                  ClientPairArray& currentResults, ClientPairArray& finalResults)
 {
   // Record the amount of collisions being registered
   mBroadPhases[type][broadPhaseId]->mStats.mPossibleCollisionsReturned += currentResults.Size();
 
   // Walk each collision and register it with this broad phase
-  for(uint i = 0; i < currentResults.Size(); ++i)
+  for(size_t i = 0; i < currentResults.Size(); ++i)
   {
     // The pair Id of objects to be checked
     ClientPair& pair = currentResults[i];
@@ -605,7 +605,7 @@ void BroadPhaseTracker::RecordCollision(NodePointerPair pair)
   //checked for collision
   u8 bitField = r.Front().second;
 
-  uint count = mBroadPhases[bpType].Size();
+  size_t count = mBroadPhases[bpType].Size();
 
   // All the bits to the right of count should be set.  If one is not set,
   // that means one broad phase did not return the pair as a possible
@@ -619,7 +619,7 @@ void BroadPhaseTracker::RecordCollision(NodePointerPair pair)
   BroadPhaseVec::range broadPhaseRange = mBroadPhases[bpType].All();
 
   //We need to mark the collisions in the statistics field
-  for(uint i = 0; !broadPhaseRange.Empty(); ++i, broadPhaseRange.PopFront())
+  for(size_t i = 0; !broadPhaseRange.Empty(); ++i, broadPhaseRange.PopFront())
   {
     //Continue if the bit wasn't set for this broad phase.  
     //A report should have already been sent about the miss.
@@ -644,7 +644,7 @@ void BroadPhaseTracker::ReportMissedCollision(uint bpType, NodePointerPair pair,
   BroadPhaseVec::range r = mBroadPhases[bpType].All();
 
   // Find the broad phase that missed it
-  for(uint i = 0; !r.Empty(); ++i)
+  for(size_t i = 0; !r.Empty(); ++i)
   {
     // If the bit isn't set for the current broad phase, we found one
     if(!(bitField & (1 << i)))

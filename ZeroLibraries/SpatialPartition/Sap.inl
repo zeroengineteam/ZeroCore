@@ -11,7 +11,7 @@
 namespace SapInternal
 {
 
-const int cSentinelPattern = 0xffdeadff;
+const size_t cSentinelPattern = 0xffdeadff;
 
 }//namespace SapInternal
 
@@ -425,7 +425,7 @@ uint Sap<ClientDataType>::GetNewBoxIndex()
   {
     //add a new box and calculate its index
     mBoxes.PushBack();
-    index = mBoxes.Size() - 1;
+    index = (uint)mBoxes.Size() - 1;
 
     //add 6 indices for the endpoints
     for(uint i = 0; i < 6; ++i)
@@ -556,9 +556,9 @@ uint Sap<ClientDataType>::BatchSort(EndPointArray& newEndpoints)
 
   EndPointArray& axis = mAxes[Axis];
 
-  uint oldPos = axis.Size() - 1;
+  uint oldPos = (uint)axis.Size() - 1;
   axis.Resize(axis.Size() + newEndpoints.Size());
-  uint insertIndex = axis.Size() - 1;
+  uint insertIndex = (uint)axis.Size() - 1;
 
   //loop from the end to the front while we still have new endpoints to Insert
   Array<EndPointType>::range newRange = newEndpoints.All();
@@ -598,7 +598,7 @@ void Sap<ClientDataType>::BatchPairAdd(uint startIndex)
 
   EndPointArray& axis = mAxes[Axis];
   //make sure to avoid the sentinel node
-  uint lastEndPoint = axis.Size() - 2;
+  uint lastEndPoint = (uint)axis.Size() - 2;
   for(uint i = lastEndPoint; i >= startIndex; --i)
   {
     EndPointType& endPoint = axis[i];
@@ -649,7 +649,7 @@ void Sap<ClientDataType>::BatchPairRemove()
   BoxSet normalBoxes,removeBoxes;
 
   //make sure to ignore the sentinel
-  uint size = axis.Size() - 1;
+  uint size = (uint)axis.Size() - 1;
   for(uint i = 1; i < size; ++i)
   {
     EndPointType& endpoint = axis[i];
@@ -692,7 +692,7 @@ void Sap<ClientDataType>::BatchEndPointRemove()
 {
   EndPointArray& axis = mAxes[Axis];
   uint startIndex = 1;
-  uint endIndex = axis.Size() - 1;
+  uint endIndex = (uint)axis.Size() - 1;
   uint insertPosition = startIndex;
 
   //loop from beginning to end, ignoring the sentinels
@@ -738,7 +738,7 @@ template <uint Axis>
 void Sap<ClientDataType>::InsertEndpointOnAxis(const EndPointType& endpoint, bool finalAxis)
 {   
   //get the index of the old last endpoint
-  int i = mAxes[Axis].Size() - 1;
+  int i = (int)mAxes[Axis].Size() - 1;
   //put the endpoint on the back of this axis
   mAxes[Axis].PushBack(endpoint);
 

@@ -177,13 +177,13 @@ struct ProxyCastResults
   bool Insert(void* mObjectHit, real distance);
 
   /// Returns the total amount of proxies to be returned for the ray cast.
-  uint GetProxyCount() {return Results.Size();}
+  uint GetProxyCount() {return (uint)Results.Size();}
   /// Returns the current amount of proxies that the cast has collided with.
   uint GetCurrentSize() const {return CurrSize;}
   /// Returns the remaining amount of new proxies to be accepted.
   /// You can still Insert when this returns 0, but it will either deny 
   /// it (if it's time is too long), or replace one with it.
-  uint GetRemainingSize() {return Results.Size() - CurrSize;}
+  uint GetRemainingSize() {return (uint)Results.Size() - CurrSize;}
 
   /// Merges two sets of results.  Used for combining separate casts into
   /// Dynamic and Static broad phases for optimizations.
