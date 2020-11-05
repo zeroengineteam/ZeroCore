@@ -177,7 +177,7 @@ ArraySet<OutMessageChannel>::range LinkOutbox::GetOutgoingChannels() const
 }
 uint LinkOutbox::GetOutgoingChannelCount() const
 {
-  return mChannels.Size();
+  return (uint)mChannels.Size();
 }
 
 void LinkOutbox::CloseOutgoingChannel(MessageChannelId channelId)

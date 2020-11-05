@@ -125,7 +125,7 @@ bool Peer::operator  <(Guid rhs) const
 
 ProtocolId Peer::GetProtocolId()
 {
-  static const ProtocolId protocolId(String("Dash Peer").Hash());
+  static const ProtocolId protocolId((uint)String("Dash Peer").Hash());
   return protocolId;
 }
 
@@ -549,7 +549,7 @@ uint Peer::GetLinkCount(LinkStatus::Enum linkStatus) const
 }
 uint Peer::GetLinkCount() const
 {
-  return mLinks.Size();
+  return (uint)mLinks.Size();
 }
 
 void Peer::DestroyLink(const IpAddress& ipAddress)
@@ -611,7 +611,7 @@ PeerPluginSet Peer::GetPlugins() const
 }
 uint Peer::GetPluginCount() const
 {
-  return mPlugins.Size();
+  return (uint)mPlugins.Size();
 }
 
 void Peer::RemovePlugin(StringParam name)
@@ -813,7 +813,7 @@ bool Peer::SendPacket(OutPacket& outPacket)
 
   // Send packet over socket
   Status status;
-  Bytes result = socket.SendTo(status, mSendBitStream.GetData(), mSendBitStream.GetBytesWritten(), outPacket.GetDestinationIpAddress());
+  Bytes result = (Bytes)socket.SendTo(status, mSendBitStream.GetData(), mSendBitStream.GetBytesWritten(), outPacket.GetDestinationIpAddress());
   if(result) // Successful?
   {
     Assert(status.Succeeded());
@@ -905,7 +905,7 @@ try
     // Wait to receive a packet over socket
     Status status;
     SocketAddress sourceAddress;
-    Bytes result = mIpv4Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, sourceAddress);
+    Bytes result = (Bytes)mIpv4Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, sourceAddress);
     rawPacket.mData.SetBytesWritten(result);
     rawPacket.mIpAddress = sourceAddress;
     if(result && IsValidRawPacket(rawPacket)) // Successful?
@@ -958,7 +958,7 @@ try
   {
     // Wait to receive a packet over socket
     Status status;
-    Bytes result = mIpv6Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, rawPacket.mIpAddress);
+    Bytes result = (Bytes)mIpv6Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, rawPacket.mIpAddress);
     rawPacket.mData.SetBytesWritten(result);
     if(result && IsValidRawPacket(rawPacket)) // Successful?
     {
@@ -1206,7 +1206,7 @@ void Peer::UpdatePeerState()
   }
 
   // Update stats
-  UpdateLinks(mLinks.Size());
+  UpdateLinks((uint32)mLinks.Size());
   UpdateConnections(GetLinkCount(LinkStatus::Connected));
 
   //

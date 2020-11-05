@@ -94,7 +94,7 @@ ArraySet<InMessageChannel>::range LinkInbox::GetIncomingChannels() const
 }
 uint LinkInbox::GetIncomingChannelCount() const
 {
-  return mChannels.Size();
+  return (uint)mChannels.Size();
 }
 
 //

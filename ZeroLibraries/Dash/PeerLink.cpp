@@ -419,7 +419,7 @@ LinkPluginSet::range PeerLink::GetPlugins() const
 }
 uint PeerLink::GetPluginCount() const
 {
-  return mPlugins.Size();
+  return (uint)mPlugins.Size();
 }
 
 void PeerLink::RemovePlugin(StringParam name)
