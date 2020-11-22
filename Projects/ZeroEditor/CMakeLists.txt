@@ -72,3 +72,13 @@ zero_add_custom_files(Target ZeroEditor CustomFiles
     ${zero_platform_data}/ZeroEditor/ZeroEditor.rc
     ${zero_platform_data}/ZeroEditor/Resource.h
 )
+
+ add_custom_command(
+        TARGET ZeroEditor POST_BUILD
+        # executes "cmake -E copy_if_different
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        # input file
+        ${ParentDirectory}/Win32Shared/ErrorDialog.exe
+        #output file
+        ${CMAKE_CURRENT_BINARY_DIR}/ErrorDialog.exe
+    )
