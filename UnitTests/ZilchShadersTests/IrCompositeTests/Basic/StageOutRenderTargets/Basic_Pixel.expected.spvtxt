@@ -1,12 +1,12 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 110
+; Bound: 107
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_Basic_Pixel "EntryPoint_Main_Basic_Pixel" %Out
+               OpEntryPoint Fragment %EntryPoint_Main_Basic_Pixel "EntryPoint_Main_Basic_Pixel" %Target0 %Target1 %Target2
                OpExecutionMode %EntryPoint_Main_Basic_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %Basic_Pixel "Basic_Pixel"
@@ -20,11 +20,9 @@
                OpMemberName %PixelBasic 3 "Target13"
                OpMemberName %PixelBasic 4 "Target2"
                OpMemberName %PixelBasic 5 "Target4"
-               OpName %Basic_PixelOut "Basic_PixelOut"
-               OpMemberName %Basic_PixelOut 0 "Target0"
-               OpMemberName %Basic_PixelOut 1 "Target1"
-               OpMemberName %Basic_PixelOut 2 "Target2"
-               OpName %Out "Out"
+               OpName %Target0 "Target0"
+               OpName %Target1 "Target1"
+               OpName %Target2 "Target2"
                OpName %Main "Main"
                OpName %self "self"
                OpName %pixelBasic "pixelBasic"
@@ -45,7 +43,9 @@
                OpName %EntryPoint_Main_Basic_Pixel "EntryPoint_Main_Basic_Pixel"
                OpName %self_7 "self"
                OpName %InitializeGlobals "InitializeGlobals"
-               OpDecorate %Out Location 0
+               OpDecorate %Target0 Location 0
+               OpDecorate %Target1 Location 1
+               OpDecorate %Target2 Location 2
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float
     %v4float = OpTypeVector %float 4
@@ -74,10 +74,10 @@
     %int_2_0 = OpConstant %int 2
   %float_0_0 = OpConstant %float 0
 %_ptr_Output_v4float = OpTypePointer Output %v4float
-%Basic_PixelOut = OpTypeStruct %v4float %v4float %v4float
-%_ptr_Output_Basic_PixelOut = OpTypePointer Output %Basic_PixelOut
-        %Out = OpVariable %_ptr_Output_Basic_PixelOut Output
-         %21 = OpTypeFunction %void
+    %Target0 = OpVariable %_ptr_Output_v4float Output
+    %Target1 = OpVariable %_ptr_Output_v4float Output
+    %Target2 = OpVariable %_ptr_Output_v4float Output
+         %19 = OpTypeFunction %void
        %Main = OpFunction %void None %10
        %self = OpFunctionParameter %_ptr_Function_Basic_Pixel
          %36 = OpLabel
@@ -163,31 +163,28 @@
 %CopyOutputs_Main = OpFunction %void None %10
      %self_6 = OpFunctionParameter %_ptr_Function_Basic_Pixel
          %91 = OpLabel
-         %92 = OpAccessChain %_ptr_Output_v4float %Out %int_0_0
-         %93 = OpAccessChain %_ptr_Function_v4float %self_6 %int_0_0
-         %94 = OpLoad %v4float %93
-               OpStore %92 %94
-         %95 = OpAccessChain %_ptr_Output_v4float %Out %int_1_0
-         %96 = OpAccessChain %_ptr_Function_v4float %self_6 %int_1_0
+         %92 = OpAccessChain %_ptr_Function_v4float %self_6 %int_0_0
+         %93 = OpLoad %v4float %92
+               OpStore %Target0 %93
+         %94 = OpAccessChain %_ptr_Function_v4float %self_6 %int_1_0
+         %95 = OpLoad %v4float %94
+               OpStore %Target1 %95
+         %96 = OpAccessChain %_ptr_Function_v4float %self_6 %int_2_0
          %97 = OpLoad %v4float %96
-               OpStore %95 %97
-         %98 = OpAccessChain %_ptr_Output_v4float %Out %int_2_0
-         %99 = OpAccessChain %_ptr_Function_v4float %self_6 %int_2_0
-        %100 = OpLoad %v4float %99
-               OpStore %98 %100
+               OpStore %Target2 %97
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main_Basic_Pixel = OpFunction %void None %21
-        %102 = OpLabel
+%EntryPoint_Main_Basic_Pixel = OpFunction %void None %19
+         %99 = OpLabel
      %self_7 = OpVariable %_ptr_Function_Basic_Pixel Function
-        %104 = OpFunctionCall %void %InitializeGlobals
-        %105 = OpFunctionCall %void %DefaultConstructor_0 %self_7
-        %106 = OpFunctionCall %void %CopyInputs_Main %self_7
-        %107 = OpFunctionCall %void %Main %self_7
-        %108 = OpFunctionCall %void %CopyOutputs_Main %self_7
+        %101 = OpFunctionCall %void %InitializeGlobals
+        %102 = OpFunctionCall %void %DefaultConstructor_0 %self_7
+        %103 = OpFunctionCall %void %CopyInputs_Main %self_7
+        %104 = OpFunctionCall %void %Main %self_7
+        %105 = OpFunctionCall %void %CopyOutputs_Main %self_7
                OpReturn
                OpFunctionEnd
-%InitializeGlobals = OpFunction %void None %21
-        %109 = OpLabel
+%InitializeGlobals = OpFunction %void None %19
+        %106 = OpLabel
                OpReturn
                OpFunctionEnd

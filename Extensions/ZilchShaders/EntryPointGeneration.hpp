@@ -358,6 +358,7 @@ public:
   void AddOffsetDecorations(InterfaceInfoGroup& infoGroup);
   void AddMemberTypeDecorations(ZilchShaderIRType* memberType, InterfaceInfoGroup::FieldInfo& fieldInfo, ShaderResourceReflectionData& memberReflection);
   void AddVertexLocationDecorations(InterfaceInfoGroup& infoGroup);
+  void AddPixelLocationDecorations(InterfaceInfoGroup& infoGroup);
   void AddFlatDecorations(InterfaceInfoGroup& infoGroup);
   void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IZilchShaderIR* toDecorate);
   void WriteMemberDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IZilchShaderIR* toDecorate, ZilchShaderIRConstantLiteral* memberIndexLiteral);
