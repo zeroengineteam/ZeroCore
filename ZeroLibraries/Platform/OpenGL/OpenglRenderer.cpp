@@ -1864,7 +1864,7 @@ void OpenglRenderer::DrawStatic(ViewNode& viewNode, FrameNode& frameNode)
   if (textureData != nullptr)
   {
     BindTexture(TextureType::Texture2D, textureSlot, textureData->mId, mDriverSupport.mSamplerObjects);
-    SetShaderParameter(ShaderInputType::Texture, "HeightMapWeights", &textureSlot);
+    SetShaderParameter(ShaderInputType::Texture, "HeightMapWeights_HeightMapTextureWeights", &textureSlot);
   }
 
   glBindVertexArray(meshData->mVertexArray);
