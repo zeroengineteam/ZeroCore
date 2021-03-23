@@ -477,7 +477,7 @@ void Space::SerializeObjectsToSpace(CogInitializer& initializer,
 {
   bool hadCogs = loader.Start("Cogs", "cogs", StructureType::Object);
 
-  size_t numberOfObjects = 0;
+  uint numberOfObjects = 0;
   loader.ArraySize(numberOfObjects);
   for(size_t i = 0; i < numberOfObjects; ++i)
   {

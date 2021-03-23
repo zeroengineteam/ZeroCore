@@ -376,7 +376,7 @@ void DataTreeLoader::PushChildOnStack()
 
 //---------------------------------------------------------- Array Serialization 
 //******************************************************************************
-void DataTreeLoader::ArraySize(size_t& arraySize)
+void DataTreeLoader::ArraySize(uint& arraySize)
 {
   arraySize = GetCurrent()->GetNumberOfChildren();
 }

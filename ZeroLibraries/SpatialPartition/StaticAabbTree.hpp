@@ -118,7 +118,7 @@ private:
   template <typename ClientDataTypeOther>
   friend void SerializeAabbTree(Serializer& stream, StaticAabbTree<ClientDataTypeOther>& tree);
 
-  typedef uint (*PartitionNodeMethodPtr)(NodeArray&);
+  typedef size_t (*PartitionNodeMethodPtr)(NodeArray&);
   PartitionNodeMethodPtr CurrPartitionMethod;
 
   ///Draw the tree at a given level.

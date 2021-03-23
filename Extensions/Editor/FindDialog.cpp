@@ -420,7 +420,7 @@ int FindTextDialog::ValidCursorPos(StringRange regionText, DocumentEditor* edito
   StringRange all = editor->GetAllText();
 
   // Get the region offset
-  int regionOffset = regionText.Data() - all.Data();
+  int regionOffset = static_cast<int>(regionText.Data() - all.Data());
   
   // If we're searching downward... (or we don't care about search direction)
   if (mDirection->GetActive() == false || mDirection->GetSelectedItem() == Direction::Down)
@@ -443,7 +443,7 @@ int FindTextDialog::ValidCursorPos(StringRange regionText, DocumentEditor* edito
   }
 
   // Otherwise, return that the cursor is not within the region
-  return CursorNotInRegion;
+  return (int)CursorNotInRegion;
 }
 
 // Get the search regions

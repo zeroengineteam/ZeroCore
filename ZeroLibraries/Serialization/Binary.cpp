@@ -120,7 +120,7 @@ void BinaryBufferLoader::Data(byte* data, size_t sizeInBytes)
 
 bool BinaryBufferLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
-  size_t size = 0;
+  u32 size = 0;
   Data((byte*)&size, sizeof(size));
 
   byte* start = mCurrentPosition;
@@ -177,7 +177,7 @@ void BinaryFileLoader::Data(byte* data, size_t sizeInBytes)
 bool BinaryFileLoader::StringField(cstr typeName, cstr fieldName, StringRange& stringRange)
 {
   Status status;
-  size_t size = 0;
+  u32 size = 0;
   mFile.Read(status, (byte*)&size, sizeof(size));
 
   if(size < 512)

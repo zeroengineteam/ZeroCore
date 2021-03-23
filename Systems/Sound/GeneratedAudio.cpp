@@ -962,7 +962,7 @@ void Grain::GetSamples(float* outputBuffer, unsigned outputFrames, unsigned outp
     if (mCurrentFrameIndex >= mSourceSamples->Size() - mSourceChannels)
       mCurrentFrameIndex = 0;
     else if (mCurrentFrameIndex < 0)
-      mCurrentFrameIndex = mSourceSamples->Size();
+      mCurrentFrameIndex = (double)mSourceSamples->Size();
 
     sample *= mWindow->GetNextValue() * mVolume;
 

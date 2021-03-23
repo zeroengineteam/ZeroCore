@@ -114,7 +114,7 @@ struct Policy< Pair<first, second> >
 template<typename containerType>
 void SaveSequence(Serializer& serializer, containerType& container)
 {
-  size_t containerSize = container.Size();
+  uint containerSize = container.Size();
   serializer.ArraySize(containerSize);
   ForEach(container.All(), SerializeFunctor<typename containerType::value_type>(serializer));
 }
@@ -122,7 +122,7 @@ void SaveSequence(Serializer& serializer, containerType& container)
 template<typename containerType>
 void LoadSequence(Serializer& serializer, containerType& container)
 {
-  size_t containerSize = 0;
+  uint containerSize = 0;
   serializer.ArraySize(containerSize);
   container.Resize(containerSize);
   ForEach(container.All(), SerializeFunctor<typename containerType::value_type>(serializer));
@@ -132,7 +132,7 @@ template<typename containerType>
 void InsertSequence(Serializer& serializer, containerType& container)
 {
   container.Clear();
-  size_t containerSize = 0;
+  uint containerSize = 0;
   serializer.ArraySize(containerSize);
   for(uint i=0;i<containerSize;++i)
   {

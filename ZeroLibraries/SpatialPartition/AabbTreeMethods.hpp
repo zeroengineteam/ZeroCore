@@ -23,7 +23,7 @@ template <typename NodeType>
 class PartitionNodeMethod
 {
 public:
-  typedef uint (*PartitionNodeAxisMethod)(Array<NodeType*>&);
+  typedef size_t(*PartitionNodeAxisMethod)(Array<NodeType*>&);
 };
 
 ///Builds an Aabb tree using the passed in partition axis method.
@@ -38,22 +38,22 @@ Aabb CalculateAabbNodes(Array<NodeType*>& leafNodes);
 
 ///Partition axis method that optimizes object collision test speed.
 template <typename NodeType>
-uint MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes);
+size_t MinimizeVolumeSumNodes(Array<NodeType*>& leafNodes);
 
 ///Partition axis method that optimizes ray cast tests.
 template <typename NodeType>
-uint MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes);
+size_t MinimizeSurfaceAreaSumNodes(Array<NodeType*>& leafNodes);
 
 ///Simple partition axis method.
 template <typename NodeType>
-uint MidPointNodes(Array<NodeType*>& leafNodes);
+size_t MidPointNodes(Array<NodeType*>& leafNodes);
 
 //-------------------------------------Old functions (still used, can't remove)
 template <typename ObjectType>
 class PartitionMethod
 {
 public:
-  typedef uint (*PartitionAxisMethod)(Array<ObjectType>&);
+  typedef size_t(*PartitionAxisMethod)(Array<ObjectType>&);
 };
 
 ///Builds an Aabb tree using the passed in partition axis method.
@@ -68,15 +68,15 @@ Aabb CalculateAabb(Array<ObjectType>& proxies);
 
 ///Partition axis method that optimizes object collision test speed.
 template <typename ObjectType>
-uint MinimizeVolumeSum(Array<ObjectType>& proxies);
+size_t MinimizeVolumeSum(Array<ObjectType>& proxies);
 
 ///Partition axis method that optimizes ray cast tests.
 template <typename ObjectType>
-uint MinimizeSurfaceAreaSum(Array<ObjectType>& proxies);
+size_t MinimizeSurfaceAreaSum(Array<ObjectType>& proxies);
 
 ///Simple partition axis method.
 template <typename ObjectType>
-uint MidPoint(Array<ObjectType>& proxies);
+size_t MidPoint(Array<ObjectType>& proxies);
 
 //-----------------------------------------------------------------Ray Functions
 ///Callbacks for simple tests to see if we should traverse further 

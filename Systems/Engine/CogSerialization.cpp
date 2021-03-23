@@ -45,7 +45,7 @@ void SaveRangeOfObjects(Serializer& saver, size_t objectCount, rangeType range)
 
   rangeType final = range;
 
-  size_t shouldSaveCount = 0;
+  uint shouldSaveCount = 0;
   while(!range.Empty())
   {
     Cog* cog = ResolveCog(range.Front());
@@ -124,9 +124,9 @@ void CogSerialization::LoadHierarchy(Serializer& serializer, CogCreationContext*
   bool hadCogs = serializer.Start("Cogs", "cogs", StructureType::Object);
   Cog* parent = hierarchy->GetOwner();
 
-  size_t numberOfObjects = 0;
+  uint numberOfObjects = 0;
   serializer.ArraySize(numberOfObjects);
-  for(size_t i = 0; i < numberOfObjects; ++i)
+  for(uint i = 0; i < numberOfObjects; ++i)
   {
     Cog* cog = Z::gFactory->BuildFromStream(context, serializer);
     if(cog == nullptr)

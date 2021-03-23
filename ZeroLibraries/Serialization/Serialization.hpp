@@ -222,7 +222,7 @@ public:
                           Guid nodeId = PolymorphicNode::cInvalidUniqueNodeId) {}
   void AddSubtractivePolymorphicNode(BoundType* boundType,
                                      Guid nodeId = PolymorphicNode::cInvalidUniqueNodeId);
-  virtual void ArraySize(size_t& arraySize) = 0;
+  virtual void ArraySize(uint& arraySize) = 0;
 
 #define FUNDAMENTAL(type) virtual bool FundamentalField(cstr fieldName, type& value) = 0;
 #include "FundamentalTypes.hpp"

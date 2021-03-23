@@ -56,7 +56,7 @@ public:
   bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType,
                            size_t numberOfElements, size_t sizeOftype) override;
 
-  void ArraySize(size_t& arraySize){};
+  void ArraySize(uint& arraySize){};
 
   //Enum Serialization
   bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) override;

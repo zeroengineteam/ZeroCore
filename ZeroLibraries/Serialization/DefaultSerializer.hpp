@@ -37,7 +37,7 @@ public:
     return false;
   }
 
-  void ArraySize(size_t& arraySize) override
+  void ArraySize(uint& arraySize) override
   {
     arraySize = 0;
   }

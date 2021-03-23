@@ -38,8 +38,9 @@ public:
   void StartPolymorphicInternal(const PolymorphicInfo& info) override
   {
     ErrorIf(info.mFlags.U32Field != 0, "Patching not supported in binary serialization");
-    BoundType* objectType = info.mObject.StoredType;
-    BinaryType()->Data((byte*)&objectType, sizeof(objectType));
+    // BoundType* objectType = info.mObject.StoredType;
+    u32 signature = 0;
+    BinaryType()->Data((byte*)&signature, sizeof(signature));
   }
 
   bool GetPolymorphic(PolymorphicNode& node) override
@@ -88,7 +89,7 @@ public:
     return true;
   }
 
-  void ArraySize(size_t& arraySize) override
+  void ArraySize(uint& arraySize) override
   {
     BinaryType()->Data((byte*)&arraySize, sizeof(arraySize));
   }
@@ -172,7 +173,7 @@ public:
     return true;
   }
 
-  void ArraySize(size_t& arraySize) override
+  void ArraySize(uint& arraySize) override
   {
     BinaryType()->Data((byte*)&arraySize, sizeof(arraySize));
   }

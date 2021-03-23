@@ -569,7 +569,7 @@ real CalculateTriMeshVolume(const Array<Vec3>& triMeshPoints,
 //Calculate the center of mass of a triangular mesh, assuming uniform density.
 Vec3 CalculateTriMeshCenterOfMass(const Vec3* triMeshPoints,
                                   const uint* triMeshTriangles,
-                                  uint triangleCount, Vec3Param scale)
+                                  size_t triangleCount, Vec3Param scale)
 {
   Vec3 centerOfMass;
   real volume;
