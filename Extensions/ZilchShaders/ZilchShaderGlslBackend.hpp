@@ -46,6 +46,7 @@ public:
 protected:
   // Helper functions that allow inherited classes to re-use a ton of code.
   void FixInterfaceBlockNames(GlslBackendInternalData& internalData);
+  void FixUniformBufferNameoverlaps(GlslBackendInternalData& internalData);
   void FindUsedSampledImageBindings(GlslBackendInternalData& internalData);
   void HandleCompiledSampledImages(GlslBackendInternalData& internalData);
   void PopulateTypeName(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirVType, ShaderResourceReflectionData& reflectionData);
