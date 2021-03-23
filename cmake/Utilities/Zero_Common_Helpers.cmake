@@ -10,7 +10,7 @@ function(zero_set_common_compiler_definitions)
                 -GS -analyze-  -Zc:wchar_t
                 
             PRIVATE
-                -W3 -wd"4302"
+                -W3 -wd"4302" -wd"4267"
                 ${common_flags}
         )
 endfunction()
