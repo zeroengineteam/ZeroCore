@@ -10,13 +10,13 @@
                OpExecutionMode %EntryPoint_Main_HardwareBuiltIn1_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %HardwareBuiltIn1_Pixel "HardwareBuiltIn1_Pixel"
+               OpMemberName %HardwareBuiltIn1_Pixel 0 "FragCoord"
                OpMemberName %HardwareBuiltIn1_Pixel 1 "PointCoord"
                OpMemberName %HardwareBuiltIn1_Pixel 2 "FragDepth"
-               OpMemberName %HardwareBuiltIn1_Pixel 0 "FragCoord"
                OpName %Pixel1 "Pixel1"
+               OpMemberName %Pixel1 0 "FragCoord"
                OpMemberName %Pixel1 1 "PointCoordinate"
                OpMemberName %Pixel1 2 "FragDepth"
-               OpMemberName %Pixel1 0 "FragCoord"
                OpName %FragCoord "FragCoord"
                OpName %PointCoord "PointCoord"
                OpName %FragDepth "FragDepth"

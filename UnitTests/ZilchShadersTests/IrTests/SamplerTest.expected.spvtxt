@@ -11,10 +11,10 @@
                OpExecutionMode %EntryPoint_Main_SamplerTest OriginUpperLeft
                OpSource Unknown 100
                OpName %SamplerTest "SamplerTest"
-               OpMemberName %SamplerTest 2 "Ddy"
                OpMemberName %SamplerTest 0 "Uv"
-               OpMemberName %SamplerTest 3 "Lod"
                OpMemberName %SamplerTest 1 "Ddx"
+               OpMemberName %SamplerTest 2 "Ddy"
+               OpMemberName %SamplerTest 3 "Lod"
                OpName %Sampler_SamplerTest "Sampler_SamplerTest"
                OpName %DepthSampler_SamplerTest "DepthSampler_SamplerTest"
                OpName %Main "Main"

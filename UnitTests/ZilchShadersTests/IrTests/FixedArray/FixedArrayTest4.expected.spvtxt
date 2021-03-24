@@ -10,8 +10,8 @@
                OpExecutionMode %EntryPoint_Main_FixedArrayTest4 OriginUpperLeft
                OpSource Unknown 100
                OpName %FixedArrayTest4 "FixedArrayTest4"
-               OpMemberName %FixedArrayTest4 1 "Data2"
                OpMemberName %FixedArrayTest4 0 "Data1"
+               OpMemberName %FixedArrayTest4 1 "Data2"
                OpName %Main "Main"
                OpName %self "self"
                OpName %PreConstructor_FixedArrayTest4 "PreConstructor_FixedArrayTest4"

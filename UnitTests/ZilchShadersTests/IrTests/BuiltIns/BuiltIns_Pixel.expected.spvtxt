@@ -11,10 +11,10 @@
                OpExecutionMode %EntryPoint_Main_BuiltIns_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %BuiltIns_Pixel "BuiltIns_Pixel"
-               OpMemberName %BuiltIns_Pixel 3 "PrimitiveId"
+               OpMemberName %BuiltIns_Pixel 0 "FragCoord"
                OpMemberName %BuiltIns_Pixel 1 "PointCoord"
                OpMemberName %BuiltIns_Pixel 2 "FragDepth"
-               OpMemberName %BuiltIns_Pixel 0 "FragCoord"
+               OpMemberName %BuiltIns_Pixel 3 "PrimitiveId"
                OpName %FragCoord "FragCoord"
                OpName %PointCoord "PointCoord"
                OpName %PrimitiveId "PrimitiveId"

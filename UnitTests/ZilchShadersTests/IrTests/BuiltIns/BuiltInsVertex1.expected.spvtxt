@@ -9,13 +9,13 @@
                OpEntryPoint Vertex %EntryPoint_Main_BuiltInsVertex1 "EntryPoint_Main_BuiltInsVertex1" %VertexId %InstanceId %PerVertexOut
                OpSource Unknown 100
                OpName %BuiltInsVertex1 "BuiltInsVertex1"
-               OpMemberName %BuiltInsVertex1 1 "InstanceId"
-               OpMemberName %BuiltInsVertex1 3 "PointSize"
                OpMemberName %BuiltInsVertex1 0 "VertexId"
+               OpMemberName %BuiltInsVertex1 1 "InstanceId"
                OpMemberName %BuiltInsVertex1 2 "ApiPerspectivePosition"
+               OpMemberName %BuiltInsVertex1 3 "PointSize"
                OpName %BuiltInsVertex1PerVertexOut "BuiltInsVertex1PerVertexOut"
-               OpMemberName %BuiltInsVertex1PerVertexOut 1 "PointSize"
                OpMemberName %BuiltInsVertex1PerVertexOut 0 "ApiPerspectivePosition"
+               OpMemberName %BuiltInsVertex1PerVertexOut 1 "PointSize"
                OpName %VertexId "VertexId"
                OpName %InstanceId "InstanceId"
                OpName %PerVertexOut "PerVertexOut"

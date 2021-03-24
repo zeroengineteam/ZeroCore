@@ -10,9 +10,9 @@
                OpExecutionMode %EntryPoint_Main_BuiltInsPixel2 OriginUpperLeft
                OpSource Unknown 100
                OpName %BuiltInsPixel2 "BuiltInsPixel2"
+               OpMemberName %BuiltInsPixel2 0 "FragDepth"
                OpMemberName %BuiltInsPixel2 1 "FrontFacing"
                OpMemberName %BuiltInsPixel2 2 "PointCoord"
-               OpMemberName %BuiltInsPixel2 0 "FragDepth"
                OpMemberName %BuiltInsPixel2 3 "FragCoord"
                OpName %FrontFacing "FrontFacing"
                OpName %PointCoord "PointCoord"

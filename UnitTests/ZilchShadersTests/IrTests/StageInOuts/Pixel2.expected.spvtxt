@@ -11,9 +11,9 @@
                OpSource Unknown 100
                OpName %Pixel2 "Pixel2"
                OpMemberName %Pixel2 0 "Normal"
+               OpMemberName %Pixel2 1 "Position"
                OpMemberName %Pixel2 2 "Color"
                OpMemberName %Pixel2 3 "Color1"
-               OpMemberName %Pixel2 1 "Position"
                OpName %Pixel2In "Pixel2In"
                OpMemberName %Pixel2In 0 "WorldNormal"
                OpMemberName %Pixel2In 1 "PerspectivePosition"

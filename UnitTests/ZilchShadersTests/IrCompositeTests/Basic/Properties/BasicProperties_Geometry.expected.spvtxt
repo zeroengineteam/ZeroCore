@@ -13,8 +13,8 @@
                OpExecutionMode %EntryPoint_Main_BasicProperties_Geometry OutputTriangleStrip
                OpSource Unknown 100
                OpName %BasicProperties_Geometry "BasicProperties_Geometry"
-               OpMemberName %BasicProperties_Geometry 1 "Value_Geometry"
                OpMemberName %BasicProperties_Geometry 0 "Position_Geometry"
+               OpMemberName %BasicProperties_Geometry 1 "Value_Geometry"
                OpMemberName %BasicProperties_Geometry 2 "PerspectiveToApiPerspective"
                OpName %BasicProperties_GeoIn "BasicProperties_GeoIn"
                OpMemberName %BasicProperties_GeoIn 0 "ApiPerspectivePosition"
@@ -30,8 +30,8 @@
                OpMemberName %Geometry 0 "Position"
                OpMemberName %Geometry 1 "Value"
                OpName %BasicProperties_GeometryMaterial "BasicProperties_GeometryMaterial"
-               OpMemberName %BasicProperties_GeometryMaterial 1 "Value_Geometry"
                OpMemberName %BasicProperties_GeometryMaterial 0 "Position_Geometry"
+               OpMemberName %BasicProperties_GeometryMaterial 1 "Value_Geometry"
                OpName %BasicProperties_GeometryTransformData "BasicProperties_GeometryTransformData"
                OpMemberName %BasicProperties_GeometryTransformData 0 "LocalToWorld"
                OpMemberName %BasicProperties_GeometryTransformData 1 "PerspectiveToApiPerspective"

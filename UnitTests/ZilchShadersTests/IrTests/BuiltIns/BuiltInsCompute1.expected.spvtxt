@@ -10,11 +10,11 @@
                OpExecutionMode %EntryPoint_Main_BuiltInsCompute1 LocalSize 1 1 1
                OpSource Unknown 100
                OpName %BuiltInsCompute1 "BuiltInsCompute1"
+               OpMemberName %BuiltInsCompute1 0 "GlobalInvocationId"
+               OpMemberName %BuiltInsCompute1 1 "LocalInvocationId"
                OpMemberName %BuiltInsCompute1 2 "LocalInvocationIndex"
                OpMemberName %BuiltInsCompute1 3 "NumWorkgroups"
-               OpMemberName %BuiltInsCompute1 0 "GlobalInvocationId"
                OpMemberName %BuiltInsCompute1 4 "WorkgroupId"
-               OpMemberName %BuiltInsCompute1 1 "LocalInvocationId"
                OpMemberName %BuiltInsCompute1 5 "WorkgroupSize"
                OpName %GlobalInvocationId "GlobalInvocationId"
                OpName %LocalInvocationId "LocalInvocationId"

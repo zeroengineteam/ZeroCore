@@ -10,8 +10,8 @@
                OpExecutionMode %auto_main OriginUpperLeft
                OpSource Unknown 100
                OpName %Types "Types"
-               OpMemberName %Types 1 "Data2"
                OpMemberName %Types 0 "Data1"
+               OpMemberName %Types 1 "Data2"
                OpName %auto_main "auto_main"
                OpName %Main0 "Main0"
                OpName %self "self"

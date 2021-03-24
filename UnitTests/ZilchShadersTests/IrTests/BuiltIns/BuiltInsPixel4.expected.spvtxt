@@ -10,11 +10,11 @@
                OpExecutionMode %EntryPoint_Main_BuiltInsPixel4 OriginUpperLeft
                OpSource Unknown 100
                OpName %BuiltInsPixel4 "BuiltInsPixel4"
-               OpMemberName %BuiltInsPixel4 4 "Depth2"
                OpMemberName %BuiltInsPixel4 0 "Coordinate"
-               OpMemberName %BuiltInsPixel4 2 "PointCoordinate"
                OpMemberName %BuiltInsPixel4 1 "Coordinate2"
+               OpMemberName %BuiltInsPixel4 2 "PointCoordinate"
                OpMemberName %BuiltInsPixel4 3 "Depth"
+               OpMemberName %BuiltInsPixel4 4 "Depth2"
                OpName %FragCoord "FragCoord"
                OpName %PointCoord "PointCoord"
                OpName %FragDepth "FragDepth"

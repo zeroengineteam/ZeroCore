@@ -10,8 +10,8 @@
                OpSource Unknown 100
                OpName %Vertex2 "Vertex2"
                OpMemberName %Vertex2 0 "Normal"
-               OpMemberName %Vertex2 2 "VertexColor"
                OpMemberName %Vertex2 1 "Position"
+               OpMemberName %Vertex2 2 "VertexColor"
                OpName %Vertex2Out "Vertex2Out"
                OpMemberName %Vertex2Out 0 "WorldNormal"
                OpMemberName %Vertex2Out 1 "PerspectivePosition"
