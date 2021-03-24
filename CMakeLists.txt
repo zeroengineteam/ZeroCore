@@ -106,6 +106,7 @@ add_subdirectory(ZeroLibraries)
 add_subdirectory(Systems)
 add_subdirectory(Extensions)
 add_subdirectory(Projects)
+add_subdirectory(UnitTests)
 
 if (generate_with_unit_tests)
     if (NOT EXISTS ${zero_unit_test_dir})

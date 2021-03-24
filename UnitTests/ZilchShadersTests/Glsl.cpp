@@ -7,7 +7,7 @@
 #include "Precompiled.hpp"
 
 // Using static GLEW
-#define GLEW_STATIC
+//#define GLEW_STATIC
 #pragma warning( disable : 4005  ) 
 // Include glew before OpenGl
 #include <GL/glew.h>
@@ -17,12 +17,12 @@
 
 
 // Link Libraries
-#pragma comment(lib, "OpenGL32.Lib")
-#ifdef NDEBUG
-#pragma comment(lib, "glew32s.lib")
-#else
-#pragma comment(lib, "glew32sd.lib")
-#endif
+//#pragma comment(lib, "OpenGL32.Lib")
+//#ifdef NDEBUG
+//#pragma comment(lib, "glew32s.lib")
+//#else
+//#pragma comment(lib, "glew32sd.lib")
+//#endif
 
 PIXELFORMATDESCRIPTOR Setup32Bit()
 {
