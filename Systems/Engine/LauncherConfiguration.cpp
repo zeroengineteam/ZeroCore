@@ -254,6 +254,16 @@ Cog* LoadLauncherConfig(Cog* zeroConfigCog, const StringMap& arguments, bool ove
     ContentConfig* contentConfig = HasOrAdd<ContentConfig>(configCog);
     contentConfig->ToolsDirectory = FilePath::Combine(buildInfo.Source, "Tools");
   }
+  
+  if(FindBuildInfo(applicationDirectory, buildInfo))
+  {
+    mainConfig->SourceDirectory = buildInfo.Source;
+    mainConfig->DataDirectory = FilePath::Combine(buildInfo.Source, "Data");
+    mainConfig->mLocallyBuilt = true;
+
+    ContentConfig* contentConfig = HasOrAdd<ContentConfig>(configCog);
+    contentConfig->ToolsDirectory = FilePath::Combine(buildInfo.Source, "Tools");
+  }
 
   LauncherConfig* versionConfig = HasOrAdd<LauncherConfig>(configCog);
   versionConfig->mSavePath = configPath;

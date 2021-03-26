@@ -285,4 +285,6 @@ void SaveConfig(Cog* config);
 //Remove config file
 void RemoveConfig(Cog* config);
 
+bool FindBuildInfo(String applicationDirectory, BuildInfo& outBuildInfo);
+
 }//namespace Zero
