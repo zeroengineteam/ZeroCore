@@ -498,9 +498,16 @@ TemplateProject* VersionSelector::CreateTemplateProjectFromMeta(Cog* metaCog, St
 void VersionSelector::FindDownloadedTemplates()
 {
   // Check the dll install directory.
-  String dllDownloadDir = mConfig->GetOwner()->has(MainConfig)->ApplicationDirectory;
+  MainConfig* mainConfig = mConfig->GetOwner()->has(MainConfig);
+  String dllDownloadDir = mainConfig->ApplicationDirectory;
   String packagedTemplates = FilePath::Combine(dllDownloadDir, "Templates");
   FindDownloadedTemplatesRecursive(packagedTemplates);
+  // Also check the location in the source repo
+  if(mainConfig->mLocallyBuilt)
+  {
+    String sourceTemplatesPath = FilePath::Combine(mainConfig->SourceDirectory, "Projects", "LauncherTemplates");
+    FindDownloadedTemplatesRecursive(sourceTemplatesPath);
+  }
 
   // Check the download directory (for user downloaded templates)
   String dir = FilePath::Combine(mConfig->mDownloadPath, "Templates");
