@@ -315,9 +315,9 @@ struct FileInfo
   //Cyclic redundancy check 32
   u32 Crc;
   //Compressed size in bytes.
-  size_t CompressedSize;
+  u32 CompressedSize;
   //Uncompressed size
-  size_t UncompressedSize;
+  u32 UncompressedSize;
   //File name length
   u16 FileNameLength;
   //Extra field length
@@ -348,7 +348,7 @@ struct ZipCentralFileHeader
   //External File Attributes
   u32 ExternalAttributes;
   //RelativeOffset
-  size_t Offset;
+  u32 Offset;
 };
 
 struct EndCentral
