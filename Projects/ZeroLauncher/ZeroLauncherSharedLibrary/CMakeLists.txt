@@ -82,3 +82,22 @@ target_compile_options(
     "-D \"_CRT_SECURE_NO_WARNINGS\"" 
     "-D \"ZeroExportDll\"" 
 )
+
+ add_custom_command(
+    TARGET ZeroLauncherSharedLibrary POST_BUILD
+    # executes "cmake -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    # input file
+    ${zero_binary_dir}/ZeroLauncherSharedLibrary/ZeroLauncherSharedLibrary.dll
+    #output file
+    ${zero_binary_dir}/ZeroLauncher/ZeroLauncherSharedLibrary.dll
+)
+add_custom_command(
+    TARGET ZeroLauncherSharedLibrary POST_BUILD
+    # executes "cmake -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    # input file
+    ${zero_binary_dir}/ZeroLauncherSharedLibrary/ZeroLauncherSharedLibrary.pdb
+    #output file
+    ${zero_binary_dir}/ZeroLauncher/ZeroLauncherSharedLibrary.pdb
+)
