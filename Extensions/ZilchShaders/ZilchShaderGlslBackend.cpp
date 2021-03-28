@@ -384,7 +384,8 @@ void ZilchShaderGlslBackend::ExtractResourceReflection(GlslBackendInternalData& 
   }
 }
 
-void ZilchShaderGlslBackend::ExtractResourcesReflection(GlslBackendInternalData& internalData, std::vector<spirv_cross::Resource>& resources, Array<ShaderStageResource>& results, bool isInterfaceType)
+template <typename VectorType>
+void ZilchShaderGlslBackend::ExtractResourcesReflection(GlslBackendInternalData& internalData, VectorType& resources, Array<ShaderStageResource>& results, bool isInterfaceType)
 {
   // Extract each resource independently
   for(size_t i = 0; i < resources.size(); ++i)
