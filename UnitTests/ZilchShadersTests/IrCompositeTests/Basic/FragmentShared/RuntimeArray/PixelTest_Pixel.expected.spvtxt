@@ -97,20 +97,10 @@
                OpDecorate %_runtimearr_SubStruct ArrayStride 4
                OpDecorate %Array1_Real Binding 3
                OpDecorate %Array1_Real DescriptorSet 0
-               OpDecorate %RuntimeArray_Real_Buffer Block
-               OpMemberDecorate %RuntimeArray_Real_Buffer 0 Offset 0
-               OpDecorate %_runtimearr_float ArrayStride 4
                OpDecorate %Array1_0 Binding 4
                OpDecorate %Array1_0 DescriptorSet 0
-               OpDecorate %RuntimeArray_Integer_Buffer Block
-               OpMemberDecorate %RuntimeArray_Integer_Buffer 0 Offset 0
-               OpDecorate %_runtimearr_int_2 ArrayStride 4
                OpDecorate %Array3_Pixel3 Binding 5
                OpDecorate %Array3_Pixel3 DescriptorSet 0
-               OpDecorate %RuntimeArray_SubStruct_Buffer Block
-               OpMemberDecorate %RuntimeArray_SubStruct_Buffer 0 Offset 0
-               OpMemberDecorate %SubStruct 0 Offset 0
-               OpDecorate %_runtimearr_SubStruct ArrayStride 4
       %int_2 = OpTypeInt 32 1
 %_ptr_Function_int_2 = OpTypePointer Function %int_2
 %PixelTest_Pixel = OpTypeStruct %int_2

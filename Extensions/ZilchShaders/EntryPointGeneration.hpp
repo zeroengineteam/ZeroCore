@@ -363,6 +363,7 @@ public:
   void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IZilchShaderIR* toDecorate);
   void WriteMemberDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IZilchShaderIR* toDecorate, ZilchShaderIRConstantLiteral* memberIndexLiteral);
   void FindAndDecorateGlobals(ZilchShaderIRType* currentType, EntryPointInfo* entryPointInfo);
+  void AddInterfaceTypesToEntryPoint(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   void DecorateImagesAndSamplers(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   void DecorateRuntimeArrays(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   /// Add decorations for a runtime array struct.
@@ -405,6 +406,8 @@ public:
   Array<ShaderInterfaceType*> mBuiltIns;
   Array<ShaderInterfaceType*> mInputs;
   Array<ShaderInterfaceType*> mOutputs;
+  HashSet<ZilchShaderIRType*> mUniqueTypes;
+  HashSet<ZilchShaderIROp*> mUniqueOps;
 };
 
 }//namespace Zero

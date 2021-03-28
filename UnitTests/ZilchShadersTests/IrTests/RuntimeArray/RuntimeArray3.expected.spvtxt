@@ -38,9 +38,6 @@
                OpDecorate %_runtimearr_v4float ArrayStride 16
                OpDecorate %Positions_RuntimeArray3 Binding 1
                OpDecorate %Positions_RuntimeArray3 DescriptorSet 0
-               OpDecorate %RuntimeArray_Real4_Buffer Block
-               OpMemberDecorate %RuntimeArray_Real4_Buffer 0 Offset 0
-               OpDecorate %_runtimearr_v4float ArrayStride 16
         %int = OpTypeInt 32 1
 %_ptr_Function_int = OpTypePointer Function %int
 %RuntimeArray3 = OpTypeStruct %int
