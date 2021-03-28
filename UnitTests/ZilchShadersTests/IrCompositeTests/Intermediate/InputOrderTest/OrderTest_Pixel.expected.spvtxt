@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 279
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_OrderTest_Pixel "EntryPoint_Main_OrderTest_Pixel" %In %FragCoord %PointCoord
+               OpEntryPoint Fragment %EntryPoint_Main_OrderTest_Pixel "EntryPoint_Main_OrderTest_Pixel" %In %FragCoord %PointCoord %Material %Frame_Data
                OpExecutionMode %EntryPoint_Main_OrderTest_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %OrderTest_Pixel "OrderTest_Pixel"

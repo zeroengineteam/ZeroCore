@@ -1,12 +1,12 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 83
 ; Schema: 0
                OpCapability Shader
                OpCapability Geometry
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Geometry %EntryPoint_Main_GeometryStatics "EntryPoint_Main_GeometryStatics"
+               OpEntryPoint Geometry %EntryPoint_Main_GeometryStatics "EntryPoint_Main_GeometryStatics" %Pi_GeoData %Count_GeometryStatics
                OpExecutionMode %EntryPoint_Main_GeometryStatics OutputVertices 3
                OpExecutionMode %EntryPoint_Main_GeometryStatics Triangles
                OpExecutionMode %EntryPoint_Main_GeometryStatics OutputTriangleStrip

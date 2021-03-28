@@ -1,12 +1,12 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 72
 ; Schema: 0
                OpCapability Shader
                OpCapability ImageQuery
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_ImageQueryLevels "EntryPoint_Main_ImageQueryLevels"
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQueryLevels "EntryPoint_Main_ImageQueryLevels" %Image_ImageQueryLevels %SampledImage_ImageQueryLevels %DepthImage_ImageQueryLevels %SampledDepthImage_ImageQueryLevels %ImageCube_ImageQueryLevels %SampledImageCube_ImageQueryLevels
                OpExecutionMode %EntryPoint_Main_ImageQueryLevels OriginUpperLeft
                OpSource Unknown 100
                OpName %ImageQueryLevels "ImageQueryLevels"

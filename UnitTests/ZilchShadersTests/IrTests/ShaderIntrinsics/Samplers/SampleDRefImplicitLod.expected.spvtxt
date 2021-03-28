@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 67
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_SampleDRefImplicitLod "EntryPoint_Main_SampleDRefImplicitLod"
+               OpEntryPoint Fragment %EntryPoint_Main_SampleDRefImplicitLod "EntryPoint_Main_SampleDRefImplicitLod" %SampledDepthImage_SampleDRefImplicitLod %DepthImage_SampleDRefImplicitLod %Sampler_SampleDRefImplicitLod
                OpExecutionMode %EntryPoint_Main_SampleDRefImplicitLod OriginUpperLeft
                OpSource Unknown 100
                OpName %SampleDRefImplicitLod "SampleDRefImplicitLod"

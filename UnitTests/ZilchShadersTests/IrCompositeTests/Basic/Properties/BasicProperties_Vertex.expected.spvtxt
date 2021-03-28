@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 86
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main_BasicProperties_Vertex "EntryPoint_Main_BasicProperties_Vertex"
+               OpEntryPoint Vertex %EntryPoint_Main_BasicProperties_Vertex "EntryPoint_Main_BasicProperties_Vertex" %Material
                OpSource Unknown 100
                OpName %BasicProperties_Vertex "BasicProperties_Vertex"
                OpMemberName %BasicProperties_Vertex 0 "Position_Vertex"

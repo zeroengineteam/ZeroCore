@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 75
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_ImageFetch "EntryPoint_Main_ImageFetch"
+               OpEntryPoint Fragment %EntryPoint_Main_ImageFetch "EntryPoint_Main_ImageFetch" %Image_ImageFetch %SampledImage_ImageFetch
                OpExecutionMode %EntryPoint_Main_ImageFetch OriginUpperLeft
                OpSource Unknown 100
                OpName %ImageFetch "ImageFetch"

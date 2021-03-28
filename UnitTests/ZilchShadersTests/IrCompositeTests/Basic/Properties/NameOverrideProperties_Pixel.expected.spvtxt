@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 86
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_NameOverrideProperties_Pixel "EntryPoint_Main_NameOverrideProperties_Pixel"
+               OpEntryPoint Fragment %EntryPoint_Main_NameOverrideProperties_Pixel "EntryPoint_Main_NameOverrideProperties_Pixel" %Material
                OpExecutionMode %EntryPoint_Main_NameOverrideProperties_Pixel OriginUpperLeft
                OpSource Unknown 100
                OpName %NameOverrideProperties_Pixel "NameOverrideProperties_Pixel"

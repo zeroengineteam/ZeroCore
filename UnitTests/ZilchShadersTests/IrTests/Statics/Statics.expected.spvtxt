@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 83
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_Statics "EntryPoint_Main_Statics"
+               OpEntryPoint Fragment %EntryPoint_Main_Statics "EntryPoint_Main_Statics" %R1_Statics %Sub_Statics %R1_SubStruct
                OpExecutionMode %EntryPoint_Main_Statics OriginUpperLeft
                OpSource Unknown 100
                OpName %Statics "Statics"

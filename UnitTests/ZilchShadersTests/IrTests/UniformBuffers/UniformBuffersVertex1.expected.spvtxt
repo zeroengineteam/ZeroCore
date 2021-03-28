@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 95
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Vertex %EntryPoint_Main_UniformBuffersVertex1 "EntryPoint_Main_UniformBuffersVertex1"
+               OpEntryPoint Vertex %EntryPoint_Main_UniformBuffersVertex1 "EntryPoint_Main_UniformBuffersVertex1" %Frame_Data %CameraData %Material
                OpSource Unknown 100
                OpName %UniformBuffersVertex1 "UniformBuffersVertex1"
                OpMemberName %UniformBuffersVertex1 0 "LogicTime"

@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 79
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_PassToFunctions "EntryPoint_Main_PassToFunctions"
+               OpEntryPoint Fragment %EntryPoint_Main_PassToFunctions "EntryPoint_Main_PassToFunctions" %SampledImage_PassToFunctions %Image_PassToFunctions %Sampler_PassToFunctions
                OpExecutionMode %EntryPoint_Main_PassToFunctions OriginUpperLeft
                OpSource Unknown 100
                OpName %PassToFunctions "PassToFunctions"

@@ -1,12 +1,12 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 247
 ; Schema: 0
                OpCapability Shader
                OpExtension "SPV_KHR_storage_buffer_storage_class"
                OpMemoryModel Logical GLSL450
-               OpEntryPoint GLCompute %EntryPoint_Main_ComputeParticles_Compute "EntryPoint_Main_ComputeParticles_Compute" %GlobalInvocationId
+               OpEntryPoint GLCompute %EntryPoint_Main_ComputeParticles_Compute "EntryPoint_Main_ComputeParticles_Compute" %GlobalInvocationId %Material %Frame_Data %Particles
                OpExecutionMode %EntryPoint_Main_ComputeParticles_Compute LocalSize 1 1 1
                OpSource Unknown 100
                OpName %ComputeParticles_Compute "ComputeParticles_Compute"

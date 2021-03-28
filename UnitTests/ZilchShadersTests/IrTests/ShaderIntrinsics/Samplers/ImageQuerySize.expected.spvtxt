@@ -1,12 +1,12 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 83
 ; Schema: 0
                OpCapability Shader
                OpCapability ImageQuery
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_ImageQuerySize "EntryPoint_Main_ImageQuerySize"
+               OpEntryPoint Fragment %EntryPoint_Main_ImageQuerySize "EntryPoint_Main_ImageQuerySize" %Image_ImageQuerySize %SampledImage_ImageQuerySize %DepthImage_ImageQuerySize %SampledDepthImage_ImageQuerySize %ImageCube_ImageQuerySize %SampledImageCube_ImageQuerySize
                OpExecutionMode %EntryPoint_Main_ImageQuerySize OriginUpperLeft
                OpSource Unknown 100
                OpName %ImageQuerySize "ImageQuerySize"

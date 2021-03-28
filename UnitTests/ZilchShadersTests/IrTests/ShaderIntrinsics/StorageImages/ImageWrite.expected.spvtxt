@@ -1,11 +1,11 @@
 ; SPIR-V
-; Version: 1.2
+; Version: 1.4
 ; Generator: Khronos; 0
 ; Bound: 57
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
-               OpEntryPoint Fragment %EntryPoint_Main_ImageWrite "EntryPoint_Main_ImageWrite"
+               OpEntryPoint Fragment %EntryPoint_Main_ImageWrite "EntryPoint_Main_ImageWrite" %StorageImage_ImageWrite
                OpExecutionMode %EntryPoint_Main_ImageWrite OriginUpperLeft
                OpSource Unknown 100
                OpName %ImageWrite "ImageWrite"
