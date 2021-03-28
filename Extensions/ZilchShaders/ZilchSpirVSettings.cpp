@@ -376,6 +376,7 @@ ZilchShaderSpirVSettings::ZilchShaderSpirVSettings()
   mFinalized = false;
   mAllowUniformMaterialBufferIndexOverap = false;
   InitializeBuiltIns();
+  mRenderTargetType = ZilchTypeId(Zilch::Real4);
 }
 
 ZilchShaderSpirVSettings::ZilchShaderSpirVSettings(const SpirVNameSettings& nameSettings) : mNameSettings(nameSettings)
@@ -383,6 +384,7 @@ ZilchShaderSpirVSettings::ZilchShaderSpirVSettings(const SpirVNameSettings& name
   mFinalized = false;
   mAllowUniformMaterialBufferIndexOverap = false;
   InitializeBuiltIns();
+  mRenderTargetType = ZilchTypeId(Zilch::Real4);
 }
 
 void ZilchShaderSpirVSettings::AddUniformBufferDescription(UniformBufferDescription& description)
@@ -488,6 +490,11 @@ void ZilchShaderSpirVSettings::SetRenderTargetName(StringParam varName, size_t t
   }
 
   mRenderTargetNames[targetIndex] = varName;
+}
+
+void ZilchShaderSpirVSettings::SetRenderTargetType(Zilch::BoundType* targetType)
+{
+  mRenderTargetType = targetType;
 }
 
 String ZilchShaderSpirVSettings::GetLanguageSpecializationName()
