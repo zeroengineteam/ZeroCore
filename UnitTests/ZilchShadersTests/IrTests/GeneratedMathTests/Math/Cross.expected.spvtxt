@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 149
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
           %2 = OpExtInstImport "GLSL.std.450"
                OpMemoryModel Logical GLSL450

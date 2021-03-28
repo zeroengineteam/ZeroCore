@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 65
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Fragment %EntryPoint_Main_StaticsDefaultValues "EntryPoint_Main_StaticsDefaultValues"

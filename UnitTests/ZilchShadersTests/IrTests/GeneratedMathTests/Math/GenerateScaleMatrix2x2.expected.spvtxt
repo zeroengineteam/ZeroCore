@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 66
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Fragment %EntryPoint_Main_GenerateScaleMatrix2x2 "EntryPoint_Main_GenerateScaleMatrix2x2"

@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 67
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Vertex %EntryPoint_Main_BuiltInsVertex5 "EntryPoint_Main_BuiltInsVertex5" %VertexId %InstanceId %PerVertexOut

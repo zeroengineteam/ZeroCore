@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 101
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpExtension "SPV_KHR_storage_buffer_storage_class"
                OpMemoryModel Logical GLSL450

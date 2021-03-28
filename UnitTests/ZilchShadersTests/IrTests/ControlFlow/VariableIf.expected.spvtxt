@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 50
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Fragment %EntryPoint_Main_VariableIf "EntryPoint_Main_VariableIf"

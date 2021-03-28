@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 86
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpMemoryModel Logical GLSL450
                OpEntryPoint Fragment %EntryPoint_Main_NameOverrideProperties_Pixel "EntryPoint_Main_NameOverrideProperties_Pixel"

@@ -3,7 +3,6 @@
 ; Generator: Khronos; 0
 ; Bound: 45
 ; Schema: 0
-               OpCapability Linkage
                OpCapability Shader
                OpCapability ImageQuery
                OpMemoryModel Logical GLSL450
