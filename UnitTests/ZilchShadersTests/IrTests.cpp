@@ -158,6 +158,10 @@ struct UnitTestCompilationPipeline : Zilch::EventHandler
 
 bool TestDiff2(StringParam expectedFilePath, StringParam generatedFilePath, StringParam generatedFileContents, ErrorReporter& reporter)
 {
+  constexpr bool acceptAllResults = false;
+  if(acceptAllResults)
+    WriteStringRangeToFile(expectedFilePath, generatedFileContents);
+
   String expectedFileContents;
   if(FileExists(expectedFilePath))
   {
