@@ -21,22 +21,6 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/include/spirv-tools/linker.hpp
     ${SPIRV-Tools-Dir}/include/spirv-tools/optimizer.hpp
 #/include
-#/source/comp
-    ${SPIRV-Tools-Dir}/source/comp/bit_stream.cpp
-    ${SPIRV-Tools-Dir}/source/comp/bit_stream.h
-    ${SPIRV-Tools-Dir}/source/comp/huffman_codec.h
-    ${SPIRV-Tools-Dir}/source/comp/markv.cpp
-    ${SPIRV-Tools-Dir}/source/comp/markv.h
-    ${SPIRV-Tools-Dir}/source/comp/markv_codec.cpp
-    ${SPIRV-Tools-Dir}/source/comp/markv_codec.h
-    ${SPIRV-Tools-Dir}/source/comp/markv_decoder.cpp
-    ${SPIRV-Tools-Dir}/source/comp/markv_decoder.h
-    ${SPIRV-Tools-Dir}/source/comp/markv_encoder.cpp
-    ${SPIRV-Tools-Dir}/source/comp/markv_encoder.h
-    ${SPIRV-Tools-Dir}/source/comp/markv_logger.h
-    ${SPIRV-Tools-Dir}/source/comp/markv_model.h
-    ${SPIRV-Tools-Dir}/source/comp/move_to_front.cpp
-    ${SPIRV-Tools-Dir}/source/comp/move_to_front.h
 #/source/link
     ${SPIRV-Tools-Dir}/source/link/linker.cpp
 #/source/opt
@@ -80,12 +64,11 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/val/validate_composites.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_constants.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_conversion.cpp
-    ${SPIRV-Tools-Dir}/source/val/validate_datarules.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_debug.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_decorations.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_derivatives.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_execution_limitations.cpp
-    ${SPIRV-Tools-Dir}/source/val/validate_ext_inst.cpp
+    ${SPIRV-Tools-Dir}/source/val/validate_extensions.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_function.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_id.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_image.cpp
@@ -95,9 +78,15 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/val/validate_literals.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_logicals.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_memory.cpp
+    ${SPIRV-Tools-Dir}/source/val/validate_memory_semantics.cpp
+    ${SPIRV-Tools-Dir}/source/val/validate_memory_semantics.h
+    ${SPIRV-Tools-Dir}/source/val/validate_misc.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_mode_setting.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_non_uniform.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_primitives.cpp
+    ${SPIRV-Tools-Dir}/source/val/validate_scopes.cpp
+    ${SPIRV-Tools-Dir}/source/val/validate_scopes.h
+    ${SPIRV-Tools-Dir}/source/val/validate_small_type_uses.cpp
     ${SPIRV-Tools-Dir}/source/val/validate_type.cpp
     ${SPIRV-Tools-Dir}/source/val/validation_state.cpp
     ${SPIRV-Tools-Dir}/source/val/validation_state.h
@@ -107,6 +96,7 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/binary.cpp
     ${SPIRV-Tools-Dir}/source/binary.h
     ${SPIRV-Tools-Dir}/source/cfa.h
+    ${SPIRV-Tools-Dir}/source/CMakeLists.txt
     ${SPIRV-Tools-Dir}/source/diagnostic.cpp
     ${SPIRV-Tools-Dir}/source/diagnostic.h
     ${SPIRV-Tools-Dir}/source/disassemble.cpp
@@ -118,8 +108,6 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/extensions.h
     ${SPIRV-Tools-Dir}/source/ext_inst.cpp
     ${SPIRV-Tools-Dir}/source/ext_inst.h
-    ${SPIRV-Tools-Dir}/source/id_descriptor.cpp
-    ${SPIRV-Tools-Dir}/source/id_descriptor.h
     ${SPIRV-Tools-Dir}/source/instruction.h
     ${SPIRV-Tools-Dir}/source/latest_version_glsl_std_450_header.h
     ${SPIRV-Tools-Dir}/source/latest_version_opencl_std_header.h
@@ -129,6 +117,7 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/name_mapper.cpp
     ${SPIRV-Tools-Dir}/source/name_mapper.h
     ${SPIRV-Tools-Dir}/source/opcode.cpp
+    ${SPIRV-Tools-Dir}/source/opcode.cpp.orig
     ${SPIRV-Tools-Dir}/source/opcode.h
     ${SPIRV-Tools-Dir}/source/operand.cpp
     ${SPIRV-Tools-Dir}/source/operand.h
@@ -143,8 +132,12 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/spirv_definition.h
     ${SPIRV-Tools-Dir}/source/spirv_endian.cpp
     ${SPIRV-Tools-Dir}/source/spirv_endian.h
+    ${SPIRV-Tools-Dir}/source/spirv_fuzzer_options.cpp
+    ${SPIRV-Tools-Dir}/source/spirv_fuzzer_options.h
     ${SPIRV-Tools-Dir}/source/spirv_optimizer_options.cpp
     ${SPIRV-Tools-Dir}/source/spirv_optimizer_options.h
+    ${SPIRV-Tools-Dir}/source/spirv_reducer_options.cpp
+    ${SPIRV-Tools-Dir}/source/spirv_reducer_options.h
     ${SPIRV-Tools-Dir}/source/spirv_target_env.cpp
     ${SPIRV-Tools-Dir}/source/spirv_target_env.h
     ${SPIRV-Tools-Dir}/source/spirv_validator_options.cpp

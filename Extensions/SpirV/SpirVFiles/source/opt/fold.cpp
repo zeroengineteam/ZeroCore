@@ -45,12 +45,21 @@ namespace {
 uint32_t InstructionFolder::UnaryOperate(SpvOp opcode, uint32_t operand) const {
   switch (opcode) {
     // Arthimetics
-    case SpvOp::SpvOpSNegate:
-      return -static_cast<int32_t>(operand);
+    case SpvOp::SpvOpSNegate: {
+      int32_t s_operand = static_cast<int32_t>(operand);
+      if (s_operand == std::numeric_limits<int32_t>::min()) {
+        return s_operand;
+      }
+      return -s_operand;
+    }
     case SpvOp::SpvOpNot:
       return ~operand;
     case SpvOp::SpvOpLogicalNot:
       return !static_cast<bool>(operand);
+    case SpvOp::SpvOpUConvert:
+      return operand;
+    case SpvOp::SpvOpSConvert:
+      return operand;
     default:
       assert(false &&
              "Unsupported unary operation for OpSpecConstantOp instruction");
@@ -114,12 +123,36 @@ uint32_t InstructionFolder::BinaryOperate(SpvOp opcode, uint32_t a,
       }
 
     // Shifting
-    case SpvOp::SpvOpShiftRightLogical: {
+    case SpvOp::SpvOpShiftRightLogical:
+      if (b >= 32) {
+        // This is undefined behaviour when |b| > 32.  Choose 0 for consistency.
+        // When |b| == 32, doing the shift in C++ in undefined, but the result
+        // will be 0, so just return that value.
+        return 0;
+      }
       return a >> b;
-    }
     case SpvOp::SpvOpShiftRightArithmetic:
+      if (b > 32) {
+        // This is undefined behaviour.  Choose 0 for consistency.
+        return 0;
+      }
+      if (b == 32) {
+        // Doing the shift in C++ is undefined, but the result is defined in the
+        // spir-v spec.  Find that value another way.
+        if (static_cast<int32_t>(a) >= 0) {
+          return 0;
+        } else {
+          return static_cast<uint32_t>(-1);
+        }
+      }
       return (static_cast<int32_t>(a)) >> b;
     case SpvOp::SpvOpShiftLeftLogical:
+      if (b >= 32) {
+        // This is undefined behaviour when |b| > 32.  Choose 0 for consistency.
+        // When |b| == 32, doing the shift in C++ in undefined, but the result
+        // will be 0, so just return that value.
+        return 0;
+      }
       return a << b;
 
     // Bitwise operations
@@ -205,13 +238,12 @@ bool InstructionFolder::FoldInstructionInternal(Instruction* inst) const {
     return true;
   }
 
-  SpvOp opcode = inst->opcode();
   analysis::ConstantManager* const_manager = context_->get_constant_mgr();
-
   std::vector<const analysis::Constant*> constants =
       const_manager->GetOperandConstants(inst);
 
-  for (const FoldingRule& rule : GetFoldingRules().GetRulesForOpcode(opcode)) {
+  for (const FoldingRule& rule :
+       GetFoldingRules().GetRulesForInstruction(inst)) {
     if (rule(context_, inst, constants)) {
       return true;
     }
@@ -296,7 +328,8 @@ bool InstructionFolder::FoldBinaryIntegerOpToConstant(
       if (constants[1] != nullptr) {
         // When shifting by a value larger than the size of the result, the
         // result is undefined.  We are setting the undefined behaviour to a
-        // result of 0.
+        // result of 0.  If the shift amount is the same as the size of the
+        // result, then the result is defined, and it 0.
         uint32_t shift_amount = constants[1]->GetU32BitValue();
         if (shift_amount >= 32) {
           *result = 0;
@@ -567,6 +600,8 @@ bool InstructionFolder::IsFoldableOpcode(SpvOp opcode) const {
     case SpvOp::SpvOpSMod:
     case SpvOp::SpvOpSNegate:
     case SpvOp::SpvOpSRem:
+    case SpvOp::SpvOpSConvert:
+    case SpvOp::SpvOpUConvert:
     case SpvOp::SpvOpUDiv:
     case SpvOp::SpvOpUGreaterThan:
     case SpvOp::SpvOpUGreaterThanEqual:
@@ -593,7 +628,7 @@ Instruction* InstructionFolder::FoldInstructionToConstant(
   analysis::ConstantManager* const_mgr = context_->get_constant_mgr();
 
   if (!inst->IsFoldableByFoldScalar() &&
-      !GetConstantFoldingRules().HasFoldingRule(inst->opcode())) {
+      !GetConstantFoldingRules().HasFoldingRule(inst)) {
     return nullptr;
   }
   // Collect the values of the constant parameters.
@@ -611,19 +646,19 @@ Instruction* InstructionFolder::FoldInstructionToConstant(
     }
   });
 
-  if (GetConstantFoldingRules().HasFoldingRule(inst->opcode())) {
-    const analysis::Constant* folded_const = nullptr;
-    for (auto rule :
-         GetConstantFoldingRules().GetRulesForOpcode(inst->opcode())) {
-      folded_const = rule(context_, inst, constants);
-      if (folded_const != nullptr) {
-        Instruction* const_inst =
-            const_mgr->GetDefiningInstruction(folded_const, inst->type_id());
-        assert(const_inst->type_id() == inst->type_id());
-        // May be a new instruction that needs to be analysed.
-        context_->UpdateDefUse(const_inst);
-        return const_inst;
+  const analysis::Constant* folded_const = nullptr;
+  for (auto rule : GetConstantFoldingRules().GetRulesForInstruction(inst)) {
+    folded_const = rule(context_, inst, constants);
+    if (folded_const != nullptr) {
+      Instruction* const_inst =
+          const_mgr->GetDefiningInstruction(folded_const, inst->type_id());
+      if (const_inst == nullptr) {
+        return nullptr;
       }
+      assert(const_inst->type_id() == inst->type_id());
+      // May be a new instruction that needs to be analysed.
+      context_->UpdateDefUse(const_inst);
+      return const_inst;
     }
   }
 

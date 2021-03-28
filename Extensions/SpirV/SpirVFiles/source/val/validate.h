@@ -123,15 +123,11 @@ spv_result_t ControlFlowPass(ValidationState_t& _, const Instruction* inst);
 /// Performs Id and SSA validation of a module
 spv_result_t IdPass(ValidationState_t& _, Instruction* inst);
 
-/// Performs validation of the Data Rules subsection of 2.16.1 Universal
-/// Validation Rules.
-/// TODO(ehsann): add more comments here as more validation code is added.
-spv_result_t DataRulesPass(ValidationState_t& _, const Instruction* inst);
-
 /// Performs instruction validation.
 spv_result_t InstructionPass(ValidationState_t& _, const Instruction* inst);
 
-/// Performs decoration validation.
+/// Performs decoration validation.  Assumes each decoration on a group
+/// has been propagated down to the group members.
 spv_result_t ValidateDecorations(ValidationState_t& _);
 
 /// Performs validation of built-in variables.
@@ -173,8 +169,8 @@ spv_result_t BarriersPass(ValidationState_t& _, const Instruction* inst);
 /// Validates correctness of literal numbers.
 spv_result_t LiteralsPass(ValidationState_t& _, const Instruction* inst);
 
-/// Validates correctness of ExtInst instructions.
-spv_result_t ExtInstPass(ValidationState_t& _, const Instruction* inst);
+/// Validates correctness of extension instructions.
+spv_result_t ExtensionPass(ValidationState_t& _, const Instruction* inst);
 
 /// Validates correctness of annotation instructions.
 spv_result_t AnnotationPass(ValidationState_t& _, const Instruction* inst);
@@ -198,11 +194,24 @@ spv_result_t ModeSettingPass(ValidationState_t& _, const Instruction* inst);
 /// Validates correctness of function instructions.
 spv_result_t FunctionPass(ValidationState_t& _, const Instruction* inst);
 
+/// Validates correctness of miscellaneous instructions.
+spv_result_t MiscPass(ValidationState_t& _, const Instruction* inst);
+
+/// Calculates the reachability of basic blocks.
+void ReachabilityPass(ValidationState_t& _);
+
 /// Validates execution limitations.
 ///
 /// Verifies execution models are allowed for all functionality they contain.
 spv_result_t ValidateExecutionLimitations(ValidationState_t& _,
                                           const Instruction* inst);
+
+/// Validates restricted uses of 8- and 16-bit types.
+///
+/// Validates shaders that uses 8- or 16-bit storage capabilities, but not full
+/// capabilities only have appropriate uses of those types.
+spv_result_t ValidateSmallTypeUses(ValidationState_t& _,
+                                   const Instruction* inst);
 
 /// @brief Validate the ID's within a SPIR-V binary
 ///

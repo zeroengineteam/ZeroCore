@@ -36,8 +36,9 @@ class DecorationManager {
   }
   DecorationManager() = delete;
 
-  // Changes all of the decorations (direct and through groups) where |pred| is
-  // true and that apply to |id| so that they no longer apply to |id|.
+  // Removes all decorations (direct and through groups) where |pred| is
+  // true and that apply to |id| so that they no longer apply to |id|.  Returns
+  // true if something changed.
   //
   // If |id| is part of a group, it will be removed from the group if it
   // does not use all of the group's decorations, or, if there are no
@@ -52,9 +53,9 @@ class DecorationManager {
   // removed, then the |OpGroupDecorate| and
   // |OpGroupMemberDecorate| for the group will be killed, but not the defining
   // |OpDecorationGroup| instruction.
-  void RemoveDecorationsFrom(uint32_t id,
-                             std::function<bool(const Instruction&)> pred =
-                                 [](const Instruction&) { return true; });
+  bool RemoveDecorationsFrom(
+      uint32_t id, std::function<bool(const Instruction&)> pred =
+                       [](const Instruction&) { return true; });
 
   // Removes all decorations from the result id of |inst|.
   //
@@ -74,6 +75,12 @@ class DecorationManager {
   // instructions that apply the same decorations but to different IDs, still
   // count as being the same.
   bool HaveTheSameDecorations(uint32_t id1, uint32_t id2) const;
+
+  // Returns whether two IDs have the same decorations. Two SpvOpGroupDecorate
+  // instructions that apply the same decorations but to different IDs, still
+  // count as being the same.
+  bool HaveSubsetOfDecorations(uint32_t id1, uint32_t id2) const;
+
   // Returns whether the two decorations instructions are the same and are
   // applying the same decorations; unless |ignore_target| is false, the targets
   // to which they are applied to does not matter, except for the member part.
@@ -95,6 +102,13 @@ class DecorationManager {
   // terminated and this function returns false.
   bool WhileEachDecoration(uint32_t id, uint32_t decoration,
                            std::function<bool(const Instruction&)> f);
+
+  // |f| is run on each decoration instruction for |id| with decoration
+  // |decoration|. Processes all decoration which target |id| either directly or
+  // indirectly through decoration groups. If |f| returns true, iteration is
+  // terminated and this function returns true. Otherwise returns false.
+  bool FindDecoration(uint32_t id, uint32_t decoration,
+                      std::function<bool(const Instruction&)> f);
 
   // Clone all decorations from one id |from|.
   // The cloned decorations are assigned to the given id |to| and are
@@ -125,6 +139,12 @@ class DecorationManager {
   void AddMemberDecoration(uint32_t member, uint32_t inst_id,
                            uint32_t decoration, uint32_t decoration_value);
 
+  friend bool operator==(const DecorationManager&, const DecorationManager&);
+  friend bool operator!=(const DecorationManager& lhs,
+                         const DecorationManager& rhs) {
+    return !(lhs == rhs);
+  }
+
  private:
   // Analyzes the defs and uses in the given |module| and populates data
   // structures in this class. Does nothing if |module| is nullptr.
@@ -149,6 +169,25 @@ class DecorationManager {
                                                // tracked ID is not a
                                                // group.
   };
+
+  friend bool operator==(const TargetData& lhs, const TargetData& rhs) {
+    if (!std::is_permutation(lhs.direct_decorations.begin(),
+                             lhs.direct_decorations.end(),
+                             rhs.direct_decorations.begin())) {
+      return false;
+    }
+    if (!std::is_permutation(lhs.indirect_decorations.begin(),
+                             lhs.indirect_decorations.end(),
+                             rhs.indirect_decorations.begin())) {
+      return false;
+    }
+    if (!std::is_permutation(lhs.decorate_insts.begin(),
+                             lhs.decorate_insts.end(),
+                             rhs.decorate_insts.begin())) {
+      return false;
+    }
+    return true;
+  }
 
   // Mapping from ids to the instructions applying a decoration to those ids.
   // In other words, for each id you get all decoration instructions

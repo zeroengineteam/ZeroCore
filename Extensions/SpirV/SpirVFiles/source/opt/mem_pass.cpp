@@ -20,6 +20,7 @@
 #include <set>
 #include <vector>
 
+#include "OpenCLDebugInfo100.h"
 #include "source/cfa.h"
 #include "source/opt/basic_block.h"
 #include "source/opt/dominator_analysis.h"
@@ -96,6 +97,11 @@ Instruction* MemPass::GetPtr(uint32_t ptrId, uint32_t* varId) {
   *varId = ptrId;
   Instruction* ptrInst = get_def_use_mgr()->GetDef(*varId);
   Instruction* varInst;
+
+  if (ptrInst->opcode() == SpvOpConstantNull) {
+    *varId = 0;
+    return ptrInst;
+  }
 
   if (ptrInst->opcode() != SpvOpVariable &&
       ptrInst->opcode() != SpvOpFunctionParameter) {
@@ -220,6 +226,11 @@ MemPass::MemPass() {}
 
 bool MemPass::HasOnlySupportedRefs(uint32_t varId) {
   return get_def_use_mgr()->WhileEachUser(varId, [this](Instruction* user) {
+    auto dbg_op = user->GetOpenCL100DebugOpcode();
+    if (dbg_op == OpenCLDebugInfo100DebugDeclare ||
+        dbg_op == OpenCLDebugInfo100DebugValue) {
+      return true;
+    }
     SpvOp op = user->opcode();
     if (op != SpvOpStore && op != SpvOpLoad && op != SpvOpName &&
         !IsNonTypeDecorate(op)) {
@@ -233,6 +244,10 @@ uint32_t MemPass::Type2Undef(uint32_t type_id) {
   const auto uitr = type2undefs_.find(type_id);
   if (uitr != type2undefs_.end()) return uitr->second;
   const uint32_t undefId = TakeNextId();
+  if (undefId == 0) {
+    return 0;
+  }
+
   std::unique_ptr<Instruction> undef_inst(
       new Instruction(context(), SpvOpUndef, type_id, undefId, {}));
   get_def_use_mgr()->AnalyzeInstDefUse(&*undef_inst);

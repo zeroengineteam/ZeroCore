@@ -3,10 +3,14 @@ target_sources(SPIRV-Tools-opt
     #/source/opt
     ${SPIRV-Tools-Dir}/source/opt/aggressive_dead_code_elim_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/aggressive_dead_code_elim_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/amd_ext_to_khr.cpp
+    ${SPIRV-Tools-Dir}/source/opt/amd_ext_to_khr.h
     ${SPIRV-Tools-Dir}/source/opt/basic_block.cpp
     ${SPIRV-Tools-Dir}/source/opt/basic_block.h
     ${SPIRV-Tools-Dir}/source/opt/block_merge_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/block_merge_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/block_merge_util.cpp
+    ${SPIRV-Tools-Dir}/source/opt/block_merge_util.h
     ${SPIRV-Tools-Dir}/source/opt/build_module.cpp
     ${SPIRV-Tools-Dir}/source/opt/build_module.h
     ${SPIRV-Tools-Dir}/source/opt/ccp_pass.cpp
@@ -15,10 +19,11 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/cfg.h
     ${SPIRV-Tools-Dir}/source/opt/cfg_cleanup_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/cfg_cleanup_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/CMakeLists.txt
+    ${SPIRV-Tools-Dir}/source/opt/code_sink.cpp
+    ${SPIRV-Tools-Dir}/source/opt/code_sink.h
     ${SPIRV-Tools-Dir}/source/opt/combine_access_chains.cpp
     ${SPIRV-Tools-Dir}/source/opt/combine_access_chains.h
-    ${SPIRV-Tools-Dir}/source/opt/common_uniform_elim_pass.cpp
-    ${SPIRV-Tools-Dir}/source/opt/common_uniform_elim_pass.h
     ${SPIRV-Tools-Dir}/source/opt/compact_ids_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/compact_ids_pass.h
     ${SPIRV-Tools-Dir}/source/opt/composite.cpp
@@ -27,6 +32,8 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/constants.h
     ${SPIRV-Tools-Dir}/source/opt/const_folding_rules.cpp
     ${SPIRV-Tools-Dir}/source/opt/const_folding_rules.h
+    ${SPIRV-Tools-Dir}/source/opt/convert_to_half_pass.cpp
+    ${SPIRV-Tools-Dir}/source/opt/convert_to_half_pass.h
     ${SPIRV-Tools-Dir}/source/opt/copy_prop_arrays.cpp
     ${SPIRV-Tools-Dir}/source/opt/copy_prop_arrays.h
     ${SPIRV-Tools-Dir}/source/opt/dead_branch_elim_pass.cpp
@@ -35,10 +42,14 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/dead_insert_elim_pass.h
     ${SPIRV-Tools-Dir}/source/opt/dead_variable_elimination.cpp
     ${SPIRV-Tools-Dir}/source/opt/dead_variable_elimination.h
+    ${SPIRV-Tools-Dir}/source/opt/debug_info_manager.cpp
+    ${SPIRV-Tools-Dir}/source/opt/debug_info_manager.h
     ${SPIRV-Tools-Dir}/source/opt/decoration_manager.cpp
     ${SPIRV-Tools-Dir}/source/opt/decoration_manager.h
     ${SPIRV-Tools-Dir}/source/opt/def_use_manager.cpp
     ${SPIRV-Tools-Dir}/source/opt/def_use_manager.h
+    ${SPIRV-Tools-Dir}/source/opt/desc_sroa.cpp
+    ${SPIRV-Tools-Dir}/source/opt/desc_sroa.h
     ${SPIRV-Tools-Dir}/source/opt/dominator_analysis.cpp
     ${SPIRV-Tools-Dir}/source/opt/dominator_analysis.h
     ${SPIRV-Tools-Dir}/source/opt/dominator_tree.cpp
@@ -47,8 +58,15 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_constant_pass.h
     ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_functions_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_functions_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_functions_util.cpp
+    ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_functions_util.h
+    ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_members_pass.cpp
+    ${SPIRV-Tools-Dir}/source/opt/eliminate_dead_members_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/empty_pass.h
     ${SPIRV-Tools-Dir}/source/opt/feature_manager.cpp
     ${SPIRV-Tools-Dir}/source/opt/feature_manager.h
+    ${SPIRV-Tools-Dir}/source/opt/fix_storage_class.cpp
+    ${SPIRV-Tools-Dir}/source/opt/fix_storage_class.h
     ${SPIRV-Tools-Dir}/source/opt/flatten_decoration_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/flatten_decoration_pass.h
     ${SPIRV-Tools-Dir}/source/opt/fold.cpp
@@ -61,6 +79,8 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/freeze_spec_constant_value_pass.h
     ${SPIRV-Tools-Dir}/source/opt/function.cpp
     ${SPIRV-Tools-Dir}/source/opt/function.h
+    ${SPIRV-Tools-Dir}/source/opt/graphics_robust_access_pass.cpp
+    ${SPIRV-Tools-Dir}/source/opt/graphics_robust_access_pass.h
     ${SPIRV-Tools-Dir}/source/opt/if_conversion.cpp
     ${SPIRV-Tools-Dir}/source/opt/if_conversion.h
     ${SPIRV-Tools-Dir}/source/opt/inline_exhaustive_pass.cpp
@@ -77,6 +97,10 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/instrument_pass.h
     ${SPIRV-Tools-Dir}/source/opt/inst_bindless_check_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/inst_bindless_check_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/inst_buff_addr_check_pass.cpp
+    ${SPIRV-Tools-Dir}/source/opt/inst_buff_addr_check_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/inst_debug_printf_pass.cpp
+    ${SPIRV-Tools-Dir}/source/opt/inst_debug_printf_pass.h
     ${SPIRV-Tools-Dir}/source/opt/ir_builder.h
     ${SPIRV-Tools-Dir}/source/opt/ir_context.cpp
     ${SPIRV-Tools-Dir}/source/opt/ir_context.h
@@ -93,8 +117,6 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/local_single_block_elim_pass.h
     ${SPIRV-Tools-Dir}/source/opt/local_single_store_elim_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/local_single_store_elim_pass.h
-    ${SPIRV-Tools-Dir}/source/opt/local_ssa_elim_pass.cpp
-    ${SPIRV-Tools-Dir}/source/opt/local_ssa_elim_pass.h
     ${SPIRV-Tools-Dir}/source/opt/log.h
     ${SPIRV-Tools-Dir}/source/opt/loop_dependence.cpp
     ${SPIRV-Tools-Dir}/source/opt/loop_dependence.h
@@ -132,8 +154,6 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/pch_source_opt.h
     ${SPIRV-Tools-Dir}/source/opt/private_to_local_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/private_to_local_pass.h
-    ${SPIRV-Tools-Dir}/source/opt/process_lines_pass.cpp
-    ${SPIRV-Tools-Dir}/source/opt/process_lines_pass.h
     ${SPIRV-Tools-Dir}/source/opt/propagator.cpp
     ${SPIRV-Tools-Dir}/source/opt/propagator.h
     ${SPIRV-Tools-Dir}/source/opt/reduce_load_size.cpp
@@ -143,6 +163,8 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/reflect.h
     ${SPIRV-Tools-Dir}/source/opt/register_pressure.cpp
     ${SPIRV-Tools-Dir}/source/opt/register_pressure.h
+    ${SPIRV-Tools-Dir}/source/opt/relax_float_ops_pass.cpp
+    ${SPIRV-Tools-Dir}/source/opt/relax_float_ops_pass.h
     ${SPIRV-Tools-Dir}/source/opt/remove_duplicates_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/remove_duplicates_pass.h
     ${SPIRV-Tools-Dir}/source/opt/replace_invalid_opc.cpp
@@ -174,10 +196,14 @@ target_sources(SPIRV-Tools-opt
     ${SPIRV-Tools-Dir}/source/opt/type_manager.h
     ${SPIRV-Tools-Dir}/source/opt/unify_const_pass.cpp
     ${SPIRV-Tools-Dir}/source/opt/unify_const_pass.h
+    ${SPIRV-Tools-Dir}/source/opt/upgrade_memory_model.cpp
+    ${SPIRV-Tools-Dir}/source/opt/upgrade_memory_model.h
     ${SPIRV-Tools-Dir}/source/opt/value_number_table.cpp
     ${SPIRV-Tools-Dir}/source/opt/value_number_table.h
     ${SPIRV-Tools-Dir}/source/opt/vector_dce.cpp
     ${SPIRV-Tools-Dir}/source/opt/vector_dce.h
     ${SPIRV-Tools-Dir}/source/opt/workaround1209.cpp
     ${SPIRV-Tools-Dir}/source/opt/workaround1209.h
+    ${SPIRV-Tools-Dir}/source/opt/wrap_opkill.cpp
+    ${SPIRV-Tools-Dir}/source/opt/wrap_opkill.h
 )

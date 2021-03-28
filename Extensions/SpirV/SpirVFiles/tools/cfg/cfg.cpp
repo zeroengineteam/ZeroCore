@@ -44,7 +44,7 @@ Options:
       argv0, argv0);
 }
 
-static const auto kDefaultEnvironment = SPV_ENV_UNIVERSAL_1_2;
+static const auto kDefaultEnvironment = SPV_ENV_UNIVERSAL_1_5;
 
 int main(int argc, char** argv) {
   const char* inFile = nullptr;
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 
   // Read the input binary.
   std::vector<uint32_t> contents;
-  if (!ReadFile<uint32_t>(inFile, "rb", &contents)) return 1;
+  if (!ReadBinaryFile<uint32_t>(inFile, &contents)) return 1;
   spv_context context = spvContextCreate(kDefaultEnvironment);
   spv_diagnostic diagnostic = nullptr;
 

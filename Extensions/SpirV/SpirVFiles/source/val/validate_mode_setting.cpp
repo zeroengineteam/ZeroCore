@@ -33,17 +33,17 @@ spv_result_t ValidateEntryPoint(ValidationState_t& _, const Instruction* inst) {
            << "OpEntryPoint Entry Point <id> '" << _.getIdName(entry_point_id)
            << "' is not a function.";
   }
-  // don't check kernel function signatures
+
+  // Only check the shader execution models
   const SpvExecutionModel execution_model =
       inst->GetOperandAs<SpvExecutionModel>(0);
   if (execution_model != SpvExecutionModelKernel) {
-    // TODO: Check the entry point signature is void main(void), may be subject
-    // to change
     const auto entry_point_type_id = entry_point->GetOperandAs<uint32_t>(3);
     const auto entry_point_type = _.FindDef(entry_point_type_id);
     if (!entry_point_type || 3 != entry_point_type->words().size()) {
       return _.diag(SPV_ERROR_INVALID_ID, inst)
-             << "OpEntryPoint Entry Point <id> '" << _.getIdName(entry_point_id)
+             << _.VkErrorID(4633) << "OpEntryPoint Entry Point <id> '"
+             << _.getIdName(entry_point_id)
              << "'s function parameter count is not zero.";
     }
   }
@@ -51,7 +51,8 @@ spv_result_t ValidateEntryPoint(ValidationState_t& _, const Instruction* inst) {
   auto return_type = _.FindDef(entry_point->type_id());
   if (!return_type || SpvOpTypeVoid != return_type->opcode()) {
     return _.diag(SPV_ERROR_INVALID_ID, inst)
-           << "OpEntryPoint Entry Point <id> '" << _.getIdName(entry_point_id)
+           << _.VkErrorID(4633) << "OpEntryPoint Entry Point <id> '"
+           << _.getIdName(entry_point_id)
            << "'s function return type is not void.";
   }
 
@@ -90,6 +91,26 @@ spv_result_t ValidateEntryPoint(ValidationState_t& _, const Instruction* inst) {
                  << "Fragment execution model entry points can specify at most "
                     "one of DepthGreater, DepthLess or DepthUnchanged "
                     "execution modes.";
+        }
+        if (execution_modes &&
+            1 < std::count_if(
+                    execution_modes->begin(), execution_modes->end(),
+                    [](const SpvExecutionMode& mode) {
+                      switch (mode) {
+                        case SpvExecutionModePixelInterlockOrderedEXT:
+                        case SpvExecutionModePixelInterlockUnorderedEXT:
+                        case SpvExecutionModeSampleInterlockOrderedEXT:
+                        case SpvExecutionModeSampleInterlockUnorderedEXT:
+                        case SpvExecutionModeShadingRateInterlockOrderedEXT:
+                        case SpvExecutionModeShadingRateInterlockUnorderedEXT:
+                          return true;
+                        default:
+                          return false;
+                      }
+                    })) {
+          return _.diag(SPV_ERROR_INVALID_DATA, inst)
+                 << "Fragment execution model entry points can specify at most "
+                    "one fragment shader interlock execution mode.";
         }
         break;
       case SpvExecutionModelTessellationControl:
@@ -207,6 +228,7 @@ spv_result_t ValidateEntryPoint(ValidationState_t& _, const Instruction* inst) {
           }
           if (!ok) {
             return _.diag(SPV_ERROR_INVALID_DATA, inst)
+                   << _.VkErrorID(4683)
                    << "In the Vulkan environment, GLCompute execution model "
                       "entry points require either the LocalSize execution "
                       "mode or an object decorated with WorkgroupSize must be "
@@ -236,6 +258,36 @@ spv_result_t ValidateExecutionMode(ValidationState_t& _,
   }
 
   const auto mode = inst->GetOperandAs<SpvExecutionMode>(1);
+  if (inst->opcode() == SpvOpExecutionModeId) {
+    size_t operand_count = inst->operands().size();
+    for (size_t i = 2; i < operand_count; ++i) {
+      const auto operand_id = inst->GetOperandAs<uint32_t>(2);
+      const auto* operand_inst = _.FindDef(operand_id);
+      if (mode == SpvExecutionModeSubgroupsPerWorkgroupId ||
+          mode == SpvExecutionModeLocalSizeHintId ||
+          mode == SpvExecutionModeLocalSizeId) {
+        if (!spvOpcodeIsConstant(operand_inst->opcode())) {
+          return _.diag(SPV_ERROR_INVALID_ID, inst)
+                 << "For OpExecutionModeId all Extra Operand ids must be "
+                    "constant "
+                    "instructions.";
+        }
+      } else {
+        return _.diag(SPV_ERROR_INVALID_ID, inst)
+               << "OpExecutionModeId is only valid when the Mode operand is an "
+                  "execution mode that takes Extra Operands that are id "
+                  "operands.";
+      }
+    }
+  } else if (mode == SpvExecutionModeSubgroupsPerWorkgroupId ||
+             mode == SpvExecutionModeLocalSizeHintId ||
+             mode == SpvExecutionModeLocalSizeId) {
+    return _.diag(SPV_ERROR_INVALID_DATA, inst)
+           << "OpExecutionMode is only valid when the Mode operand is an "
+              "execution mode that takes no Extra Operands, or takes Extra "
+              "Operands that are not id operands.";
+  }
+
   const auto* models = _.GetExecutionModels(entry_point_id);
   switch (mode) {
     case SpvExecutionModeInvocations:
@@ -344,8 +396,15 @@ spv_result_t ValidateExecutionMode(ValidationState_t& _,
     case SpvExecutionModeOriginLowerLeft:
     case SpvExecutionModeEarlyFragmentTests:
     case SpvExecutionModeDepthReplacing:
+    case SpvExecutionModeDepthGreater:
     case SpvExecutionModeDepthLess:
     case SpvExecutionModeDepthUnchanged:
+    case SpvExecutionModePixelInterlockOrderedEXT:
+    case SpvExecutionModePixelInterlockUnorderedEXT:
+    case SpvExecutionModeSampleInterlockOrderedEXT:
+    case SpvExecutionModeSampleInterlockUnorderedEXT:
+    case SpvExecutionModeShadingRateInterlockOrderedEXT:
+    case SpvExecutionModeShadingRateInterlockUnorderedEXT:
       if (!std::all_of(models->begin(), models->end(),
                        [](const SpvExecutionModel& model) {
                          return model == SpvExecutionModelFragment;
@@ -401,16 +460,54 @@ spv_result_t ValidateExecutionMode(ValidationState_t& _,
   if (spvIsVulkanEnv(_.context()->target_env)) {
     if (mode == SpvExecutionModeOriginLowerLeft) {
       return _.diag(SPV_ERROR_INVALID_DATA, inst)
+             << _.VkErrorID(4653)
              << "In the Vulkan environment, the OriginLowerLeft execution mode "
                 "must not be used.";
     }
     if (mode == SpvExecutionModePixelCenterInteger) {
       return _.diag(SPV_ERROR_INVALID_DATA, inst)
+             << _.VkErrorID(4654)
              << "In the Vulkan environment, the PixelCenterInteger execution "
                 "mode must not be used.";
     }
   }
 
+  return SPV_SUCCESS;
+}
+
+spv_result_t ValidateMemoryModel(ValidationState_t& _,
+                                 const Instruction* inst) {
+  // Already produced an error if multiple memory model instructions are
+  // present.
+  if (_.memory_model() != SpvMemoryModelVulkanKHR &&
+      _.HasCapability(SpvCapabilityVulkanMemoryModelKHR)) {
+    return _.diag(SPV_ERROR_INVALID_DATA, inst)
+           << "VulkanMemoryModelKHR capability must only be specified if "
+              "the VulkanKHR memory model is used.";
+  }
+
+  if (spvIsOpenCLEnv(_.context()->target_env)) {
+    if ((_.addressing_model() != SpvAddressingModelPhysical32) &&
+        (_.addressing_model() != SpvAddressingModelPhysical64)) {
+      return _.diag(SPV_ERROR_INVALID_DATA, inst)
+             << "Addressing model must be Physical32 or Physical64 "
+             << "in the OpenCL environment.";
+    }
+    if (_.memory_model() != SpvMemoryModelOpenCL) {
+      return _.diag(SPV_ERROR_INVALID_DATA, inst)
+             << "Memory model must be OpenCL in the OpenCL environment.";
+    }
+  }
+
+  if (spvIsVulkanEnv(_.context()->target_env)) {
+    if ((_.addressing_model() != SpvAddressingModelLogical) &&
+        (_.addressing_model() != SpvAddressingModelPhysicalStorageBuffer64)) {
+      return _.diag(SPV_ERROR_INVALID_DATA, inst)
+             << _.VkErrorID(4635)
+             << "Addressing model must be Logical or PhysicalStorageBuffer64 "
+             << "in the Vulkan environment.";
+    }
+  }
   return SPV_SUCCESS;
 }
 
@@ -424,6 +521,9 @@ spv_result_t ModeSettingPass(ValidationState_t& _, const Instruction* inst) {
     case SpvOpExecutionMode:
     case SpvOpExecutionModeId:
       if (auto error = ValidateExecutionMode(_, inst)) return error;
+      break;
+    case SpvOpMemoryModel:
+      if (auto error = ValidateMemoryModel(_, inst)) return error;
       break;
     default:
       break;

@@ -108,21 +108,29 @@ void BasicBlock::KillAllInsts(bool killLabel) {
 
 void BasicBlock::ForEachSuccessorLabel(
     const std::function<void(const uint32_t)>& f) const {
+  WhileEachSuccessorLabel([f](const uint32_t l) {
+    f(l);
+    return true;
+  });
+}
+
+bool BasicBlock::WhileEachSuccessorLabel(
+    const std::function<bool(const uint32_t)>& f) const {
   const auto br = &insts_.back();
   switch (br->opcode()) {
-    case SpvOpBranch: {
-      f(br->GetOperand(0).words[0]);
-    } break;
+    case SpvOpBranch:
+      return f(br->GetOperand(0).words[0]);
     case SpvOpBranchConditional:
     case SpvOpSwitch: {
       bool is_first = true;
-      br->ForEachInId([&is_first, &f](const uint32_t* idp) {
-        if (!is_first) f(*idp);
+      return br->WhileEachInId([&is_first, &f](const uint32_t* idp) {
+        if (!is_first) return f(*idp);
         is_first = false;
+        return true;
       });
-    } break;
+    }
     default:
-      break;
+      return true;
   }
 }
 
@@ -184,6 +192,12 @@ uint32_t BasicBlock::MergeBlockIdIfAny() const {
   return mbid;
 }
 
+uint32_t BasicBlock::MergeBlockId() const {
+  uint32_t mbid = MergeBlockIdIfAny();
+  assert(mbid && "Expected block to have a corresponding merge block");
+  return mbid;
+}
+
 uint32_t BasicBlock::ContinueBlockIdIfAny() const {
   auto merge_ii = cend();
   --merge_ii;
@@ -194,6 +208,12 @@ uint32_t BasicBlock::ContinueBlockIdIfAny() const {
       cbid = merge_ii->GetSingleWordInOperand(kLoopMergeContinueBlockIdInIdx);
     }
   }
+  return cbid;
+}
+
+uint32_t BasicBlock::ContinueBlockId() const {
+  uint32_t cbid = ContinueBlockIdIfAny();
+  assert(cbid && "Expected block to have a corresponding continue target");
   return cbid;
 }
 
@@ -210,7 +230,7 @@ std::string BasicBlock::PrettyPrint(uint32_t options) const {
   std::ostringstream str;
   ForEachInst([&str, options](const Instruction* inst) {
     str << inst->PrettyPrint(options);
-    if (!IsTerminatorInst(inst->opcode())) {
+    if (!spvOpcodeIsBlockTerminator(inst->opcode())) {
       str << std::endl;
     }
   });
@@ -228,7 +248,8 @@ BasicBlock* BasicBlock::SplitBasicBlock(IRContext* context, uint32_t label_id,
   function_->InsertBasicBlockAfter(std::move(new_block_temp), this);
 
   new_block->insts_.Splice(new_block->end(), &insts_, iter, end());
-  new_block->SetParent(GetParent());
+  assert(new_block->GetParent() == GetParent() &&
+         "The parent should already be set appropriately.");
 
   context->AnalyzeDefUse(new_block->GetLabelInst());
 
