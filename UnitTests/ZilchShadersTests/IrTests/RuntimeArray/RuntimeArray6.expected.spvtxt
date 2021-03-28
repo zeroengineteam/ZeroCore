@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 76
+; Bound: 79
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
@@ -55,6 +55,8 @@
        %void = OpTypeVoid
 %_ptr_Function_void = OpTypePointer Function %void
           %8 = OpTypeFunction %void %_ptr_Function_RuntimeArray6
+       %uint = OpTypeInt 32 0
+%_ptr_Function_uint = OpTypePointer Function %uint
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float
     %v2float = OpTypeVector %float 2
@@ -65,7 +67,7 @@
 %_ptr_Function_v4float = OpTypePointer Function %v4float
 %ParticleData = OpTypeStruct %float %v2float %v3float %v4float
 %_ptr_Function_ParticleData = OpTypePointer Function %ParticleData
-         %19 = OpTypeFunction %void %_ptr_Function_ParticleData
+         %21 = OpTypeFunction %void %_ptr_Function_ParticleData
       %int_0 = OpConstant %int 0
     %float_0 = OpConstant %float 0
       %int_1 = OpConstant %int 1
@@ -77,73 +79,74 @@
 %_ptr_StorageBuffer_RuntimeArray_ParticleData_Buffer = OpTypePointer StorageBuffer %RuntimeArray_ParticleData_Buffer
 %Data_RuntimeArray6 = OpVariable %_ptr_StorageBuffer_RuntimeArray_ParticleData_Buffer StorageBuffer
 %_ptr_StorageBuffer_ParticleData = OpTypePointer StorageBuffer %ParticleData
-         %25 = OpTypeFunction %void
+         %27 = OpTypeFunction %void
        %Main = OpFunction %void None %8
        %self = OpFunctionParameter %_ptr_Function_RuntimeArray6
-         %34 = OpLabel
+         %36 = OpLabel
       %count = OpVariable %_ptr_Function_int Function
    %particle = OpVariable %_ptr_Function_ParticleData Function
-         %37 = OpArrayLength %int %Data_RuntimeArray6 0
-               OpStore %count %37
-         %38 = OpAccessChain %_ptr_StorageBuffer_ParticleData %Data_RuntimeArray6 %int_0 %int_0
-         %39 = OpLoad %ParticleData %38
-               OpStore %particle %39
+         %39 = OpArrayLength %uint %Data_RuntimeArray6 0
+         %40 = OpBitcast %int %39
+               OpStore %count %40
+         %41 = OpAccessChain %_ptr_StorageBuffer_ParticleData %Data_RuntimeArray6 %int_0 %int_0
+         %42 = OpLoad %ParticleData %41
+               OpStore %particle %42
                OpReturn
                OpFunctionEnd
-%PreConstructor_ParticleData = OpFunction %void None %19
+%PreConstructor_ParticleData = OpFunction %void None %21
      %self_0 = OpFunctionParameter %_ptr_Function_ParticleData
-         %42 = OpLabel
-         %43 = OpAccessChain %_ptr_Function_float %self_0 %int_0
-               OpStore %43 %float_0
-         %44 = OpAccessChain %_ptr_Function_v2float %self_0 %int_1
-         %45 = OpCompositeConstruct %v2float %float_0 %float_0
-               OpStore %44 %45
-         %46 = OpAccessChain %_ptr_Function_v3float %self_0 %int_2
-         %47 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
-               OpStore %46 %47
-         %48 = OpAccessChain %_ptr_Function_v4float %self_0 %int_3
-         %49 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
-               OpStore %48 %49
+         %45 = OpLabel
+         %46 = OpAccessChain %_ptr_Function_float %self_0 %int_0
+               OpStore %46 %float_0
+         %47 = OpAccessChain %_ptr_Function_v2float %self_0 %int_1
+         %48 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %47 %48
+         %49 = OpAccessChain %_ptr_Function_v3float %self_0 %int_2
+         %50 = OpCompositeConstruct %v3float %float_0 %float_0 %float_0
+               OpStore %49 %50
+         %51 = OpAccessChain %_ptr_Function_v4float %self_0 %int_3
+         %52 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %51 %52
                OpReturn
                OpFunctionEnd
-%DefaultConstructor = OpFunction %void None %19
+%DefaultConstructor = OpFunction %void None %21
      %self_1 = OpFunctionParameter %_ptr_Function_ParticleData
-         %52 = OpLabel
-         %53 = OpFunctionCall %void %PreConstructor_ParticleData %self_1
+         %55 = OpLabel
+         %56 = OpFunctionCall %void %PreConstructor_ParticleData %self_1
                OpReturn
                OpFunctionEnd
 %PreConstructor_RuntimeArray6 = OpFunction %void None %8
      %self_2 = OpFunctionParameter %_ptr_Function_RuntimeArray6
-         %56 = OpLabel
+         %59 = OpLabel
                OpReturn
                OpFunctionEnd
 %DefaultConstructor_0 = OpFunction %void None %8
      %self_3 = OpFunctionParameter %_ptr_Function_RuntimeArray6
-         %59 = OpLabel
-         %60 = OpFunctionCall %void %PreConstructor_RuntimeArray6 %self_3
+         %62 = OpLabel
+         %63 = OpFunctionCall %void %PreConstructor_RuntimeArray6 %self_3
                OpReturn
                OpFunctionEnd
 %CopyInputs_Main = OpFunction %void None %8
      %self_4 = OpFunctionParameter %_ptr_Function_RuntimeArray6
-         %63 = OpLabel
+         %66 = OpLabel
                OpReturn
                OpFunctionEnd
 %CopyOutputs_Main = OpFunction %void None %8
      %self_5 = OpFunctionParameter %_ptr_Function_RuntimeArray6
-         %66 = OpLabel
+         %69 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main_RuntimeArray6 = OpFunction %void None %25
-         %68 = OpLabel
+%EntryPoint_Main_RuntimeArray6 = OpFunction %void None %27
+         %71 = OpLabel
      %self_6 = OpVariable %_ptr_Function_RuntimeArray6 Function
-         %70 = OpFunctionCall %void %InitializeGlobals
-         %71 = OpFunctionCall %void %DefaultConstructor_0 %self_6
-         %72 = OpFunctionCall %void %CopyInputs_Main %self_6
-         %73 = OpFunctionCall %void %Main %self_6
-         %74 = OpFunctionCall %void %CopyOutputs_Main %self_6
+         %73 = OpFunctionCall %void %InitializeGlobals
+         %74 = OpFunctionCall %void %DefaultConstructor_0 %self_6
+         %75 = OpFunctionCall %void %CopyInputs_Main %self_6
+         %76 = OpFunctionCall %void %Main %self_6
+         %77 = OpFunctionCall %void %CopyOutputs_Main %self_6
                OpReturn
                OpFunctionEnd
-%InitializeGlobals = OpFunction %void None %25
-         %75 = OpLabel
+%InitializeGlobals = OpFunction %void None %27
+         %78 = OpLabel
                OpReturn
                OpFunctionEnd

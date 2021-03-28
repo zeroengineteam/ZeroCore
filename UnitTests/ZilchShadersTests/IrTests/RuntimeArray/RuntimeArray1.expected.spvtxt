@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 51
+; Bound: 54
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
@@ -42,6 +42,8 @@
        %void = OpTypeVoid
 %_ptr_Function_void = OpTypePointer Function %void
           %8 = OpTypeFunction %void %_ptr_Function_RuntimeArray1
+       %uint = OpTypeInt 32 0
+%_ptr_Function_uint = OpTypePointer Function %uint
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float
 %_runtimearr_float = OpTypeRuntimeArray %float
@@ -51,54 +53,55 @@
 %Data_RuntimeArray1 = OpVariable %_ptr_StorageBuffer_RuntimeArray_Real_Buffer StorageBuffer
 %_ptr_StorageBuffer_float = OpTypePointer StorageBuffer %float
       %int_0 = OpConstant %int 0
-         %16 = OpTypeFunction %void
+         %18 = OpTypeFunction %void
        %Main = OpFunction %void None %8
        %self = OpFunctionParameter %_ptr_Function_RuntimeArray1
-         %21 = OpLabel
+         %23 = OpLabel
       %count = OpVariable %_ptr_Function_int Function
       %value = OpVariable %_ptr_Function_float Function
-         %24 = OpArrayLength %int %Data_RuntimeArray1 0
-               OpStore %count %24
-         %25 = OpAccessChain %_ptr_StorageBuffer_float %Data_RuntimeArray1 %int_0 %int_0
-         %26 = OpLoad %float %25
-               OpStore %value %26
-         %27 = OpAccessChain %_ptr_StorageBuffer_float %Data_RuntimeArray1 %int_0 %int_0
-         %28 = OpLoad %float %value
-               OpStore %27 %28
+         %26 = OpArrayLength %uint %Data_RuntimeArray1 0
+         %27 = OpBitcast %int %26
+               OpStore %count %27
+         %28 = OpAccessChain %_ptr_StorageBuffer_float %Data_RuntimeArray1 %int_0 %int_0
+         %29 = OpLoad %float %28
+               OpStore %value %29
+         %30 = OpAccessChain %_ptr_StorageBuffer_float %Data_RuntimeArray1 %int_0 %int_0
+         %31 = OpLoad %float %value
+               OpStore %30 %31
                OpReturn
                OpFunctionEnd
 %PreConstructor_RuntimeArray1 = OpFunction %void None %8
      %self_0 = OpFunctionParameter %_ptr_Function_RuntimeArray1
-         %31 = OpLabel
+         %34 = OpLabel
                OpReturn
                OpFunctionEnd
 %DefaultConstructor = OpFunction %void None %8
      %self_1 = OpFunctionParameter %_ptr_Function_RuntimeArray1
-         %34 = OpLabel
-         %35 = OpFunctionCall %void %PreConstructor_RuntimeArray1 %self_1
+         %37 = OpLabel
+         %38 = OpFunctionCall %void %PreConstructor_RuntimeArray1 %self_1
                OpReturn
                OpFunctionEnd
 %CopyInputs_Main = OpFunction %void None %8
      %self_2 = OpFunctionParameter %_ptr_Function_RuntimeArray1
-         %38 = OpLabel
+         %41 = OpLabel
                OpReturn
                OpFunctionEnd
 %CopyOutputs_Main = OpFunction %void None %8
      %self_3 = OpFunctionParameter %_ptr_Function_RuntimeArray1
-         %41 = OpLabel
+         %44 = OpLabel
                OpReturn
                OpFunctionEnd
-%EntryPoint_Main_RuntimeArray1 = OpFunction %void None %16
-         %43 = OpLabel
+%EntryPoint_Main_RuntimeArray1 = OpFunction %void None %18
+         %46 = OpLabel
      %self_4 = OpVariable %_ptr_Function_RuntimeArray1 Function
-         %45 = OpFunctionCall %void %InitializeGlobals
-         %46 = OpFunctionCall %void %DefaultConstructor %self_4
-         %47 = OpFunctionCall %void %CopyInputs_Main %self_4
-         %48 = OpFunctionCall %void %Main %self_4
-         %49 = OpFunctionCall %void %CopyOutputs_Main %self_4
+         %48 = OpFunctionCall %void %InitializeGlobals
+         %49 = OpFunctionCall %void %DefaultConstructor %self_4
+         %50 = OpFunctionCall %void %CopyInputs_Main %self_4
+         %51 = OpFunctionCall %void %Main %self_4
+         %52 = OpFunctionCall %void %CopyOutputs_Main %self_4
                OpReturn
                OpFunctionEnd
-%InitializeGlobals = OpFunction %void None %16
-         %50 = OpLabel
+%InitializeGlobals = OpFunction %void None %18
+         %53 = OpLabel
                OpReturn
                OpFunctionEnd
