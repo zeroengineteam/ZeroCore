@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 106
+; Bound: 109
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
@@ -153,45 +153,50 @@
 %_PreConstructor_TPair_Real2__TPair_Integer__Real__ = OpFunction %void None %20
      %self_5 = OpFunctionParameter %_ptr_Function_TPair_Real2__TPair_Integer__Real__
          %79 = OpLabel
-         %80 = OpAccessChain %_ptr_Function_v2float %self_5 %int_0
-         %81 = OpCompositeConstruct %v2float %float_0 %float_0
-               OpStore %80 %81
-         %82 = OpAccessChain %_ptr_Function_TPair_Integer__Real_ %self_5 %int_1
-         %83 = OpFunctionCall %void %DefaultConstructor %82
+         %80 = OpVariable %_ptr_Function_TPair_Integer__Real_ Function
+         %81 = OpAccessChain %_ptr_Function_v2float %self_5 %int_0
+         %82 = OpCompositeConstruct %v2float %float_0 %float_0
+               OpStore %81 %82
+         %83 = OpAccessChain %_ptr_Function_TPair_Integer__Real_ %self_5 %int_1
+         %84 = OpLoad %TPair_Integer__Real_ %83
+               OpStore %80 %84
+         %85 = OpFunctionCall %void %DefaultConstructor %80
+         %86 = OpLoad %TPair_Integer__Real_ %80
+               OpStore %83 %86
                OpReturn
                OpFunctionEnd
 %PreConstructor_TemplatePairTest = OpFunction %void None %8
      %self_6 = OpFunctionParameter %_ptr_Function_TemplatePairTest
-         %86 = OpLabel
+         %89 = OpLabel
                OpReturn
                OpFunctionEnd
 %DefaultConstructor_1 = OpFunction %void None %8
      %self_7 = OpFunctionParameter %_ptr_Function_TemplatePairTest
-         %89 = OpLabel
-         %90 = OpFunctionCall %void %PreConstructor_TemplatePairTest %self_7
+         %92 = OpLabel
+         %93 = OpFunctionCall %void %PreConstructor_TemplatePairTest %self_7
                OpReturn
                OpFunctionEnd
 %CopyInputs_Main = OpFunction %void None %8
      %self_8 = OpFunctionParameter %_ptr_Function_TemplatePairTest
-         %93 = OpLabel
+         %96 = OpLabel
                OpReturn
                OpFunctionEnd
 %CopyOutputs_Main = OpFunction %void None %8
      %self_9 = OpFunctionParameter %_ptr_Function_TemplatePairTest
-         %96 = OpLabel
+         %99 = OpLabel
                OpReturn
                OpFunctionEnd
 %EntryPoint_Main_TemplatePairTest = OpFunction %void None %21
-         %98 = OpLabel
+        %101 = OpLabel
     %self_10 = OpVariable %_ptr_Function_TemplatePairTest Function
-        %100 = OpFunctionCall %void %InitializeGlobals
-        %101 = OpFunctionCall %void %DefaultConstructor_1 %self_10
-        %102 = OpFunctionCall %void %CopyInputs_Main %self_10
-        %103 = OpFunctionCall %void %Main %self_10
-        %104 = OpFunctionCall %void %CopyOutputs_Main %self_10
+        %103 = OpFunctionCall %void %InitializeGlobals
+        %104 = OpFunctionCall %void %DefaultConstructor_1 %self_10
+        %105 = OpFunctionCall %void %CopyInputs_Main %self_10
+        %106 = OpFunctionCall %void %Main %self_10
+        %107 = OpFunctionCall %void %CopyOutputs_Main %self_10
                OpReturn
                OpFunctionEnd
 %InitializeGlobals = OpFunction %void None %21
-        %105 = OpLabel
+        %108 = OpLabel
                OpReturn
                OpFunctionEnd

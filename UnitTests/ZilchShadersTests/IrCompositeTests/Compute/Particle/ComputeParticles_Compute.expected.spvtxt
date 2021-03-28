@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.2
 ; Generator: Khronos; 0
-; Bound: 235
+; Bound: 247
 ; Schema: 0
                OpCapability Shader
                OpExtension "SPV_KHR_storage_buffer_storage_class"
@@ -254,156 +254,176 @@
 %PreConstructor_ParticleReader = OpFunction %void None %20
      %self_4 = OpFunctionParameter %_ptr_Function_ParticleReader
         %128 = OpLabel
-        %129 = OpAccessChain %_ptr_Function_v3int %self_4 %int_0
-        %130 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
-               OpStore %129 %130
-        %131 = OpAccessChain %_ptr_Function_ParticleData %self_4 %int_1
-        %132 = OpFunctionCall %void %DefaultConstructor_0 %131
+        %129 = OpVariable %_ptr_Function_ParticleData Function
+        %130 = OpAccessChain %_ptr_Function_v3int %self_4 %int_0
+        %131 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %130 %131
+        %132 = OpAccessChain %_ptr_Function_ParticleData %self_4 %int_1
+        %133 = OpLoad %ParticleData %132
+               OpStore %129 %133
+        %134 = OpFunctionCall %void %DefaultConstructor_0 %129
+        %135 = OpLoad %ParticleData %129
+               OpStore %132 %135
                OpReturn
                OpFunctionEnd
 %DefaultConstructor_1 = OpFunction %void None %28
      %self_5 = OpFunctionParameter %_ptr_Function_ParticleForces
-        %135 = OpLabel
-        %136 = OpFunctionCall %void %PreConstructor_ParticleForces %self_5
+        %138 = OpLabel
+        %139 = OpFunctionCall %void %PreConstructor_ParticleForces %self_5
                OpReturn
                OpFunctionEnd
      %Main_1 = OpFunction %void None %28
      %self_6 = OpFunctionParameter %_ptr_Function_ParticleForces
-        %139 = OpLabel
-        %140 = OpAccessChain %_ptr_Function_ParticleData %self_6 %int_2
-        %141 = OpAccessChain %_ptr_Function_v4float %140 %int_1
-        %142 = OpAccessChain %_ptr_Function_v4float %self_6 %int_0
-        %143 = OpAccessChain %_ptr_Function_float %self_6 %int_1
-        %144 = OpLoad %v4float %142
-        %145 = OpLoad %float %143
-        %146 = OpVectorTimesScalar %v4float %144 %145
-        %147 = OpLoad %v4float %141
-        %148 = OpFAdd %v4float %147 %146
-               OpStore %141 %148
+        %142 = OpLabel
+        %143 = OpAccessChain %_ptr_Function_ParticleData %self_6 %int_2
+        %144 = OpAccessChain %_ptr_Function_v4float %143 %int_1
+        %145 = OpAccessChain %_ptr_Function_v4float %self_6 %int_0
+        %146 = OpAccessChain %_ptr_Function_float %self_6 %int_1
+        %147 = OpLoad %v4float %145
+        %148 = OpLoad %float %146
+        %149 = OpVectorTimesScalar %v4float %147 %148
+        %150 = OpLoad %v4float %144
+        %151 = OpFAdd %v4float %150 %149
+               OpStore %144 %151
                OpReturn
                OpFunctionEnd
 %PreConstructor_ParticleForces = OpFunction %void None %28
      %self_7 = OpFunctionParameter %_ptr_Function_ParticleForces
-        %151 = OpLabel
-        %152 = OpAccessChain %_ptr_Function_v4float %self_7 %int_0
-        %153 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
-               OpStore %152 %153
-        %154 = OpAccessChain %_ptr_Function_float %self_7 %int_1
-               OpStore %154 %float_0
-        %155 = OpAccessChain %_ptr_Function_ParticleData %self_7 %int_2
-        %156 = OpFunctionCall %void %DefaultConstructor_0 %155
+        %154 = OpLabel
+        %155 = OpVariable %_ptr_Function_ParticleData Function
+        %156 = OpAccessChain %_ptr_Function_v4float %self_7 %int_0
+        %157 = OpCompositeConstruct %v4float %float_0 %float_0 %float_0 %float_0
+               OpStore %156 %157
+        %158 = OpAccessChain %_ptr_Function_float %self_7 %int_1
+               OpStore %158 %float_0
+        %159 = OpAccessChain %_ptr_Function_ParticleData %self_7 %int_2
+        %160 = OpLoad %ParticleData %159
+               OpStore %155 %160
+        %161 = OpFunctionCall %void %DefaultConstructor_0 %155
+        %162 = OpLoad %ParticleData %155
+               OpStore %159 %162
                OpReturn
                OpFunctionEnd
 %DefaultConstructor_2 = OpFunction %void None %31
      %self_8 = OpFunctionParameter %_ptr_Function_ParticleIntegration
-        %159 = OpLabel
-        %160 = OpFunctionCall %void %PreConstructor_ParticleIntegration %self_8
+        %165 = OpLabel
+        %166 = OpFunctionCall %void %PreConstructor_ParticleIntegration %self_8
                OpReturn
                OpFunctionEnd
      %Main_2 = OpFunction %void None %31
      %self_9 = OpFunctionParameter %_ptr_Function_ParticleIntegration
-        %163 = OpLabel
-        %164 = OpAccessChain %_ptr_Function_ParticleData %self_9 %int_1
-        %165 = OpAccessChain %_ptr_Function_v4float %164 %int_0
-        %166 = OpAccessChain %_ptr_Function_ParticleData %self_9 %int_1
-        %167 = OpAccessChain %_ptr_Function_v4float %166 %int_1
-        %168 = OpAccessChain %_ptr_Function_float %self_9 %int_0
-        %169 = OpLoad %v4float %167
-        %170 = OpLoad %float %168
-        %171 = OpVectorTimesScalar %v4float %169 %170
-        %172 = OpLoad %v4float %165
-        %173 = OpFAdd %v4float %172 %171
-               OpStore %165 %173
+        %169 = OpLabel
+        %170 = OpAccessChain %_ptr_Function_ParticleData %self_9 %int_1
+        %171 = OpAccessChain %_ptr_Function_v4float %170 %int_0
+        %172 = OpAccessChain %_ptr_Function_ParticleData %self_9 %int_1
+        %173 = OpAccessChain %_ptr_Function_v4float %172 %int_1
+        %174 = OpAccessChain %_ptr_Function_float %self_9 %int_0
+        %175 = OpLoad %v4float %173
+        %176 = OpLoad %float %174
+        %177 = OpVectorTimesScalar %v4float %175 %176
+        %178 = OpLoad %v4float %171
+        %179 = OpFAdd %v4float %178 %177
+               OpStore %171 %179
                OpReturn
                OpFunctionEnd
 %PreConstructor_ParticleIntegration = OpFunction %void None %31
     %self_10 = OpFunctionParameter %_ptr_Function_ParticleIntegration
-        %176 = OpLabel
-        %177 = OpAccessChain %_ptr_Function_float %self_10 %int_0
-               OpStore %177 %float_0
-        %178 = OpAccessChain %_ptr_Function_ParticleData %self_10 %int_1
-        %179 = OpFunctionCall %void %DefaultConstructor_0 %178
+        %182 = OpLabel
+        %183 = OpVariable %_ptr_Function_ParticleData Function
+        %184 = OpAccessChain %_ptr_Function_float %self_10 %int_0
+               OpStore %184 %float_0
+        %185 = OpAccessChain %_ptr_Function_ParticleData %self_10 %int_1
+        %186 = OpLoad %ParticleData %185
+               OpStore %183 %186
+        %187 = OpFunctionCall %void %DefaultConstructor_0 %183
+        %188 = OpLoad %ParticleData %183
+               OpStore %185 %188
                OpReturn
                OpFunctionEnd
 %DefaultConstructor_3 = OpFunction %void None %34
     %self_11 = OpFunctionParameter %_ptr_Function_ParticleWriter
-        %182 = OpLabel
-        %183 = OpFunctionCall %void %PreConstructor_ParticleWriter %self_11
+        %191 = OpLabel
+        %192 = OpFunctionCall %void %PreConstructor_ParticleWriter %self_11
                OpReturn
                OpFunctionEnd
      %Main_3 = OpFunction %void None %34
     %self_12 = OpFunctionParameter %_ptr_Function_ParticleWriter
-        %186 = OpLabel
-        %187 = OpAccessChain %_ptr_Function_v3int %self_12 %int_0
-        %188 = OpAccessChain %_ptr_Function_int %187 %int_0
-        %189 = OpLoad %int %188
-        %190 = OpAccessChain %_ptr_StorageBuffer_ParticleData %Particles %int_0 %189
-        %191 = OpAccessChain %_ptr_Function_ParticleData %self_12 %int_1
-        %192 = OpLoad %ParticleData %191
-               OpStore %190 %192
+        %195 = OpLabel
+        %196 = OpAccessChain %_ptr_Function_v3int %self_12 %int_0
+        %197 = OpAccessChain %_ptr_Function_int %196 %int_0
+        %198 = OpLoad %int %197
+        %199 = OpAccessChain %_ptr_StorageBuffer_ParticleData %Particles %int_0 %198
+        %200 = OpAccessChain %_ptr_Function_ParticleData %self_12 %int_1
+        %201 = OpLoad %ParticleData %200
+               OpStore %199 %201
                OpReturn
                OpFunctionEnd
 %PreConstructor_ParticleWriter = OpFunction %void None %34
     %self_13 = OpFunctionParameter %_ptr_Function_ParticleWriter
-        %195 = OpLabel
-        %196 = OpAccessChain %_ptr_Function_v3int %self_13 %int_0
-        %197 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
-               OpStore %196 %197
-        %198 = OpAccessChain %_ptr_Function_ParticleData %self_13 %int_1
-        %199 = OpFunctionCall %void %DefaultConstructor_0 %198
+        %204 = OpLabel
+        %205 = OpVariable %_ptr_Function_ParticleData Function
+        %206 = OpAccessChain %_ptr_Function_v3int %self_13 %int_0
+        %207 = OpCompositeConstruct %v3int %int_0 %int_0 %int_0
+               OpStore %206 %207
+        %208 = OpAccessChain %_ptr_Function_ParticleData %self_13 %int_1
+        %209 = OpLoad %ParticleData %208
+               OpStore %205 %209
+        %210 = OpFunctionCall %void %DefaultConstructor_0 %205
+        %211 = OpLoad %ParticleData %205
+               OpStore %208 %211
                OpReturn
                OpFunctionEnd
 %PreConstructor_ComputeParticles_Compute = OpFunction %void None %14
     %self_14 = OpFunctionParameter %_ptr_Function_ComputeParticles_Compute
-        %202 = OpLabel
-        %203 = OpAccessChain %_ptr_Function_v3int %self_14 %int_0_0
-        %204 = OpCompositeConstruct %v3int %int_0_0 %int_0_0 %int_0_0
-               OpStore %203 %204
-        %205 = OpAccessChain %_ptr_Function_v4float %self_14 %int_1_0
-        %206 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
-               OpStore %205 %206
-        %207 = OpAccessChain %_ptr_Function_float %self_14 %int_2_0
-               OpStore %207 %float_0_0
+        %214 = OpLabel
+        %215 = OpAccessChain %_ptr_Function_v3int %self_14 %int_0_0
+        %216 = OpCompositeConstruct %v3int %int_0_0 %int_0_0 %int_0_0
+               OpStore %215 %216
+        %217 = OpAccessChain %_ptr_Function_v4float %self_14 %int_1_0
+        %218 = OpCompositeConstruct %v4float %float_0_0 %float_0_0 %float_0_0 %float_0_0
+               OpStore %217 %218
+        %219 = OpAccessChain %_ptr_Function_float %self_14 %int_2_0
+               OpStore %219 %float_0_0
                OpReturn
                OpFunctionEnd
 %DefaultConstructor_4 = OpFunction %void None %14
     %self_15 = OpFunctionParameter %_ptr_Function_ComputeParticles_Compute
-        %210 = OpLabel
-        %211 = OpFunctionCall %void %PreConstructor_ComputeParticles_Compute %self_15
+        %222 = OpLabel
+        %223 = OpFunctionCall %void %PreConstructor_ComputeParticles_Compute %self_15
                OpReturn
                OpFunctionEnd
 %CopyInputs_Main = OpFunction %void None %14
     %self_16 = OpFunctionParameter %_ptr_Function_ComputeParticles_Compute
-        %214 = OpLabel
-        %215 = OpAccessChain %_ptr_Function_v3int %self_16 %int_0_0
-        %216 = OpLoad %v3int %GlobalInvocationId
-               OpStore %215 %216
-        %217 = OpAccessChain %_ptr_Uniform_v4float %Material %int_0_0
-        %218 = OpAccessChain %_ptr_Function_v4float %self_16 %int_1_0
-        %219 = OpLoad %v4float %217
-               OpStore %218 %219
-        %220 = OpAccessChain %_ptr_Uniform_float %Frame_Data %int_0_0
-        %221 = OpAccessChain %_ptr_Function_float %self_16 %int_2_0
-        %222 = OpLoad %float %220
-               OpStore %221 %222
+        %226 = OpLabel
+        %227 = OpAccessChain %_ptr_Function_v3int %self_16 %int_0_0
+        %228 = OpLoad %v3int %GlobalInvocationId
+               OpStore %227 %228
+        %229 = OpAccessChain %_ptr_Uniform_v4float %Material %int_0_0
+        %230 = OpAccessChain %_ptr_Function_v4float %self_16 %int_1_0
+        %231 = OpLoad %v4float %229
+               OpStore %230 %231
+        %232 = OpAccessChain %_ptr_Uniform_float %Frame_Data %int_0_0
+        %233 = OpAccessChain %_ptr_Function_float %self_16 %int_2_0
+        %234 = OpLoad %float %232
+               OpStore %233 %234
                OpReturn
                OpFunctionEnd
 %CopyOutputs_Main = OpFunction %void None %14
     %self_17 = OpFunctionParameter %_ptr_Function_ComputeParticles_Compute
-        %225 = OpLabel
+        %237 = OpLabel
                OpReturn
                OpFunctionEnd
 %EntryPoint_Main_ComputeParticles_Compute = OpFunction %void None %42
-        %227 = OpLabel
+        %239 = OpLabel
     %self_18 = OpVariable %_ptr_Function_ComputeParticles_Compute Function
-        %229 = OpFunctionCall %void %InitializeGlobals
-        %230 = OpFunctionCall %void %DefaultConstructor_4 %self_18
-        %231 = OpFunctionCall %void %CopyInputs_Main %self_18
-        %232 = OpFunctionCall %void %Main %self_18
-        %233 = OpFunctionCall %void %CopyOutputs_Main %self_18
+        %241 = OpFunctionCall %void %InitializeGlobals
+        %242 = OpFunctionCall %void %DefaultConstructor_4 %self_18
+        %243 = OpFunctionCall %void %CopyInputs_Main %self_18
+        %244 = OpFunctionCall %void %Main %self_18
+        %245 = OpFunctionCall %void %CopyOutputs_Main %self_18
                OpReturn
                OpFunctionEnd
 %InitializeGlobals = OpFunction %void None %42
-        %234 = OpLabel
+        %246 = OpLabel
                OpReturn
                OpFunctionEnd
