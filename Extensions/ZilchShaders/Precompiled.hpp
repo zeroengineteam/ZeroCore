@@ -13,3 +13,4 @@
 #include "source/spirv_validator_options.h"
 #include "spirv_optimizer_options.h"
 #include "SpirV/SPIRV-Cross/spirv_glsl.hpp"
+#include "source/extensions.h"

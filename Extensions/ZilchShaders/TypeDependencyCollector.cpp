@@ -6,6 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "Precompiled.hpp"
 
+#include "extensions.h"
+
 namespace Zero
 {
 
@@ -158,6 +160,12 @@ void TypeDependencyCollector::AddTypeReference(ZilchShaderIRType* type)
 {
   mReferencedTypes.InsertOrIgnore(type);
   mTypesConstantsAndGlobals.InsertOrIgnore(type);
+
+  // Storage buffers require an extension specification
+  if(type->mStorageClass == spv::StorageClassStorageBuffer)
+  {
+    mRequiredExtensions.InsertOrIgnore(spvtools::kSPV_KHR_storage_buffer_storage_class);
+  }
 }
 
 void TypeDependencyCollector::AddConstantReference(ZilchShaderIROp* op)

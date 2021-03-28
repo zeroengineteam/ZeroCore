@@ -5,6 +5,7 @@
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
+               OpExtension "SPV_KHR_storage_buffer_storage_class"
                OpMemoryModel Logical GLSL450
                OpEntryPoint GLCompute %EntryPoint_Main_ComputeParticles_Compute "EntryPoint_Main_ComputeParticles_Compute" %GlobalInvocationId
                OpExecutionMode %EntryPoint_Main_ComputeParticles_Compute LocalSize 1 1 1

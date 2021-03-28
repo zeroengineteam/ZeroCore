@@ -5,6 +5,7 @@
 ; Schema: 0
                OpCapability Linkage
                OpCapability Shader
+               OpExtension "SPV_KHR_storage_buffer_storage_class"
                OpMemoryModel Logical GLSL450
                OpEntryPoint Fragment %EntryPoint_Main_RuntimeArray4 "EntryPoint_Main_RuntimeArray4"
                OpExecutionMode %EntryPoint_Main_RuntimeArray4 OriginUpperLeft
