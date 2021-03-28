@@ -34,7 +34,7 @@
                OpDecorate %SampledDepthImage_SampleDRefExplicitLod DescriptorSet 0
                OpDecorate %DepthImage_SampleDRefExplicitLod Binding 1
                OpDecorate %DepthImage_SampleDRefExplicitLod DescriptorSet 0
-               OpDecorate %Sampler_SampleDRefExplicitLod Binding 1
+               OpDecorate %Sampler_SampleDRefExplicitLod Binding 2
                OpDecorate %Sampler_SampleDRefExplicitLod DescriptorSet 0
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float

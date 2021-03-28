@@ -39,11 +39,11 @@
                OpDecorate %SampledImage_SampleGradExplicitLod DescriptorSet 0
                OpDecorate %Image_SampleGradExplicitLod Binding 1
                OpDecorate %Image_SampleGradExplicitLod DescriptorSet 0
-               OpDecorate %Sampler_SampleGradExplicitLod Binding 1
+               OpDecorate %Sampler_SampleGradExplicitLod Binding 2
                OpDecorate %Sampler_SampleGradExplicitLod DescriptorSet 0
-               OpDecorate %SampledImageCube_SampleGradExplicitLod Binding 2
+               OpDecorate %SampledImageCube_SampleGradExplicitLod Binding 3
                OpDecorate %SampledImageCube_SampleGradExplicitLod DescriptorSet 0
-               OpDecorate %ImageCube_SampleGradExplicitLod Binding 3
+               OpDecorate %ImageCube_SampleGradExplicitLod Binding 4
                OpDecorate %ImageCube_SampleGradExplicitLod DescriptorSet 0
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float

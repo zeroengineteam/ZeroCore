@@ -38,15 +38,15 @@
                OpDecorate %SampledImage_ImageQueryLod DescriptorSet 0
                OpDecorate %Image_ImageQueryLod Binding 1
                OpDecorate %Image_ImageQueryLod DescriptorSet 0
-               OpDecorate %Sampler_ImageQueryLod Binding 1
+               OpDecorate %Sampler_ImageQueryLod Binding 2
                OpDecorate %Sampler_ImageQueryLod DescriptorSet 0
-               OpDecorate %SampledDepthImage_ImageQueryLod Binding 2
+               OpDecorate %SampledDepthImage_ImageQueryLod Binding 3
                OpDecorate %SampledDepthImage_ImageQueryLod DescriptorSet 0
-               OpDecorate %DepthImage_ImageQueryLod Binding 3
+               OpDecorate %DepthImage_ImageQueryLod Binding 4
                OpDecorate %DepthImage_ImageQueryLod DescriptorSet 0
-               OpDecorate %SampledImageCube_ImageQueryLod Binding 4
+               OpDecorate %SampledImageCube_ImageQueryLod Binding 5
                OpDecorate %SampledImageCube_ImageQueryLod DescriptorSet 0
-               OpDecorate %ImageCube_ImageQueryLod Binding 5
+               OpDecorate %ImageCube_ImageQueryLod Binding 6
                OpDecorate %ImageCube_ImageQueryLod DescriptorSet 0
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float

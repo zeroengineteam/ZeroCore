@@ -32,7 +32,7 @@
                OpDecorate %SampledImage_SampleProjImplicitLod DescriptorSet 0
                OpDecorate %Image_SampleProjImplicitLod Binding 1
                OpDecorate %Image_SampleProjImplicitLod DescriptorSet 0
-               OpDecorate %Sampler_SampleProjImplicitLod Binding 1
+               OpDecorate %Sampler_SampleProjImplicitLod Binding 2
                OpDecorate %Sampler_SampleProjImplicitLod DescriptorSet 0
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float

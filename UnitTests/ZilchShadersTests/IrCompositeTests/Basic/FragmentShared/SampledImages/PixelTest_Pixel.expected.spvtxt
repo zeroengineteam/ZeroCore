@@ -67,13 +67,13 @@
                OpDecorate %SampledImage DescriptorSet 0
                OpDecorate %Image2d Binding 1
                OpDecorate %Image2d DescriptorSet 0
-               OpDecorate %Sampler Binding 1
+               OpDecorate %Sampler Binding 2
                OpDecorate %Sampler DescriptorSet 0
-               OpDecorate %SampledImage2 Binding 2
+               OpDecorate %SampledImage2 Binding 3
                OpDecorate %SampledImage2 DescriptorSet 0
-               OpDecorate %Image2d_Pixel3 Binding 3
+               OpDecorate %Image2d_Pixel3 Binding 4
                OpDecorate %Image2d_Pixel3 DescriptorSet 0
-               OpDecorate %Sampler_Pixel3 Binding 3
+               OpDecorate %Sampler_Pixel3 Binding 5
                OpDecorate %Sampler_Pixel3 DescriptorSet 0
         %int = OpTypeInt 32 1
 %_ptr_Function_int = OpTypePointer Function %int

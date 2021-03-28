@@ -135,7 +135,7 @@ UniformBufferDescription::UniformBufferDescription()
   Set(0, 0, mAllStagesMask, "Uniform");
 }
 
-UniformBufferDescription::UniformBufferDescription(int bindingId, int descriptorSetId)
+UniformBufferDescription::UniformBufferDescription(u32 bindingId, u32 descriptorSetId)
 {
   Set(bindingId, descriptorSetId, mAllStagesMask, "Uniform");
 }
@@ -173,7 +173,7 @@ void UniformBufferDescription::CopyFrom(const UniformBufferDescription& source)
   }
 }
 
-void UniformBufferDescription::Set(int bindingId, int descriptorSetId, ShaderStage::Enum allowedStages, StringParam debugName)
+void UniformBufferDescription::Set(u32 bindingId, u32 descriptorSetId, ShaderStage::Enum allowedStages, StringParam debugName)
 {
   mBindingId = bindingId;
   mDescriptorSetId = descriptorSetId;

@@ -96,7 +96,7 @@
                OpMemberDecorate %ComputeParticles_ComputeFrame_Data 1 Offset 4
                OpDecorate %Frame_Data DescriptorSet 0
                OpDecorate %Frame_Data Binding 0
-               OpDecorate %Particles Binding 0
+               OpDecorate %Particles Binding 1
                OpDecorate %Particles DescriptorSet 0
                OpDecorate %RuntimeArray_ParticleData_Buffer Block
                OpMemberDecorate %RuntimeArray_ParticleData_Buffer 0 Offset 0

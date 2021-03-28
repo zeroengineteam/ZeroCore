@@ -39,7 +39,7 @@
                OpDecorate %SampledImage_PassToFunctions DescriptorSet 0
                OpDecorate %Image_PassToFunctions Binding 1
                OpDecorate %Image_PassToFunctions DescriptorSet 0
-               OpDecorate %Sampler_PassToFunctions Binding 1
+               OpDecorate %Sampler_PassToFunctions Binding 2
                OpDecorate %Sampler_PassToFunctions DescriptorSet 0
       %float = OpTypeFloat 32
 %_ptr_Function_float = OpTypePointer Function %float

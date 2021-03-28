@@ -371,8 +371,7 @@ public:
   /// Recursively decorate a struct (currently setup for runtime arrays)
   void RecursivelyDecorateStructType(BasicBlock* decorationBlock, ZilchShaderIRType* structType, ShaderStageResource& stageResource);
 
-  int FindBindingId(HashSet<int>& usedIds);
-  int FindBindingId(HashSet<int>& usedIds1, HashSet<int>& usedIds2);
+  u32 FindBindingId();
 
   // Copy reflection data from the internal interface info to the entry point
   void CopyReflectionDataToEntryPoint(EntryPointInfo* entryPointInfo, ShaderInterfaceInfo& interfaceInfo);
@@ -408,6 +407,7 @@ public:
   Array<ShaderInterfaceType*> mOutputs;
   HashSet<ZilchShaderIRType*> mUniqueTypes;
   HashSet<ZilchShaderIROp*> mUniqueOps;
+  HashSet<u32> mUsedBindingIds;
 };
 
 }//namespace Zero
