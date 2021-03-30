@@ -930,7 +930,7 @@ Optimizer::PassToken CreateAmdExtToKhrPass() {
 
 // ZeroEdit
 spv_result_t spvOptimizeWithOptions(
-  const spv_const_context context, const spv_const_optimizer_options options,
+  const spv_const_context context, const spv_optimizer_options options,
   const spv_const_binary binary, spv_binary* pBinary, spv_diagnostic* diagnostic)
 {
   spvDiagnosticDestroy(*diagnostic);
@@ -973,7 +973,7 @@ spv_result_t spvOptimizeWithOptions(
     }
   }
   
-  bool success = optimizer.Run(binary->code, binary->wordCount, &optimizerBinaryOutput);
+  bool success = optimizer.Run(binary->code, binary->wordCount, &optimizerBinaryOutput, options);
 
   // Create the c-api output data. This could be improved by making a custom
   // allocator for std::vector that fills out this data to potentially avoid a copy.
