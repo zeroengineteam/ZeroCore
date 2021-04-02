@@ -117,7 +117,6 @@ target_sources(SPIRV-Tools
     ${SPIRV-Tools-Dir}/source/name_mapper.cpp
     ${SPIRV-Tools-Dir}/source/name_mapper.h
     ${SPIRV-Tools-Dir}/source/opcode.cpp
-    ${SPIRV-Tools-Dir}/source/opcode.cpp.orig
     ${SPIRV-Tools-Dir}/source/opcode.h
     ${SPIRV-Tools-Dir}/source/operand.cpp
     ${SPIRV-Tools-Dir}/source/operand.h
