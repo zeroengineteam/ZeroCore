@@ -1,5 +1,5 @@
 # ZeroCore
 The main repository that Zero Engine is built from.
 
-Visit http://downloadlauncher.zeroengine.io/ to get the launcher.
-Visit https://docs.zeroengine.io to view the documentation.
+Visit https://github.com/zeroengineteam/ZeroCore/releases/tag/1.0 to get the launcher.
+Visit https://github.com/zeroengineteam/ZeroDocs to view the documentation.
