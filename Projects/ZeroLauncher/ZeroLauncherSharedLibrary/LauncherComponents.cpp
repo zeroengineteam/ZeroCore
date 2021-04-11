@@ -178,7 +178,7 @@ String ZeroTemplate::GetFullTemplateVersionName()
   // build a string that is SKU[Id1-Id2,Id3,Id4...etc...] for all build ids
   StringBuilder builder;
   builder.Append(mSKU);
-  builder.Append("_");
+  builder.Append("[");
   for(size_t i = 0; i < mBuildIds.Size(); ++i)
   {
     BuildIdRange& idRange = mBuildIds[i];
@@ -193,6 +193,7 @@ String ZeroTemplate::GetFullTemplateVersionName()
     if(i != mBuildIds.Size() - 1)
       builder.Append(",");
   }
+  builder.Append("]");
   return builder.ToString();
 }
 
