@@ -103,6 +103,9 @@ public:
   void ValidateNameOverrideAttribute(ShaderIRAttribute* shaderAttribute);
   void ValidateSingleParamAttribute(ShaderIRAttribute* shaderAttribute, StringParam expectedParamName, Zilch::ConstantType::Enum expectedParamType, bool allowEmptyName);
   void ValidateAttributeNoParameters(ShaderIRAttribute* shaderAttribute);
+  void ValidateAttributeParameters(ShaderIRAttribute* shaderAttribute, HashMap<String, AttributeInfo>& allowedAttributes, StringParam errorTypeName);
+  bool ValidateAttributeParameterSignature(ShaderIRAttribute* shaderAttribute, const AttributeInfo::ParameterSignature& signature) const;
+  bool DoTypesMatch(const AttributeInfo::ParamType& actualType, const AttributeInfo::ParamType& expectedType) const;
   // Validates that the given attribute has all dependency attributes specified
   void ValidateAttributeDependencies(ShaderIRAttribute* shaderAttribute, ShaderIRAttributeList& shaderAttributeList, Array<String>& dependencies);
   // Validates that none of the given attribute names are also present. Needed to have exclusive attribute combinations.
