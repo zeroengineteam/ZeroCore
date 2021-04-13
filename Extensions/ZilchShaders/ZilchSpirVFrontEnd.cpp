@@ -3175,10 +3175,14 @@ BasicBlock* ZilchSpirVFrontEnd::BuildBlockNoStack(StringParam labelDebugName, Zi
 ZilchShaderIROp* ZilchSpirVFrontEnd::BuildIROpNoBlockAdd(OpType opType, ZilchShaderIRType* resultType, ZilchSpirVFrontEndContext* context)
 {
   ZilchShaderIROp* result = new ZilchShaderIROp(opType);
-
-  result->mDebugInfo = context->mDebugInfo;
-  result->mResultType = resultType;
-  context->mDebugInfo.Clear();
+  if(context != nullptr)
+  {
+    result->mDebugInfo = context->mDebugInfo;
+    result->mResultType = resultType;
+    context->mDebugInfo.Clear();
+  }
+  else
+    result->mResultType = resultType;
 
   return result;
 }

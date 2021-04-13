@@ -2055,7 +2055,7 @@ void OpenglRenderer::SetShaderParameters(FrameNode* frameNode, ViewNode* viewNod
       remappedBoneTransforms.PushBack(mRenderQueues->mSkinningBuffer[bufferIndex] * meshData->mBones[meshIndex].mBindTransform);
     }
 
-    GLint location = glGetUniformLocation(mActiveShader, "BoneTransforms");
+    GLint location = glGetUniformLocation(mActiveShader, "MiscData.BoneTransforms");
     glUniformMatrix4fv(location, static_cast<uint>(remappedBoneTransforms.Size()), cTransposeMatrices, remappedBoneTransforms[0].array);
   }
 

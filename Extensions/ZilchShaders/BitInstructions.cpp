@@ -21,7 +21,7 @@ void ResolveIntBitCount(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode*
 // Register function callbacks for all bit operations (see Bit Instructions in the spir-v spec).
 // Some functions aren't implemented here as zilch doesn't have a corresponding function.
 // Everything else should be implemented on the ShaderIntrinsics type.
-void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
+void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
@@ -35,7 +35,7 @@ void RegisterBitOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shader
   // Register ops that are on all integer vector types
   for(size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i];
     String zilchTypeName = zilchType->ToString();
 
     mathTypeResolver.RegisterFunctionResolver(GetStaticFunction(mathType, "CountBits", zilchTypeName), ResolveIntBitCount);
