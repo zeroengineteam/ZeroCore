@@ -805,7 +805,7 @@ void ResolveColor(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* /*fun
   context->PushIRStack(constructOp);
 }
 
-void RegisterColorsOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, TypeGroups& types)
+void RegisterColorsOps(ZilchSpirVFrontEnd* translator, ZilchShaderIRLibrary* shaderLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::Library* coreLibrary = core.GetLibrary();

@@ -110,14 +110,14 @@ void GenerateFSign(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* func
   context->PushIRStack(intSignOp);
 }
 
-void GenerateAngleAndTrigFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void GenerateAngleAndTrigFunctions(SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
 
   for(size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
     String zilchTypeName = zilchType->Name;
 
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "ToRadians", zilchTypeName), BasicExtensionFunction<GLSLstd450Radians>);
@@ -136,14 +136,14 @@ void GenerateAngleAndTrigFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups
   }
 }
 
-void GenerateExponentialFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void GenerateExponentialFunctions(SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
 
   for(size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
     String zilchTypeName = zilchType->Name;
 
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "Pow", zilchTypeName, zilchTypeName), BasicExtensionFunction<GLSLstd450Pow>);
@@ -156,14 +156,14 @@ void GenerateExponentialFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups&
   }
 }
 
-void GenerateCommonFloatFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void GenerateCommonFloatFunctions(SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
 
   for(size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
     String zilchTypeName = zilchType->Name;
 
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "Abs", zilchTypeName), BasicExtensionFunction<GLSLstd450FAbs>);
@@ -183,14 +183,14 @@ void GenerateCommonFloatFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups&
   }
 }
 
-void GenerateCommonIntFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void GenerateCommonIntFunctions(SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
 
   for(size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i];
     String zilchTypeName = zilchType->Name;
 
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "Abs", zilchTypeName), BasicExtensionFunction<GLSLstd450SAbs>);
@@ -202,7 +202,7 @@ void GenerateCommonIntFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& t
   }
 }
 
-void GenerateGeometricFloatFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void GenerateGeometricFloatFunctions(SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
@@ -213,7 +213,7 @@ void GenerateGeometricFloatFunctions(SpirVExtensionLibrary* extLibrary, TypeGrou
   
   for(size_t i = 1; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
     String zilchTypeName = zilchType->Name;
     
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "Distance", zilchTypeName, zilchTypeName), BasicExtensionFunction<GLSLstd450Distance>);
@@ -226,14 +226,14 @@ void GenerateGeometricFloatFunctions(SpirVExtensionLibrary* extLibrary, TypeGrou
   extLibrary->CreateExtInst(GetStaticFunction(mathType, "Cross", real3Name, real3Name), BasicExtensionFunction<GLSLstd450Cross>);
 }
 
-void CreateFloatMatrixFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void CreateFloatMatrixFunctions(SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
 
   for(size_t i = 2; i <= 4; ++i)
   {
-    Zilch::BoundType* zilchType = types.GetMatrixType(i, i)->mZilchType;
+    Zilch::BoundType* zilchType = types.GetMatrixType(i, i);
     String zilchTypeName = zilchType->Name;
 
     extLibrary->CreateExtInst(GetStaticFunction(mathType, "Invert", zilchTypeName), BasicExtensionFunction<GLSLstd450MatrixInverse>);
@@ -242,7 +242,7 @@ void CreateFloatMatrixFunctions(SpirVExtensionLibrary* extLibrary, TypeGroups& t
 }
 
 // Registers callback functions for all of the glsl 450 extension library instructions that exist in zilch
-void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary, SpirVExtensionLibrary* extLibrary, TypeGroups& types)
+void RegisterGlsl450Extensions(ZilchShaderIRLibrary* shaderLibrary, SpirVExtensionLibrary* extLibrary, ZilchTypeGroups& types)
 {
   Zilch::Core& core = Zilch::Core::GetInstance();
   Zilch::BoundType* mathType = core.MathType;
@@ -267,15 +267,15 @@ void AddGlslIntrinsic(Zilch::LibraryBuilder& builder, Zilch::BoundType* type, Sp
 }
 
 /// Adds all relevant glsl extension operations to the ShaderIntrinsics type, including non-supported instructions in zilch. 
-void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder, SpirVExtensionLibrary* extLibrary, Zilch::BoundType* type, TypeGroups& types)
+void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder, SpirVExtensionLibrary* extLibrary, Zilch::BoundType* type, ZilchTypeGroups& types)
 {
-  Zilch::BoundType* realType = types.mRealVectorTypes[0]->mZilchType;
-  Zilch::BoundType* real3Type = types.mRealVectorTypes[2]->mZilchType;
+  Zilch::BoundType* realType = types.mRealVectorTypes[0];
+  Zilch::BoundType* real3Type = types.mRealVectorTypes[2];
 
   // Reals
   for(size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mRealVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mRealVectorTypes[i];
     
     AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450Round, "Round", OneParameter(zilchType), zilchType);
     AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450RoundEven, "RoundEven", OneParameter(zilchType), zilchType);
@@ -334,7 +334,7 @@ void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder, SpirVExtension
   // Integer
   for(size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
   {
-    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i]->mZilchType;
+    Zilch::BoundType* zilchType = types.mIntegerVectorTypes[i];
 
     AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450SAbs, "SAbs", OneParameter(zilchType, "value"), zilchType);
     AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450SSign, "SSign", OneParameter(zilchType, "value"), zilchType);
@@ -349,7 +349,7 @@ void AddGlslExtensionIntrinsicOps(Zilch::LibraryBuilder& builder, SpirVExtension
   // Matrices
   for(size_t i = 2; i <= 4; ++i)
   {
-    Zilch::BoundType* zilchType = types.GetMatrixType(i, i)->mZilchType;
+    Zilch::BoundType* zilchType = types.GetMatrixType(i, i);
     AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450Determinant, "Determinant", OneParameter(zilchType), realType);
     AddGlslIntrinsic(builder, type, extLibrary, GLSLstd450MatrixInverse, "MatrixInverse", OneParameter(zilchType), zilchType);
   }

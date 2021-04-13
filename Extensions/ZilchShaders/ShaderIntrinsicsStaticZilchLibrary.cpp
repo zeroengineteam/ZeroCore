@@ -82,6 +82,7 @@ void ShaderIntrinsicsStaticZilchLibrary::Parse(ZilchSpirVFrontEnd* translator)
 
   // Register the template resolver for fixed array
   shaderLibrary->RegisterTemplateResolver("FixedArray[Type,Integer]", FixedArrayResolver);
+  FixedArrayResolver(translator, shaderLibrary->mZilchLibrary->BoundTypes["FixedArray[Real4x4, 80]"]);
   String runtimeArayResolverName = BuildString(SpirVNameSettings::mRuntimeArrayTypeName, "[Type]");
   shaderLibrary->RegisterTemplateResolver(runtimeArayResolverName, RuntimeArrayResolver);
 
