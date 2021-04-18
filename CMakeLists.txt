@@ -8,7 +8,7 @@
 cmake_minimum_required(VERSION 3.9.1 FATAL_ERROR)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
+set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo Production)
 
 ################################################################################
 # Declare project(s) and set used languages

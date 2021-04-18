@@ -15,10 +15,13 @@ set(common_flags
     -Zc:wchar_t
     $<$<CONFIG:Debug>:-Zi>
     $<$<CONFIG:Release>:-Zi>
+    $<$<CONFIG:Production>:-Zi>
     $<$<CONFIG:Debug>:-Gm>
     $<$<CONFIG:Release>:-Gm->
+    $<$<CONFIG:Production>:-Gm->
     $<$<CONFIG:Debug>:-Od>
     $<$<CONFIG:Release>:-O2>
+    $<$<CONFIG:Production>:-MP>
     -Zc:inline 
     -fp:fast 
     -errorReport:prompt 
@@ -30,10 +33,13 @@ set(common_flags
     $<$<CONFIG:Debug>:-MDd>
     $<$<CONFIG:Release>:-Oi>
     $<$<CONFIG:Release>:-MT>
+    $<$<CONFIG:Production>:-MT>
     -EHsc 
     -nologo
     $<$<CONFIG:Debug>:-DDEBUG>
     $<$<CONFIG:Release>:-DNDEBUG>
+    $<$<CONFIG:Production>:-DNDEBUG>
+    $<$<CONFIG:Production>:-DZERO_PRODUCTION>
     "-D \"_CRT_SECURE_NO_WARNINGS\"" 
 )
 

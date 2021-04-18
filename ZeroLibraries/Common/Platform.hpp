@@ -297,7 +297,11 @@
 #define ZeroDebugBreak() __debugbreak()
 #define ZeroTodo(text) /* __pragma(message(__FILE__ "(" ZeroStringize(__LINE__) ") : Todo: " text)) */
 #if defined(COMPILER_MICROSOFT)
+#if defined ZERO_PRODUCTION
+#define ZeroForceInline inline
+#else
 #define ZeroForceInline inline __forceinline
+#endif
 #else
 #define ZeroForceInline inline
 #endif
