@@ -1,7 +1,7 @@
 ; SPIR-V
 ; Version: 1.4
 ; Generator: Khronos; 0
-; Bound: 36
+; Bound: 39
 ; Schema: 0
                OpCapability Shader
                OpMemoryModel Logical GLSL450
@@ -52,16 +52,21 @@
                OpStore %a %27
          %28 = OpCompositeConstruct %v2float %float_1 %float_1
                OpStore %a %28
+         %29 = OpCompositeConstruct %v2float %float_0 %float_0
+         %30 = OpVectorShuffle %v2float %29 %29 0 1
+               OpStore %a %30
+         %31 = OpLoad %v2float %a
+               OpStore %a %31
                OpReturn
                OpFunctionEnd
 %PreConstructor_Real2Constructors = OpFunction %void None %8
      %self_0 = OpFunctionParameter %_ptr_Function_Real2Constructors
-         %31 = OpLabel
+         %34 = OpLabel
                OpReturn
                OpFunctionEnd
 %DefaultConstructor = OpFunction %void None %8
      %self_1 = OpFunctionParameter %_ptr_Function_Real2Constructors
-         %34 = OpLabel
-         %35 = OpFunctionCall %void %PreConstructor_Real2Constructors %self_1
+         %37 = OpLabel
+         %38 = OpFunctionCall %void %PreConstructor_Real2Constructors %self_1
                OpReturn
                OpFunctionEnd

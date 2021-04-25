@@ -57,6 +57,10 @@ void ZilchShaderGenerator::Initialize()
 
 void ZilchShaderGenerator::InitializeSpirV()
 {
+  // Initialize the libraries first. We need to do this so that we can access the FixedArray type.
+  ZilchShaderIRCore::InitializeInstance();
+  Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary();
+
   SpirVNameSettings nameSettings;
 
   nameSettings.mPerspectiveToApiPerspectiveName = "ZeroPerspectiveToApiPerspective";
@@ -109,7 +113,7 @@ void ZilchShaderGenerator::InitializeSpirV()
   vertexDefDesc.AddField(real2Type, "UvAux");
   vertexDefDesc.AddField(real4Type, "Color");
   vertexDefDesc.AddField(real4Type, "ColorAux");
-  vertexDefDesc.AddField(intType, "BoneIndices");
+  vertexDefDesc.AddField(int4Type, "BoneIndices");
   vertexDefDesc.AddField(real4Type, "BoneWeights");
   vertexDefDesc.AddField(real4Type, "Aux0");
   vertexDefDesc.AddField(real4Type, "Aux1");
@@ -154,13 +158,15 @@ void ZilchShaderGenerator::InitializeSpirV()
   transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
-  //UniformBufferDescription miscData(3);
-  //miscData.mDebugName = "MiscData";
-  //settings->mShaderDefinitionSettings.AddBuiltIn("BoneTransforms", "FixedArray[Real4x4, 80]");
-  // SpriteSource input
-  //settings->mShaderDefinitionSettings.AddBuiltIn("SpriteSource", "Sampler2d");
-  //// HeightMap input
-  //settings->mShaderDefinitionSettings.AddBuiltIn("HeightMapWeights", "Sampler2d");
+  Zilch::BoundType* boneTransformsType = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary()->BoundTypes["FixedArray[Real4x4, 80]"];
+  UniformBufferDescription miscData(3);
+  miscData.mDebugName = "MiscData";
+  miscData.AddField(boneTransformsType, "BoneTransforms");
+  // Legacy did this, but you can't put samplers in a uniform buffer so this is illegal
+  //Zilch::BoundType* sampledImage2dType = Zilch::ShaderIntrinsicsLibrary::GetInstance().GetLibrary()->BoundTypes["SampledImage2d"];
+  //miscData.AddField(sampledImage2dType, "SpriteSource");
+  //miscData.AddField(sampledImage2dType, "HeightMapWeights");
+  settings->AddUniformBufferDescription(miscData);
 
   settings->AutoSetDefaultUniformBufferDescription();
 
@@ -179,7 +185,7 @@ void ZilchShaderGenerator::InitializeSpirV()
   mFrontEndTranslator->SetSettings(mSpirVSettings);
   mFrontEndTranslator->Setup();
   // Create the core library and parse it
-  ZilchShaderIRCore::InitializeInstance();
+  
   ZilchShaderIRCore& coreLibrary = ZilchShaderIRCore::GetInstance();
   coreLibrary.Parse(mFrontEndTranslator);
   mCoreLibrary = coreLibrary.GetLibrary();

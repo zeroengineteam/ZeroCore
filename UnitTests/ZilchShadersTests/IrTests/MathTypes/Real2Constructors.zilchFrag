@@ -7,5 +7,7 @@ struct Real2Constructors
     a = Real2(1.0, 0.0);
     a = Real2(1, 0);
     a = Real2(1.0);
+    a = Real2(Real2());
+    a = Real2(a);
   }
 }
