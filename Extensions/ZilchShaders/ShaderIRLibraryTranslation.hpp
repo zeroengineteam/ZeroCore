@@ -81,6 +81,7 @@ bool IsVectorSwizzle(StringParam memberName);
 void ResolveScalarComponentAccess(ZilchSpirVFrontEnd* translator, Zilch::MemberAccessNode* memberAccessNode, byte componentName, ZilchSpirVFrontEndContext* context);
 void ResolveScalarSwizzle(ZilchSpirVFrontEnd* translator, Zilch::MemberAccessNode* memberAccessNode, StringParam memberName, ZilchSpirVFrontEndContext* context);
 void ScalarBackupFieldResolver(ZilchSpirVFrontEnd* translator, Zilch::MemberAccessNode* memberAccessNode, ZilchSpirVFrontEndContext* context);
+void ResolveVectorCopyConstructor(ZilchSpirVFrontEnd* translator, Zilch::FunctionCallNode* fnCallNode, Zilch::StaticTypeNode* staticTypeNode, ZilchSpirVFrontEndContext* context);
 void ResolveVectorComponentAccess(ZilchSpirVFrontEnd* translator, ZilchShaderIROp* selfInstance, ZilchShaderIRType* componentType, byte componentName, ZilchSpirVFrontEndContext* context);
 void ResolveVectorComponentAccess(ZilchSpirVFrontEnd* translator, Zilch::MemberAccessNode* memberAccessNode, byte componentName, ZilchSpirVFrontEndContext* context);
 void ResolveVectorSwizzle(ZilchSpirVFrontEnd* translator, IZilchShaderIR* selfInstance, ZilchShaderIRType* resultType, StringParam memberName, ZilchSpirVFrontEndContext* context);
