@@ -1,0 +1,12 @@
+#pragma once
+#define ZeroMajorVersion ${ZeroMajorVersion}
+#define ZeroMinorVersion ${ZeroMinorVersion}
+#define ZeroPatchVersion ${ZeroPatchVersion}
+
+#define ZeroRevisionId ${ZeroRevisionId}
+
+#define ZeroShortChangeSet ${ZeroShortChangeSet}
+#define ZeroChangeSet ${ZeroChangeSet}
+#define ZeroChangeSetDate "${ZeroChangeSetDate}"
+
+

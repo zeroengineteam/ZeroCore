@@ -30,3 +30,14 @@ zero_set_all_common_project_settings(
   PrecompiledHeader "Precompiled.hpp"
   PrecompiledSource "Precompiled.cpp"
 )
+
+
+set(ZeroMajorVersion 0)
+set(ZeroMinorVersion 0)
+set(ZeroPatchVersion 0)
+set(ZeroRevisionId 0)
+set(ZeroShortChangeSet 0)
+set(ZeroChangeSet 0)
+set(ZeroChangeSetDate 0)
+
+configure_file(${zero_core_path}/BuildVersionTemplate.data ${CurrentDirectory}/BuildVersion.inl ESCAPE_QUOTES) 
