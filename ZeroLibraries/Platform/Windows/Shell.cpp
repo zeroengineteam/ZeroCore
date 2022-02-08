@@ -551,94 +551,96 @@ void ScanDevice(Array<PlatformInputDevice>& devices, HANDLE deviceHandle, RID_DE
     ReturnIf(HidP_GetCaps(preparsedData, &caps) != HIDP_STATUS_SUCCESS, ,
       "Unable to get device capabilities");
 
-    HIDP_BUTTON_CAPS* buttonCaps = (PHIDP_BUTTON_CAPS)alloca(sizeof(HIDP_BUTTON_CAPS) * caps.NumberInputButtonCaps);
-
     USHORT capsLength = caps.NumberInputButtonCaps;
-    ReturnIf(HidP_GetButtonCaps(HidP_Input, buttonCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS, ,
-      "Unable to get button capabilities");
+    if (capsLength != 0) {
+        HIDP_BUTTON_CAPS* buttonCaps = (PHIDP_BUTTON_CAPS)alloca(sizeof(HIDP_BUTTON_CAPS) * caps.NumberInputButtonCaps);
 
-    PlatformInputDevice& device = devices.PushBack();
-    device.mName = deviceName;
-    device.mDeviceHandle = deviceHandle;
+        ReturnIf(HidP_GetButtonCaps(HidP_Input, buttonCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS, ,
+            "Unable to get button capabilities");
 
-    // Basically though we don't get a caps per button, we actually do have 'button sets'
-    // and thus we can have more than one set of caps per button set
-    uint buttonIndex = 0;
-    for (uint i = 0; i < caps.NumberInputButtonCaps; i++)
-    {
-      auto& buttonCap = buttonCaps[i];
-      uint buttonCountInRange = buttonCap.Range.UsageMax - buttonCap.Range.UsageMin + 1;
+        PlatformInputDevice& device = devices.PushBack();
+        device.mName = deviceName;
+        device.mDeviceHandle = deviceHandle;
 
-      for (uint j = 0; j < buttonCountInRange; ++j)
-      {
-        PlatformButton& button = device.mButtons.PushBack();
-        button.mName = String::Format("Button%d", buttonIndex);
-        button.mOffset = buttonCap.Range.UsageMin;
-        button.mBit = j;
-        ++buttonIndex;
-      }
-    }
-
-    // Value caps
-    if (caps.NumberInputValueCaps != 0)
-    {
-      HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
-      capsLength = caps.NumberInputValueCaps;
-      ReturnIf(HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS, ,
-        "Unable to get value capabilities");
-
-      HashMap<uint, String>& usageNames = GetUsageNames();
-
-      for (uint i = 0; i < caps.NumberInputValueCaps; i++)
-      {
-        auto& valueCap = valueCaps[i];
-
-        PlatformAxis& axis = device.mAxes.PushBack();
-        axis.mOffset = valueCap.Range.UsageMin;
-        axis.mSize = valueCap.Range.UsageMax - valueCap.Range.UsageMin;
-        axis.mMax = valueCap.LogicalMax + 1;
-
-        if (valueCap.LogicalMax == -1)
+        // Basically though we don't get a caps per button, we actually do have 'button sets'
+        // and thus we can have more than one set of caps per button set
+        uint buttonIndex = 0;
+        for (uint i = 0; i < caps.NumberInputButtonCaps; i++)
         {
-          if (valueCap.BitSize == 8)
-          {
-            axis.mMax = 0xFF;
-          }
-          else if (valueCap.BitSize == 16)
-          {
-            axis.mMax = 0xFFFF;
-          }
-          else if (valueCap.BitSize == 32)
-          {
-            axis.mMax = 0xFFFFFFFF;
-          }
+            auto& buttonCap = buttonCaps[i];
+            uint buttonCountInRange = buttonCap.Range.UsageMax - buttonCap.Range.UsageMin + 1;
+
+            for (uint j = 0; j < buttonCountInRange; ++j)
+            {
+                PlatformButton& button = device.mButtons.PushBack();
+                button.mName = String::Format("Button%d", buttonIndex);
+                button.mOffset = buttonCap.Range.UsageMin;
+                button.mBit = j;
+                ++buttonIndex;
+            }
         }
 
-        axis.mMin = valueCap.LogicalMin;
-        axis.mName = usageNames.FindValue(valueCap.Range.UsageMin, "Unknown");
-        axis.mCanBeDisabled = (valueCap.HasNull != 0);
-      }
-    }
+        // Value caps
+        if (caps.NumberInputValueCaps != 0)
+        {
+            HIDP_VALUE_CAPS* valueCaps = (PHIDP_VALUE_CAPS)alloca(sizeof(HIDP_VALUE_CAPS) * caps.NumberInputValueCaps);
+            capsLength = caps.NumberInputValueCaps;
+            ReturnIf(HidP_GetValueCaps(HidP_Input, valueCaps, &capsLength, preparsedData) != HIDP_STATUS_SUCCESS, ,
+                "Unable to get value capabilities");
 
-    // Build a guid using the name hash, and vendor / product / version info
-    Guid guid = deviceName.Hash();
-    guid = guid ^ ridDeviceInfo.hid.dwVendorId * 4187;
-    guid = guid ^ ridDeviceInfo.hid.dwProductId;
-    guid = guid ^ ridDeviceInfo.hid.dwVersionNumber;
-    device.mGuid = guid;
+            HashMap<uint, String>& usageNames = GetUsageNames();
 
-    const bool detailedDeviceInfo = false;
+            for (uint i = 0; i < caps.NumberInputValueCaps; i++)
+            {
+                auto& valueCap = valueCaps[i];
 
-    // Print details
-    if (detailedDeviceInfo)
-    {
-      ZPrint("Device Name: %s ", deviceName.c_str());
-      ZPrint("Vendor Id: %d ", ridDeviceInfo.hid.dwVendorId);
-      ZPrint("Product Id: %d ", ridDeviceInfo.hid.dwProductId);
-      ZPrint("Version Number: %d ", ridDeviceInfo.hid.dwVersionNumber);
-      ZPrint("Usage: %X ", ridDeviceInfo.hid.usUsage);
-      ZPrint("Usage Page: %X ", ridDeviceInfo.hid.usUsagePage);
-      ZPrint("\n");
+                PlatformAxis& axis = device.mAxes.PushBack();
+                axis.mOffset = valueCap.Range.UsageMin;
+                axis.mSize = valueCap.Range.UsageMax - valueCap.Range.UsageMin;
+                axis.mMax = valueCap.LogicalMax + 1;
+
+                if (valueCap.LogicalMax == -1)
+                {
+                    if (valueCap.BitSize == 8)
+                    {
+                        axis.mMax = 0xFF;
+                    }
+                    else if (valueCap.BitSize == 16)
+                    {
+                        axis.mMax = 0xFFFF;
+                    }
+                    else if (valueCap.BitSize == 32)
+                    {
+                        axis.mMax = 0xFFFFFFFF;
+                    }
+                }
+
+                axis.mMin = valueCap.LogicalMin;
+                axis.mName = usageNames.FindValue(valueCap.Range.UsageMin, "Unknown");
+                axis.mCanBeDisabled = (valueCap.HasNull != 0);
+            }
+        }
+
+        // Build a guid using the name hash, and vendor / product / version info
+        Guid guid = deviceName.Hash();
+        guid = guid ^ ridDeviceInfo.hid.dwVendorId * 4187;
+        guid = guid ^ ridDeviceInfo.hid.dwProductId;
+        guid = guid ^ ridDeviceInfo.hid.dwVersionNumber;
+        device.mGuid = guid;
+
+        const bool detailedDeviceInfo = false;
+
+        // Print details
+        if (detailedDeviceInfo)
+        {
+            ZPrint("Device Name: %s ", deviceName.c_str());
+            ZPrint("Vendor Id: %d ", ridDeviceInfo.hid.dwVendorId);
+            ZPrint("Product Id: %d ", ridDeviceInfo.hid.dwProductId);
+            ZPrint("Version Number: %d ", ridDeviceInfo.hid.dwVersionNumber);
+            ZPrint("Usage: %X ", ridDeviceInfo.hid.usUsage);
+            ZPrint("Usage Page: %X ", ridDeviceInfo.hid.usUsagePage);
+            ZPrint("\n");
+        }
     }
   }
 }
